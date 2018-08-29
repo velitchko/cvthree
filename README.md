@@ -2,7 +2,7 @@
 
 ## Changelog
 
-v2.0.0 - Angular 6 (update) \\
+v2.0.0 - Angular 6 (update)  
 v1.0.0 - Angular 2 
 
 ## Installing dependencies
