@@ -1,7 +1,9 @@
 # CVTHREE
 
 ## Changelog
-v1.0.0 - updated to Angular 6 Universal 
+
+v2.0.0 - Angular 6 (update)
+v1.0.0 - Angular 2 
 
 ## Installing dependencies
 
