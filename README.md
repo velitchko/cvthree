@@ -7,6 +7,11 @@ v1.0.0 - updated to Angular 6 Universal
 
 run `npm install`
 
+## Running the application
+
+run `npm run dev` 
+the application should be available at `http://localhost:8000`
+
 ## Database 
 This project uses MongoDB (locally installed)
 
