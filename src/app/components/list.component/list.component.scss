@@ -1,0 +1,68 @@
+.compare-button-container {
+  display: block;
+  /* display: flex */
+  /* align-items: center; */
+  /* align-self: center; */
+  /* justify-content: center; */
+  text-align: center;
+  position: fixed;
+  margin: 0 auto;
+  right: 0;
+  left: 0;
+  bottom: 4em;
+}
+
+
+.list-entry-avatar {
+    width: 150px;
+    height: 150px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    .list-entry-avatar-overlay {
+      opacity: 0;
+    }
+    &:hover,
+    &:focus {
+      cursor: pointer;
+      opacity: 0.5;
+      .list-entry-avatar-overlay {
+        opacity: 1.0;
+        > .view {
+          text-decoration: none;
+          font-size: 3em;
+          color: black;
+          top: 1.2em;
+          left: 0.6em;
+          position: relative;
+        }
+      }
+    }
+}
+
+.selected {
+  border: 2px solid #00d1b2 !important;
+  background-color: rgba(0, 209, 178, 0.2)
+}
+
+.list-entry {
+  margin-bottom: 1em;
+}
+
+.mat-card {
+  border: 2px solid transparent;
+  padding-top: 0em;
+}
+
+.mat-card-avatar {
+  border: 6px solid #00d1b2;
+}
+
+.mat-card-actions {
+    margin: 0em;
+    padding-top: 1em;
+}
+
+// .default-avatar {
+//   fill: red;
+// }

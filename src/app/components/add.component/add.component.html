@@ -1,0 +1,578 @@
+<mat-accordion class="add-component-accordion">
+  <!-- GENERAL -->
+  <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="cvthree-panel-with-icon">
+          <mat-icon>account_circle</mat-icon> Personal information
+        </div>
+      </mat-panel-title>
+      <mat-panel-description>
+        Who are you?
+        <mat-icon *ngIf="!generalInfoOK()">warning</mat-icon>
+        <mat-icon *ngIf="generalInfoOK()">check</mat-icon>
+
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <!-- PICTURE -->
+    <div *ngIf="resume.profilePicture">
+      <img [src]="resume.profilePicture">
+      <button mat-mini-fab color="warn" (click)="clearPicture()">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+    <app-file-upload></app-file-upload>
+    <mat-form-field>
+      <input matInput type="text" required placeholder="First Name" #firstName [formControl]="firstNameFormControl"> <!-- First Name -->
+      <mat-error *ngIf="firstNameFormControl.hasError('required')">
+          Name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="text" required placeholder="Last Name" #lastName [formControl]="lastNameFormControl"> <!-- Last Name -->
+      <mat-error *ngIf="lastNameFormControl.hasError('required')">
+          Name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [matDatepicker]="birthday" required placeholder="Birthday" #birthDay [formControl]="birthdayFormControl"> <!-- Birthday -->
+      <mat-error *ngIf="birthdayFormControl.hasError('required')">
+          Birthday is <strong>required</strong>
+      </mat-error>
+      <mat-datepicker-toggle matSuffix [for]="birthday"></mat-datepicker-toggle>
+      <mat-datepicker #birthday></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="text" required placeholder="Occupation" #generalOccupation [formControl]="occupationFormControl"> <!-- Occupation -->
+      <mat-error *ngIf="occupationFormControl.hasError('required')">
+          Occupation is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="text" required placeholder="Address" #generalAddress [formControl]="generalAddressFormControl">
+      <mat-error *ngIf="generalAddressFormControl.hasError('required')">
+          Address is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="number" placeholder="Postal code" #generalPostalcode>
+      <mat-hint align="end">Optional</mat-hint>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="text" required placeholder="City" #generalCity [formControl]="generalCityFormControl">
+      <mat-error *ngIf="generalCityFormControl.hasError('required')">
+          City is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="text" required placeholder="Country" #generalCountry [formControl]="generalCountryFormControl"> <!-- Location -->
+      <mat-error *ngIf="generalCountryFormControl.hasError('required')">
+          Country is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea matInput placeholder="About me..." #generalAbout maxlength="500"></textarea> <!-- Summary -->
+      <mat-hint align="end">Optional {{ generalAbout.value.length }} / 500</mat-hint>
+    </mat-form-field>
+    <mat-action-row>
+      <button mat-button color="primary" (click)="nextStep()">Next</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+  <!-- CONTACT + SOCIAL -->
+  <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="cvthree-panel-with-icon">
+        <mat-icon>contacts</mat-icon> Contact information
+        </div>
+      </mat-panel-title>
+      <mat-panel-description>
+        How can we contact you?
+        <mat-icon *ngIf="!contactInfoOK()">warning</mat-icon>
+        <mat-icon *ngIf="contactInfoOK()">check</mat-icon>
+
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <mat-form-field>
+      <input matInput type="email" required placeholder="E-Mail" #personalEmail [formControl]="emailFormControl"> <!-- Email -->
+      <mat-error *ngIf="emailFormControl.hasError('pattern')">
+          Please enter a valid email address
+      </mat-error>
+      <mat-error *ngIf="emailFormControl.hasError('required')">
+          Email is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="tel" placeholder="Phone Number" #personalPhone> <!-- Phone Number -->
+      <mat-hint align="end">Optional</mat-hint>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="url" placeholder="Website" #personalWebsite [formControl]="urlFormControl"> <!-- Website -->
+      <mat-hint align="end">Optional</mat-hint>
+      <mat-error *ngIf="urlFormControl.hasError('pattern')">
+          Please enter a valid website address
+      </mat-error>
+    </mat-form-field>
+    <mat-action-row>
+      <button mat-button color="warn" (click)="prevStep()">Previous</button>
+      <button mat-button color="primary" (click)="nextStep()">Next</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+  <!-- Social networks ? -->
+  <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="cvthree-panel-with-icon">
+          <mat-icon>share</mat-icon> Social
+        </div>
+      </mat-panel-title>
+      <mat-panel-description>
+        Which social networks are you a part of?
+        <mat-icon *ngIf="!languageInfoOK()">warning</mat-icon>
+        <mat-icon *ngIf="languageInfoOK()">check</mat-icon>
+
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <button *ngIf="!edit && resume.profiles.length > 0" mat-icon-button color="accent">
+      <mat-icon area-lable="Edit networks" (click)="editMode()">edit</mat-icon>
+    </button>
+    <button *ngIf="edit" mat-icon-button color="accent">
+      <mat-icon area-lable="Save network" (click)="save()">check</mat-icon>
+    </button>
+    <div *ngFor="let n of work">
+      <div *ngIf="!edit"> <!-- VIEW MODE -->
+        {{ n.socialNetwork }} | {{ n.accountName }}
+      </div>
+      <div *ngIf="edit">  <!-- EDIT MODE -->
+        <mat-form-field>
+          <input matInput type="text" [(ngModel)]="n.accountName">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="Social Network" [(ngModel)]="n.socialNetwork">
+            <mat-option *ngFor="let nn of networks()" [value]="nn">
+              {{ nn }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-icon-button color="warn">
+          <mat-icon area-lable="Delete Social network" (click)="deleteSocialNetwork(l)">delete</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="!edit">
+      <mat-form-field>
+        <input matInput type="text" placeholder="Account" #accountName> <!-- Languages -->
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Network" #socialNetwork>
+      </mat-form-field>
+      <button mat-icon-button color="primary">
+        <mat-icon aria-label="Add more networks" (click)="addNetwork(socialNetwork, accountName)">add_circle</mat-icon>
+      </button>
+    </div>
+    <mat-action-row>
+      <button mat-button color="warn" (click)="prevStep()">Previous</button>
+      <button mat-button color="primary" (click)="nextStep()">Next</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+  <!-- LANGUAGES -->
+  <mat-expansion-panel [expanded]="step === 3" (opened)="setStep(3)" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="cvthree-panel-with-icon">
+          <mat-icon>language</mat-icon> Languages
+        </div>
+      </mat-panel-title>
+      <mat-panel-description>
+        What languages do you know?
+        <mat-icon *ngIf="!languageInfoOK()">warning</mat-icon>
+        <mat-icon *ngIf="languageInfoOK()">check</mat-icon>
+
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <button *ngIf="!edit && resume.languages.length > 0" mat-icon-button color="accent">
+      <mat-icon area-lable="Edit language" (click)="editMode()">edit</mat-icon>
+    </button>
+    <button *ngIf="edit" mat-icon-button color="accent">
+      <mat-icon area-lable="Save language" (click)="save()">check</mat-icon>
+    </button>
+    <div *ngFor="let l of resume.languages">
+      <div *ngIf="!edit"> <!-- VIEW MODE -->
+        {{ l.name }} | {{ l.level }}
+      </div>
+      <div *ngIf="edit">  <!-- EDIT MODE -->
+        <mat-form-field>
+          <input matInput type="text" [(ngModel)]="l.name">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="Proficiency" [(ngModel)]="l.level">
+            <mat-option *ngFor="let ll of levels()" [value]="ll">
+              {{ ll }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-icon-button color="warn">
+          <mat-icon area-lable="Delete language" (click)="deleteLanguage(l)">delete</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="!edit">
+      <mat-form-field>
+        <input matInput type="text" placeholder="Language" #lang> <!-- Languages -->
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="Proficiency" #level>
+          <mat-option *ngFor="let ll of levels()" [value]="ll">
+            {{ ll }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-icon-button color="primary">
+        <mat-icon aria-label="Add more languages" (click)="addLanguage(lang, level)">add_circle</mat-icon>
+      </button>
+    </div>
+    <mat-action-row>
+      <button mat-button color="warn" (click)="prevStep()">Previous</button>
+      <button mat-button color="primary" (click)="nextStep()">Next</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+  <!-- SKILLS -->
+  <mat-expansion-panel [expanded]="step === 4" (opened)="setStep(4)" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="cvthree-panel-with-icon">
+          <mat-icon>settings</mat-icon> Skills
+        </div>
+      </mat-panel-title>
+      <mat-panel-description>
+        What can you do?
+        <mat-icon *ngIf="!skillInfoOK()">warning</mat-icon>
+        <mat-icon *ngIf="skillInfoOK()">check</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <button *ngIf="!edit && resume.skills.length > 0" mat-icon-button color="accent">
+      <mat-icon area-lable="Edit skill" (click)="editMode()">edit</mat-icon>
+    </button>
+    <button *ngIf="edit" mat-icon-button color="accent">
+      <mat-icon area-lable="Save skill" (click)="save()">check</mat-icon>
+    </button>
+    <div *ngFor="let s of resume.skills">
+      <div *ngIf="!edit"> <!-- VIEW MODE -->
+        {{ s.name }} | {{ s.level }}
+      </div>
+      <div *ngIf="edit">
+        <mat-form-field>
+          <input matInput type="text" [(ngModel)]="s.name">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="Proficiency" [(ngModel)]="s.level">
+            <mat-option *ngFor="let p of proficiencies()" [value]="p">
+              {{ p }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-icon-button color="warn">
+          <mat-icon area-lable="Delete skill" (click)="deleteSkill(s)">delete</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="!edit">
+      <mat-form-field>
+        <input matInput type="text" placeholder="Skill" #skill> <!-- Skills -->
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="Proficiency" #proficiency>
+          <mat-option *ngFor="let p of proficiencies()" [value]="p">
+            {{ p }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-icon-button color="accent">
+        <mat-icon aria-label="Add more skills" (click)="addSkill(skill, proficiency)">add_circle</mat-icon>
+      </button>
+    </div>
+    <mat-action-row>
+      <button mat-button color="warn" (click)="prevStep()">Previous</button>
+      <button mat-button color="primary" (click)="nextStep()">Next</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+  <!-- INTERESTS -->
+  <mat-expansion-panel [expanded]="step === 5" (opened)="setStep(5)" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="cvthree-panel-with-icon">
+          <mat-icon>favorite</mat-icon> Interests
+        </div>
+      </mat-panel-title>
+      <mat-panel-description>
+        What do you like?
+        <mat-icon *ngIf="!interestInfoOK()">warning</mat-icon>
+        <mat-icon *ngIf="interestInfoOK()">check</mat-icon>
+
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <button *ngIf="!edit && resume.interests.length > 0" mat-icon-button color="accent">
+      <mat-icon area-lable="Edit interest" (click)="editMode()">edit</mat-icon>
+    </button>
+    <button *ngIf="edit" mat-icon-button color="accent">
+      <mat-icon area-lable="Save interest" (click)="save()">check</mat-icon>
+    </button>
+    <div *ngFor="let i of resume.interests">
+      <div *ngIf="!edit">
+        {{ i.name }}
+      </div>
+      <div *ngIf="edit">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Interest" [(ngModel)]="i.name"> <!-- Interests -->
+        </mat-form-field>
+        <button *ngIf="!edit" mat-icon-button color="warn">
+          <mat-icon area-lable="Delete interest" (click)="deleteInterest(i)">delete</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="!edit">
+      <mat-form-field>
+        <input matInput type="text" placeholder="Interest" #interest> <!-- Interests -->
+      </mat-form-field>
+      <button mat-icon-button color="accent">
+        <mat-icon aria-label="Add more interests" (click)="addInterest(interest)">add_circle</mat-icon>
+      </button>
+    </div>
+    <mat-action-row>
+      <button mat-button color="warn" (click)="prevStep()">Previous</button>
+      <button mat-button color="primary" (click)="nextStep()">Next</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+  <!-- REFERENCES -->
+  <mat-expansion-panel [expanded]="step === 6" (opened)="setStep(6)" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="cvthree-panel-with-icon">
+          <mat-icon>create</mat-icon> References
+        </div>
+      </mat-panel-title>
+      <mat-panel-description>
+        Who can recommend you?
+        <mat-icon *ngIf="!referenceInfoOK()">warning</mat-icon>
+        <mat-icon *ngIf="referenceInfoOK()">check</mat-icon>
+
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <button *ngIf="!edit && resume.references.length > 0" mat-icon-button color="accent">
+      <mat-icon area-lable="Edit reference" (click)="editMode()">edit</mat-icon>
+    </button>
+    <button *ngIf="edit" mat-icon-button color="accent">
+      <mat-icon area-lable="Save reference" (click)="save()">check</mat-icon>
+    </button>
+    <div *ngFor="let r of resume.references">
+      <div *ngIf="!edit">
+        {{ r.reference }}
+        <span>from {{ r.name }}</span>
+      </div>
+      <div *ngIf="edit">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Reference" [(ngModel)]="r.reference"> <!-- References -->
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Employer" [(ngModel)]="r.name"> <!-- Employer -->
+        </mat-form-field>
+        <button *ngIf="!edit" mat-icon-button color="warn">
+          <mat-icon area-lable="Delete reference" (click)="deleteReference(r)">delete</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="!edit">
+      <mat-form-field>
+        <input matInput type="text" placeholder="Reference" #reference> <!-- References -->
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Employer" #employer> <!-- References -->
+      </mat-form-field>
+      <button mat-icon-button color="accent">
+        <mat-icon aria-label="Add more references" (click)="addReference(reference, employer)">add_circle</mat-icon>
+      </button>
+    </div>
+    <mat-action-row>
+      <button mat-button color="warn" (click)="prevStep()">Previous</button>
+      <button mat-button color="primary" (click)="nextStep()">Next</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+  <!-- EVENTS (TIMELINE) -->
+  <mat-expansion-panel [expanded]="step === 7" (opened)="setStep(7)" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="cvthree-panel-with-icon">
+          <mat-icon>work</mat-icon> Events
+        </div>
+      </mat-panel-title>
+      <mat-panel-description>
+        What have you done?
+        <mat-icon *ngIf="!eventInfoOK()">warning</mat-icon>
+        <mat-icon *ngIf="eventInfoOK()">check</mat-icon>
+
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <button *ngIf="!edit && resume.work.length > 0" mat-icon-button color="accent">
+      <mat-icon area-lable="Edit event" (click)="editMode()">edit</mat-icon>
+    </button>
+    <button *ngIf="edit" mat-icon-button color="accent">
+      <mat-icon area-lable="Save event" (click)="save()">check</mat-icon>
+    </button>
+    <div *ngFor="let e of work">
+      <div *ngIf="!edit">
+        {{ e.title }}
+        <span>{{ e.startDate }} - {{ e.endDate }}</span>
+      </div>
+      <div *ngIf="edit">
+        <mat-form-field>
+          <input matInput type="text" [(ngModel)]="e.title">
+        </mat-form-field>
+        <mat-form-field>
+          <textarea matInput [(ngModel)]="e.description" maxlength="500"></textarea>
+          <mat-hint align="end">{{ e.description.length }} / 500</mat-hint>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" [(ngModel)]="e.location.address">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="number" [(ngModel)]="e.location.postalCode">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" [(ngModel)]="e.location.city">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" [(ngModel)]="e.location.country">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="start_date" [(ngModel)]="e.startDate">
+          <mat-datepicker-toggle matSuffix [for]="start_date"></mat-datepicker-toggle>
+          <mat-datepicker #start_date></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="end_date" [(ngModel)]="e.endDate">
+          <mat-datepicker-toggle matSuffix [for]="end_date"></mat-datepicker-toggle>
+          <mat-datepicker #end_date></mat-datepicker>
+        </mat-form-field>
+        <button *ngIf="!edit" mat-icon-button color="warn">
+          <mat-icon area-lable="Delete reference" (click)="deleteEvent(e)">delete</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="!edit">
+      <mat-form-field>
+        <input matInput type="text" required placeholder="Title" #title [formControl]="eventTitleFormControl">
+        <mat-error *ngIf="eventTitleFormControl.hasError('required')">
+            Title is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <textarea matInput placeholder="Description" #desc maxlength="500"></textarea>
+        <mat-hint align="end">Optional {{ desc.value.length }} / 500</mat-hint>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" required placeholder="Address" #address [formControl]="eventAddressFormControl">
+        <mat-error *ngIf="eventAddressFormControl.hasError('required')">
+            Address is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="number" placeholder="Postal code" #postalcode>
+          <mat-hint align="end">Optional</mat-hint>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" required placeholder="City" #city [formControl]="eventCityFormControl">
+        <mat-error *ngIf="eventCityFormControl.hasError('required')">
+            City is <strong>required</strong>.
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" required placeholder="Country" #country [formControl]="eventCountryFormControl">
+        <mat-error *ngIf="eventCountryFormControl.hasError('required')">
+            Country is <strong>required</strong>.
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput [matDatepicker]="start_date" required placeholder="Start date" #startDate [formControl]="eventStartdateFormControl">
+        <mat-error *ngIf="eventStartdateFormControl.hasError('required')">
+           Startdate is <strong>required</strong>.
+        </mat-error>
+        <mat-datepicker-toggle matSuffix [for]="start_date"></mat-datepicker-toggle>
+        <mat-datepicker #start_date></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput [matDatepicker]="end_date" placeholder="End date" #endDate [formControl]="eventEnddateFormControl">
+        <mat-error *ngIf="eventEnddateFormControl.hasError('required')">
+            Enddate needs to occur <strong>after startdate</strong>.
+        </mat-error>
+        <mat-hint align="end">Optional</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="end_date"></mat-datepicker-toggle>
+        <mat-datepicker #end_date></mat-datepicker>
+      </mat-form-field>
+      <button mat-icon-button color="accent">
+        <mat-icon aria-label="Add more events" (click)="addEvent()">add_circle</mat-icon>
+      </button>
+    </div>
+    <mat-action-row>
+      <button mat-button color="warn" (click)="prevStep()">Previous</button>
+      <button mat-button color="primary" (click)="nextStep()">End</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [expanded]="step === 8" (opened)="setStep(8)" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="cvthree-panel-with-icon">
+          <mat-icon>note_add</mat-icon> Publications
+        </div>
+      </mat-panel-title>
+      <mat-panel-description>
+        What have you published?
+        <mat-icon *ngIf="!eventInfoOK()">warning</mat-icon>
+        <mat-icon *ngIf="eventInfoOK()">check</mat-icon>
+
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-action-row>
+      <button mat-button color="warn" (click)="prevStep()">Previous</button>
+      <button mat-button color="primary" (click)="nextStep()">End</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+  <mat-expansion-panel [expanded]="step === 8" (opened)="setStep(8)" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="cvthree-panel-with-icon">
+          <mat-icon>star</mat-icon> Certificates & Awards
+        </div>
+      </mat-panel-title>
+      <mat-panel-description>
+        Show your certificates!
+        <mat-icon *ngIf="!eventInfoOK()">warning</mat-icon>
+        <mat-icon *ngIf="eventInfoOK()">check</mat-icon>
+
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-action-row>
+      <button mat-button color="warn" (click)="prevStep()">Previous</button>
+      <button mat-button color="primary" (click)="nextStep()">End</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
+<div>
+  <mat-progress-spinner *ngIf="saving" color="white" mode="indeterminate"></mat-progress-spinner>
+  <button mat-raised-button color="accent" (click)="saveResume()">
+    Save<span *ngIf="saved">d  <mat-icon>check</mat-icon></span>
+  </button>
+  <button mat-menu-item *ngIf="saved" (click)="view()">
+    <mat-icon>link</mat-icon>
+    <span>View</span>
+  </button>
+</div>

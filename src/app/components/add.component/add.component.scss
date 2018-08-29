@@ -1,0 +1,16 @@
+.add-component-accordion .mat-expansion-panel-header-title,
+.add-component-accordion .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.add-component-accordion .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cvthree-panel-with-icon {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,0 +1,55 @@
+.cvthree-nav {
+  display: flex;
+  flex-direction: row;
+  flex: 0 1 auto;
+  justify-content: center;
+  align-items: center;
+  padding: 0em;
+  font-size: 1.2em;
+  .cvthree-nav-item {
+    list-style: none;
+    padding-right: 1em;
+    a {
+      text-decoration: none;
+      &.is-active {
+        text-decoration: underline;
+      }
+      &:hover {
+        background: -webkit-linear-gradient(45deg, #52edc7, #55efcb);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: hue 5s linear infinite;
+        @keyframes hue {
+          from {
+            -webkit-filter: hue-rotate(0deg);
+          }
+          to {
+            -webkit-filter: hue-rotate(-360deg);
+          }
+        }
+      }
+    }
+  }
+}
+
+.cvthree-text-logo {
+  position: absolute;
+  font-size: 2.2em;
+  top: 0.25em;
+  left: 0.25em;
+
+  .gradient-text {
+    background: -webkit-linear-gradient(45deg, #52edc7, #55efcb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: hue 5s linear infinite;
+    @keyframes hue {
+      from {
+        -webkit-filter: hue-rotate(0deg);
+      }
+      to {
+        -webkit-filter: hue-rotate(-360deg);
+      }
+    }
+  }
+}

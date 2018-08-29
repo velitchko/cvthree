@@ -1,0 +1,32 @@
+.general {
+  display: flex;
+
+  .name {
+    font-size: 3em;
+    color: #00d1b2;
+    text-transform: uppercase;
+  }
+  .age {
+    font-size: 3em;
+    color: #454647;
+  }
+
+  .avatar {
+    width: 15em;
+    height: 15em;
+    border-radius: 50%;
+    flex-shrink: 0;
+    object-fit: cover;
+    border: 10px solid #00d1b2;
+  }
+}
+
+.skill {}
+.timeline {}
+.languages {
+  display: flex;
+  flex-direction: row;
+  flex: 0 1 auto;
+  justify-content: flex-start;
+  align-items: center;
+}

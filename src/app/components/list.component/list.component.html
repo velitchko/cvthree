@@ -1,0 +1,44 @@
+<div class="progress" *ngIf="loading">
+  <div class="indeterminate"></div>
+</div>
+<div *ngIf="!loading">
+  <div *ngFor="let resume of resumes; let idx = index">
+    <mat-card [ngClass]="{'selected': resume.selected}" class="list-entry">
+      <mat-card-actions align="right">
+        <button *ngIf="!resume.selected" mat-raised-button color="primary" (click)="add(idx)">
+            <mat-icon>add</mat-icon>
+        </button>
+        <button *ngIf="resume.selected" mat-raised-button color="warn" (click)="delete(idx)">
+            <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-raised-button color="accent" (click)="edit(idx)">
+          <mat-icon>create</mat-icon>
+        </button>
+        <!--
+        <button mat-raised-button color="primary" (click)="view()">
+          <mat-icon>visibility</mat-icon>
+        </button>
+      -->
+        <!-- <button mat-raised-button color="warn" (click)="delete()">
+          <mat-icon>delete</mat-icon>
+        </button> -->
+      </mat-card-actions>
+      <mat-card-header>
+        <div class="list-entry-avatar" mat-card-avatar [style.backgroundImage]="getSanitizedPicture(resume.profilePicture)" (click)="view(idx)">
+          <div class="list-entry-avatar-overlay">
+            <a class="view" href="javascript:void(0)">VIEW</a>
+          </div>
+        </div>
+        <mat-card-title>{{ resume.firstName }} {{ resume.lastName }} <!--{{ resume.age }}--></mat-card-title>
+        <mat-card-subtitle>{{ resume.label }} @ {{ resume.location.city }}, {{ resume.location.country }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- honors, certificates, awards-->
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="resumesToBeCompared.length >= 2" class="compare-button-container">
+    <button mat-raised-button color="primary" (click)="compareResumes()">COMPARE</button>
+  </div>
+</div>

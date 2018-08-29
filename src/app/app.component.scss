@@ -1,0 +1,65 @@
+/* GENERAL STYLES */
+* {
+ font-family: 'Roboto', sans-serif;
+}
+
+body {
+    display: flex;
+    /*min-height: 100vh;*/
+    flex-direction: column;
+    background-color: #f0f3f9;
+}
+
+a {
+  color: #00d1b2;
+  text-decoration: none;
+
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+
+  &:visited {
+    color: #454647;
+  }
+}
+
+/* LOGO STUFF */
+.white-text {
+  color: #fff;
+}
+
+.logo {
+  user-select: none;
+  cursor: pointer;
+  &.small {
+    transform: scale(0.2);
+    padding-top: 2px;
+  }
+  .cvthree-svg {
+    transform: rotate(30deg);
+    position: absolute;
+    z-index: -1;
+  }
+  .cvthree-text {
+    font-size: 13em;
+    position: absolute;
+    font-family: 'Roboto', sans-serif;
+    top: calc(50% + 0.07em);
+    left: calc(50% + 0.11em);
+    &.small {
+      font-size: 6em;
+      top: calc(50% + 0.6em);
+      left: calc(50% + 0.2em);
+    }
+  }
+}
+
+.loading-logo {
+  position: absolute;
+  margin: 0 auto;
+  top: calc(50% - 150px);
+  left: calc(50% - 150px);
+}

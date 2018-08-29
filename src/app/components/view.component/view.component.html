@@ -1,0 +1,27 @@
+<div *ngIf="loading" class="progress">
+  <div class="indeterminate"></div>
+</div>
+<div #wrapper>
+  <div class="general">
+    <div>
+      <div>
+          <img [src]="resume.profilePicture" class="avatar">
+      </div>
+      <div>
+        <span class="name">{{ resume.firstName }} {{ resume.lastName }}</span> <span class="age">| {{ age }}</span>
+      </div>
+      <div>
+        <span>{{ resume.occupation}} @ {{ resume.location.city }}, {{ resume.location.country }}</span><a href="javascript:voclass(0)"><mat-icon>location_on</mat-icon></a> <!-- <mat-icon>public</mat-icon>-->
+      </div>
+    </div>
+    <span class="email"><mat-icon>email</mat-icon>{{ resume.email }}</span>
+    <span class="phone"><mat-icon>phone</mat-icon>{{ resume.phone }}</span>
+    <!-- gender, social networks -->
+  </div>
+  <div class="languages" #languages>
+  </div>
+  <div class="skills" #skills>
+  </div>
+  <div class="timeline">
+  </div>
+</div>
