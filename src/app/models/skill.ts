@@ -1,9 +1,10 @@
 export class Skill {
   name: string;
   level: string;
-  keywords: Array<string>;
+  size?: number; // optional only set at leaf nodes
+  children: Array<Skill>; // nested skills
 
   constructor() {
-    this.keywords = new Array<string>();
+    this.children = new Array<Skill>();
   }
 }

@@ -74,10 +74,10 @@ let ResumeSchema = new mongoose.Schema({
     awarder: String,
     summary: String
   }],
-  skills: [{ // TODO how to make hierarchical?
+  skills: [{
     name: String,
     level: String,
-    keywords: [String]
+    children: [] // TODO create skill schema and nest somehow
   }],
   languages: [{
     name: String,
@@ -110,10 +110,19 @@ let ResumeSchema = new mongoose.Schema({
 // make all text fields indexable
 ResumeSchema.index({'$**': 'text'});
 
+function setSkillSizes(skills: any): void {
+  skills.forEach((s: any) => {
+    if(s.children) setSkillSizes(s);
+    else s.size = 1;
+  });
+}
+
 // set dates - geocode things pre save
 ResumeSchema.pre('save', function(next) {
   let _self: any = this;
   let promiseArr = new Array<Promise<any>>();
+  setSkillSizes(_self.skills);
+  console.log(_self.skills);
   _self.work.forEach((w: any) => {
     // geocode location
     let address = `${w.address} ${w.postalCode} ${w.city} ${w.country}`;
@@ -143,7 +152,7 @@ ResumeSchema.pre('save', function(next) {
   // once everything resolves rewrite work array and save
   Promise.all(promiseArr).then((success) => {
     console.log('all promises resolved');
-    console.log(success);
+    //console.log(success);
     next();
   }).catch((err) => {
     console.log('ERROR');
