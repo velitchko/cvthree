@@ -21,9 +21,38 @@
   }
 }
 
-.skill {}
+.skill {
+  display: flex;
+  flex-direction: row;
+  flex: 0 1 auto;
+  justify-content: flex-start;
+  align-items: center;
+}
+// SKILL STUFF
+::ng-deep .slice {
+   cursor: pointer;
+}
+
+::ng-deep .slice .main-arc {
+   stroke: #fff;
+   stroke-width: 1px;
+}
+
+::ng-deep .slice .hidden-arc {
+   fill: none;
+}
+
+::ng-deep .slice text {
+   pointer-events: none;
+   dominant-baseline: middle;
+   text-anchor: middle;
+}
+::ng-deep .label {
+ font-family: 'Roboto', sans-serif;
+}
+
 .timeline {}
-.languages {
+.language-wrapper {
   display: flex;
   flex-direction: row;
   flex: 0 1 auto;
