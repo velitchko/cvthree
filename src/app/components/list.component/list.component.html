@@ -1,10 +1,27 @@
 <div class="progress" *ngIf="loading">
   <div class="indeterminate"></div>
 </div>
-<div *ngIf="!loading">
-  <div *ngFor="let resume of resumes; let idx = index">
+<div *ngIf="!loading" class="search">
+  <mat-form-field>
+    <input matInput placeholder="Search...">
+  </mat-form-field>
+</div>
+<div *ngIf="!loading" class="list-wrapper">
+  <div *ngFor="let resume of resumes; let idx = index" class="list-entry-wrapper">
     <mat-card [ngClass]="{'selected': resume.selected}" class="list-entry">
-      <mat-card-actions align="right">
+      <mat-card-header>
+        <div class="list-entry-avatar" mat-card-avatar [style.backgroundImage]="getSanitizedPicture(resume.profilePicture)" (click)="view(idx)">
+          <div class="list-entry-avatar-overlay">
+            <a class="view" href="javascript:void(0)">VIEW</a>
+          </div>
+        </div>
+        <mat-card-title><h2><span style="color: #00d1b2">{{ resume.firstName }}</span> <span style="color: #707070">{{ resume.lastName }} |</span> {{ getAge(resume.birthDay) }}</h2></mat-card-title>
+        <mat-card-subtitle>{{ resume.label }} @ {{ resume.location.city }}, {{ resume.location.country }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- honors, certificates, awards-->
+      </mat-card-content>
+      <mat-card-actions align="bottom" class="list-actions">
         <button *ngIf="!resume.selected" mat-raised-button color="primary" (click)="add(idx)">
             <mat-icon>add</mat-icon>
         </button>
@@ -23,18 +40,6 @@
           <mat-icon>delete</mat-icon>
         </button> -->
       </mat-card-actions>
-      <mat-card-header>
-        <div class="list-entry-avatar" mat-card-avatar [style.backgroundImage]="getSanitizedPicture(resume.profilePicture)" (click)="view(idx)">
-          <div class="list-entry-avatar-overlay">
-            <a class="view" href="javascript:void(0)">VIEW</a>
-          </div>
-        </div>
-        <mat-card-title>{{ resume.firstName }} {{ resume.lastName }} <!--{{ resume.age }}--></mat-card-title>
-        <mat-card-subtitle>{{ resume.label }} @ {{ resume.location.city }}, {{ resume.location.country }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <!-- honors, certificates, awards-->
-      </mat-card-content>
     </mat-card>
   </div>
 

@@ -3,6 +3,7 @@ import { DatabaseServices } from '../../services/db.service';
 import { Resume } from '../../models/resume';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
+import { UtilServices } from '../../services/util.service';
 
 @Component({
   selector: 'app-list',
@@ -14,7 +15,11 @@ export class ListComponent  {
   loading: boolean = true;
   resumes: Array<Resume>;
   resumesToBeCompared: Array<Resume>;
-  constructor(private db: DatabaseServices, private router: Router, private sanitization: DomSanitizer) {
+  constructor(
+    private db: DatabaseServices,
+    private util: UtilServices,
+    private router: Router,
+    private sanitization: DomSanitizer) {
     this.resumes = new Array<Resume>();
     this.resumesToBeCompared = new Array<Resume>();
     this.db.getAllResumes().then((success: any) => {
@@ -35,6 +40,10 @@ export class ListComponent  {
 
   view(idx: number): void {
     this.router.navigate(['/view', this.resumes[idx].id]);
+  }
+
+  getAge(birthDay: Date): number {
+    return this.util.getAge(birthDay);
   }
 
   compareResumes(): void {
