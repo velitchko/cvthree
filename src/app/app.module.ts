@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app.routing.module';
+// DRAG & DROP FILE UPLOAD MODULE
+import { FileDropModule } from 'ngx-file-drop';
 // COMPONENTS
 import { AppComponent } from './app.component';
 import { MenuComponent } from './components/menu.component/menu.component';
@@ -12,7 +14,6 @@ import { ListComponent } from './components/list.component/list.component';
 import { EditComponent } from './components/edit.component/edit.component';
 import { CompareComponent } from './components/compare.component/compare.component';
 import { FileUploadComponent } from './components/file.upload.component/file.upload.component';
-
 // SERVICES
 import { DatabaseServices } from './services/db.service';
 import { UtilServices } from './services/util.service';
@@ -21,8 +22,7 @@ import { UtilServices } from './services/util.service';
 // forms
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-// DRAG & DROP FILE UPLOAD MODULE
-import { FileDropModule } from 'ngx-file-drop';
+
 // material ui
 import {
   MatAutocompleteModule,
@@ -61,17 +61,6 @@ import {
 export const APP_ID = 'cvthree';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    MenuComponent,
-    AddComponent,
-    HomeComponent,
-    ViewComponent,
-    ListComponent,
-    EditComponent,
-    CompareComponent,
-    FileUploadComponent
-  ],
   imports: [
     BrowserModule.withServerTransition({ appId: APP_ID }),
     AppRoutingModule,
@@ -111,6 +100,17 @@ export const APP_ID = 'cvthree';
     FormsModule,
     ReactiveFormsModule,
     FileDropModule
+  ],
+  declarations: [
+    AppComponent,
+    MenuComponent,
+    AddComponent,
+    HomeComponent,
+    ViewComponent,
+    ListComponent,
+    EditComponent,
+    CompareComponent,
+    FileUploadComponent
   ],
   providers: [ DatabaseServices, UtilServices ],
   bootstrap: [ AppComponent ]
