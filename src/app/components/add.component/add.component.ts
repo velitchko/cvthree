@@ -17,13 +17,12 @@ import { Reference } from '../../models/reference';
 import { Project }  from '../../models/project';
 import { LanguageLevel } from '../../lists/language.level';
 import { SkillLevel } from '../../lists/skill.level';
-
 import { DatabaseServices } from '../../services/db.service';
 import { Router } from '@angular/router';
 
 // regex for input validation
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-//const PHONE_REGEX = ;
+//TODO const PHONE_REGEX = ;
 const URL_REGEX = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/;
 
 @Component({
@@ -119,7 +118,11 @@ export class AddComponent  {
     return proficiencies.slice(proficiencies.length/2);
   };
 
-  constructor( private db: DatabaseServices, private ref: ChangeDetectorRef, @Inject(PLATFORM_ID) private platformId: Object, private router: Router ) {
+  constructor(
+    private db: DatabaseServices,
+    private ref: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private router: Router ) {
     this.resume = new Resume();
     if(isPlatformBrowser(this.platformId)) {
     }
@@ -242,8 +245,13 @@ export class AddComponent  {
     this.resume.references.splice(idx, 1);
   }
 
-  geoCode(address: string, city: string, postalcode: number, country: string, callback: Function): void {
+  geoCode(address: string, city: string, postalcode: number, country: string): Promise<any> {
+    let promise = new Promise<any>((resolve, reject) => {
+      // TODO geocoding http requests here
+      // using google maps currently
+    });
 
+    return promise;
   }
 
   addEvent(): void {
