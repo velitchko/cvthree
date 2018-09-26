@@ -2,8 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app.routing.module';
-// DRAG & DROP FILE UPLOAD MODULE
-import { FileDropModule } from 'ngx-file-drop';
+
 // COMPONENTS
 import { AppComponent } from './app.component';
 import { MenuComponent } from './components/menu.component/menu.component';
@@ -13,6 +12,7 @@ import { ViewComponent } from './components/view.component/view.component';
 import { ListComponent } from './components/list.component/list.component';
 import { EditComponent } from './components/edit.component/edit.component';
 import { CompareComponent } from './components/compare.component/compare.component';
+import { TreeComponent } from './components/tree.component/tree.component';
 import { FileUploadComponent } from './components/file.upload.component/file.upload.component';
 // SERVICES
 import { DatabaseServices } from './services/db.service';
@@ -23,8 +23,13 @@ import { UtilServices } from './services/util.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+// DRAG & DROP FILE UPLOAD MODULE
+import { FileDropModule } from 'ngx-file-drop';
+
 // material ui
+import {CdkTreeModule} from '@angular/cdk/tree';
 import {
+  MAT_DATE_LOCALE,
   MatAutocompleteModule,
   MatButtonModule,
   MatButtonToggleModule,
@@ -56,6 +61,7 @@ import {
   MatToolbarModule,
   MatTooltipModule,
   MatStepperModule,
+  MatTreeModule
  } from '@angular/material';
 
 export const APP_ID = 'cvthree';
@@ -63,6 +69,8 @@ export const APP_ID = 'cvthree';
 @NgModule({
   imports: [
     BrowserModule.withServerTransition({ appId: APP_ID }),
+    CdkTreeModule,
+    FileDropModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatAutocompleteModule,
@@ -96,10 +104,10 @@ export const APP_ID = 'cvthree';
     MatToolbarModule,
     MatTooltipModule,
     MatStepperModule,
+    MatTreeModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    FileDropModule
   ],
   declarations: [
     AppComponent,
@@ -110,9 +118,24 @@ export const APP_ID = 'cvthree';
     ListComponent,
     EditComponent,
     CompareComponent,
+    TreeComponent,
     FileUploadComponent
   ],
-  providers: [ DatabaseServices, UtilServices ],
+  providers: [
+    DatabaseServices,
+    UtilServices,
+    {provide: MAT_DATE_LOCALE, useValue: 'en-GB'}, // Locale for datepicker
+    { provide: 'WINDOW', useFactory: getWindow },
+    { provide: 'DOCUMENT', useFactory: getDocument }
+  ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }
+
+export function getWindow() {
+  return (typeof window !== "undefined") ? window : null;
+}
+
+export function getDocument() {
+  return (typeof document !== "undefined") ? document : null;
+}

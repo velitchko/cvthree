@@ -1,0 +1,45 @@
+.tree-invisible {
+  display: none;
+}
+
+.tree ul,
+.tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+.tree-node {
+  display: block;
+  padding-left: 40px;
+}
+
+::ng-deep .skill-node {
+  display: inline;
+}
+
+::ng-deep .node-hover {
+  position: relative;
+  left: -40px;
+  opacity: 0;
+  transition: opacity 0.25s ease-in-out;
+}
+::ng-deep .tree-node-hover {
+  display: inline;
+  &:hover {
+    .node-hover {
+      opacity: 1;
+    }
+  }
+}
+
+::ng-deep .tree-cat-hover {
+  display: inline;
+  &:hover {
+    .node-hover {
+      left: -80px;
+      opacity: 1;
+    }
+
+  }
+}

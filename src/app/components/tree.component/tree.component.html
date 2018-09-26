@@ -1,0 +1,69 @@
+<cdk-tree [dataSource]="nestedDataSource" [treeControl]="nestedTreeControl">
+  <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="tree-node">
+    <div class="tree-node-hover">
+      <button mat-icon-button disabled><mat-icon>remove</mat-icon></button>
+      <button mat-mini-fab color="warn" (click)="removeNode(node)" class="node-hover"><mat-icon>remove</mat-icon></button>
+    </div>
+    <div *ngIf="edit" class="skill-node">
+      <mat-form-field>
+        <input matInput type="text" placeholder="Skill" [(ngModel)]="node.name">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select [(ngModel)]="node.level" placeholder="Level">
+          <mat-option *ngFor="let ll of levels()" [value]="ll">{{ ll }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+          <input matInput placeholder="Add new skill..." #newNodeName>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select #newNodeLevel placeholder="Level">
+          <mat-option *ngFor="let ll of levels()" [value]="ll">{{ ll }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-mini-fab color="primary" (click)="addNode(node, newNodeName, newNodeLevel)"><mat-icon>add</mat-icon></button>
+      
+    </div>
+    <div *ngIf="!edit">
+      {{node.name}} | {{node.level}}
+    </div>
+  </cdk-nested-tree-node>
+  <cdk-nested-tree-node *cdkTreeNodeDef="let node; when: hasNestedChild" class="tree-node">
+    <div class="tree-cat-hover">
+      <button mat-icon-button [attr.aria-label]="'toggle ' + node.name" cdkTreeNodeToggle>
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{nestedTreeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+        </mat-icon>
+      </button>
+      <button mat-mini-fab color="warn" (click)="removeNode(node)" class="node-hover"><mat-icon>remove</mat-icon></button>
+    </div>
+    <div *ngIf="edit" class="skill-node">
+      <mat-form-field>
+        <input matInput type="text" placeholder="Skill" [(ngModel)]="node.name">
+      </mat-form-field>
+      <mat-form-field>
+          <input matInput placeholder="Add new skill..." #newNodeName>
+      </mat-form-field>
+      <button mat-mini-fab color="primary" (click)="addNode(node, newNodeName, newNodeLevel)"><mat-icon>add</mat-icon></button>
+      
+    </div>
+    <div *ngIf="!edit">
+      {{node.name}} | {{node.level}}
+    </div>
+    <div [class.tree-invisible]="!nestedTreeControl.isExpanded(node)">
+      <ng-container cdkTreeNodeOutlet></ng-container>
+    </div>
+  </cdk-nested-tree-node>
+</cdk-tree>
+<div>
+  <mat-form-field>
+    <input matInput placeholder="Add new category" #newCatNode> 
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select placeholder="Level" #newCatLevel>
+        <mat-option *ngFor="let ll of levels()" [value]="ll">{{ ll }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="addCategory(newCatNode, newCatLevel)"><mat-icon>add</mat-icon> Add Category</button>
+</div>
+<button mat-raised-button (click)="saveSkills()" color="accent">Save</button>
