@@ -238,16 +238,16 @@ export function createApi(distPath: string, ngSetupOptions: NgSetupOptions) {
    * Get resumes by id
    */
   api.get('/api/v1/resume/:id', (req: express.Request, res: express.Response) => {
-  console.log('get resume ' + req.params.id);
-  Resume.findOne({ _id : req.params.id }, (err, resume) => {
-    if(err) {
-      console.log(err);
-      res.status(500).json({ message: 'ERROR', error: err, results: null });
-    } else {
-      res.status(200).json({ message: 'OK', results: resume });
-    }
+    console.log('get resume ' + req.params.id);
+    Resume.findOne({ _id : req.params.id }, (err, resume) => {
+      if(err) {
+        console.log(err);
+        res.status(500).json({ message: 'ERROR', error: err, results: null });
+      } else {
+        res.status(200).json({ message: 'OK', results: resume });
+      }
+    });
   });
-});
 
   /**
    * Get all resumes
@@ -269,15 +269,36 @@ export function createApi(distPath: string, ngSetupOptions: NgSetupOptions) {
    */
   api.post('/api/v1/resume', (req: express.Request, res: express.Response) => {
     console.log('post resume');
-    console.log(req.body);
     let cv = new Resume();
-    //cv.name
-    // TODO fillout attributes
+    cv.firstName = req.body.firstName;
+    cv.lastName = req.body.lastName;
+    cv.label = req.body.label
+    cv.birthday = req.body.birthday;
+    cv.profilePicture = req.body.profilePicture || 'default.png';
+    cv.email = req.body.email;
+    cv.phone = req.body.phone;
+    cv.summary = req.body.summary;
+    cv.url = req.body.url;
+    cv.location = req.body.location;
+    cv.profiles = req.body.profiles;
+    cv.work = req.body.work;
+    cv.publications = req.body.publications;
+    cv.courses = req.body.courses;
+    cv.education = req.body.education;
+    cv.awards = req.body.awards;
+    cv.skills = req.body.skills;
+    cv.certificates = req.body.certificates;
+    cv.languages = req.body.languages;
+    cv.interests = req.body.interests;
+    cv.references = req.body.references;
+    cv.projects = req.body.projects;
+
     cv.save((err, resume) => {
       if(err) {
         console.log(err);
         res.status(500).json({ message: 'ERROR', error: err, results: null });
       } else {
+        console.log(resume);
         res.status(200).json({ message: 'OK', results: resume });
       }
     })
@@ -286,7 +307,7 @@ export function createApi(distPath: string, ngSetupOptions: NgSetupOptions) {
   /**
    * Update resume
    */
-  api.put('/api/v1/resume/:id', (req: express.Request, res: express.Response) => {
+  api.put('/api/v1/resumes/:id', (req: express.Request, res: express.Response) => {
     console.log('put resume ' + req.params.id);
     Resume.findOneAndUpdate({ _id : req.params.id }, { $set : req.body }, (err, resume) => {
       if(err) {
