@@ -1,5 +1,5 @@
 // angular
-import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, KeyValueChanges, KeyValueDiffer, KeyValueDiffers, ChangeDetectorRef, Inject, PLATFORM_ID } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { Resume } from '../../models/resume';
@@ -17,7 +17,6 @@ import { Reference } from '../../models/reference';
 import { Project }  from '../../models/project';
 import { LanguageLevel } from '../../lists/language.level';
 import { SkillLevel } from '../../lists/skill.level';
-
 import { DatabaseServices } from '../../services/db.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
@@ -32,9 +31,10 @@ const URL_REGEX = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a
   styleUrls: ['edit.component.scss']
 })
 
-export class EditComponent  {
+export class EditComponent implements OnInit {
   // end Resume format (initialized when attempting to create DB entry)
   resume: Resume;
+  private resumeDiff: KeyValueDiffer<string, any>;
   step = 0;
 
   selectedId: string;
@@ -43,7 +43,7 @@ export class EditComponent  {
   uploading: boolean = false;
   saving: boolean = false;
   saved: boolean = false;
-  edit: boolean = false;
+  unsaved: boolean = false;
 
   // internal objects used for data-binding
   language: Language;
@@ -123,8 +123,8 @@ export class EditComponent  {
 
   constructor(
     private db: DatabaseServices,
-    private ref: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    private cd: ChangeDetectorRef,
+    private differs: KeyValueDiffers,
     private router: Router,
     private route: ActivatedRoute) {
     this.resume = new Resume();
@@ -134,15 +134,31 @@ export class EditComponent  {
         this.resume = success;
       });
     });
-    if(isPlatformBrowser(this.platformId)) {
-    }
   }
 
-  ngOnInit():void {}
+  ngOnInit(): void {
+    this.resumeDiff = this.differs.find(this.resume).create();
+  }
 
-  ngAfterViewInit():void {}
-
-  ngOnDestroy():void {}
+  
+  ngDoCheck(): void {
+    const changes = this.resumeDiff.diff(this.resume);
+    if (changes) {
+      this.resumeChanged(changes);
+    }
+  }
+  
+  resumeChanged(changes: KeyValueChanges<string, any>) {
+    this.saved = false;
+    this.saving = false;
+    this.unsaved = true;
+    this.cd.detectChanges();
+    /* If you want to see details then use
+      changes.forEachRemovedItem((record) => ...);
+      changes.forEachAddedItem((record) => ...);
+      changes.forEachChangedItem((record) => ...);
+    */
+  }
 
   setStep(index: number): void {
     this.step = index;
@@ -156,14 +172,8 @@ export class EditComponent  {
     this.step--;
   }
 
-  editMode(): void {
-    // enter edit mode
-    this.edit = true;
-  }
-
   save(): void {
-    // edit edit model
-    this.edit = false;
+    this.saveResume();
   }
 
   generalInfoOK(): boolean {
@@ -205,16 +215,26 @@ export class EditComponent  {
     this.resume.profilePicture = '';
   }
 
-  addNetwork() {
+  addNetwork(url: any, handle: any) {
     this.profile = new Profile();
 
+    this.profile.url = url.value;
+    this.profile.username = handle.value;
+    
     this.resume.profiles.push(this.profile);
+
+    url.value = '';
+    handle.value = '';
   }
 
   addLanguage(lang: any, level: any): void {
     this.language = new Language();
 
+    this.language.name = lang.value;
+    this.language.level = level.value;
+
     this.resume.languages.push(this.language);
+
     lang.value = '';
     level.value = '';
   }
@@ -223,21 +243,14 @@ export class EditComponent  {
     this.resume.languages.splice(idx, 1);
   }
 
-  addSkill(skill: any, proficiency: any): void {
-    this.skill = new Skill();
-
-    this.resume.skills.push(this.skill);
-  }
-
-  deleteSkill(idx: any): void {
-    this.resume.skills.splice(idx, 1);
-  }
-
   addInterest(interest: any): void {
     this.interest = new Interest();
 
+    this.interest.name = interest.value;
+
     this.resume.interests.push(this.interest);
 
+    interest.value = '';
   }
 
   deleteInterest(idx: any): void {
@@ -248,16 +261,16 @@ export class EditComponent  {
     this.reference = new Reference();
 
     this.resume.references.push(this.reference);
-
   }
 
   deleteReference(idx: any): void {
     this.resume.references.splice(idx, 1);
   }
 
+  // TODO: move this to util / DB presave
   geoCode(address: string, city: string, postalcode: number, country: string): Promise<any> {
     let promise = new Promise<any>((resolve, reject) => {
-      // TODO geocoding http requests here
+      // TODO: geocoding http requests here
       // using google maps currently
     });
 
@@ -268,14 +281,25 @@ export class EditComponent  {
 
   }
 
+  skillsUpdated($event: any): void {
+    this.resume.skills = $event;
+  }
+
   deleteEvent(idx: any): void {
     this.resume.work.splice(idx, 1);
   }
 
-  // TODO refactor
   saveResume(): void {
     this.saving = true;
-
+    this.db.updateResume(this.resume.id, this.resume).then((success: any) => {
+      if(success.message === "OK") {
+        this.saving = false;
+        this.saved = true;
+        this.unsaved = false;
+        this.cd.detectChanges();
+      }
+      else console.log(success);
+    })
   }
 
   view(): void {
