@@ -19,16 +19,17 @@ export class DatabaseServices {
 
   transformResume(resume: any): any {
     let body: any = {};
+
     body.firstName = resume.firstName;
     body.lastName = resume.lastName;
     body.location = resume.location;
-    body.birthDay = resume.birthDay;
+    body.birthday = resume.birthDay;
+    body.label = resume.label;
     body.profilePicture = resume.profilePicture;
     body.email = resume.email;
     body.phone = resume.phone;
     body.summary = resume.summary;
     body.url = resume.url;
-    body.label = resume.label;
     body.projects = resume.projects;
     body.references = resume.references;
     body.interests = resume.interests;
@@ -41,18 +42,19 @@ export class DatabaseServices {
     body.work = resume.work;
     body.profiles = resume.profiles;
     body.courses = resume.courses;
-    body.location = resume.location;
+
     return body;
   }
 
   parseResume(json: any): Resume {
     let resume = new Resume();
+
     resume.id = json._id;
     resume.firstName = json.firstName;
     resume.lastName = json.lastName;
     resume.location = json.location;
-    resume.birthDay = new Date(json.birthDay) || null;
-    resume.profilePicture = json.profilePicture;
+    resume.birthDay = new Date(json.birthday) || null;
+    resume.profilePicture = json.profilePicture ? json.profilePicture : `${environment.API_PATH}uploads/default.jpg`;
     resume.email = json.email;
     resume.phone = json.phone;
     resume.summary = json.summary;
@@ -71,6 +73,7 @@ export class DatabaseServices {
     resume.profiles = json.profiles;
     resume.courses = json.courses;
     resume.location = json.location;
+
     return resume;
   }
 
