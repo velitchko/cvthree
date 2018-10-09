@@ -8,6 +8,7 @@ import * as slash from 'slash';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as request from 'request';
+import * as score from './score';
 
 let Resume = require('./db/schemas/resume');
 
@@ -357,6 +358,25 @@ export function createApi(distPath: string, ngSetupOptions: NgSetupOptions) {
   /**
    * Search
    */
+  api.post('/api/v1/skillquery', (req: express.Request, res: express.Response) => {
+    let queries = JSON.parse(req.body.query);
+    let results = [];
+    Resume.find({}, (err, resumes) => {
+      resumes.forEach((r) => {
+        let base = score.baseScore(r.skills, queries);
+        let bonus = score.bonusScore(r.skills, queries);
+        if(base === 0) return;
+        results.push({
+          resume: r,
+          base: base,
+          bonus: bonus
+        });
+      });
+      res.status(200).json({ message: 'OK', results: results });
+    });
+    //res.status(200).json({ message: 'OK', results: []});
+  });
+
   api.post('/api/v1/query', (req: express.Request, res: express.Response) => {
     console.log('querying ');
     console.log(req.body.query);
@@ -369,6 +389,8 @@ export function createApi(distPath: string, ngSetupOptions: NgSetupOptions) {
       }
     });
   });
+
+ 
 
   // All regular routes use the Universal engine
   api.get('*', (req, res) => res.render('index', { req }));

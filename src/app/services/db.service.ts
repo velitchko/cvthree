@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { Query } from '../components/search.component/search.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Resume } from '../models/resume';
@@ -9,13 +10,10 @@ import { Resume } from '../models/resume';
 
 export class DatabaseServices {
   resumes: Array<any>;
-  selectedResumes: Array<any>;
 
   constructor(private http: HttpClient) {
     this.resumes = new Array<Resume>();
-    this.selectedResumes = new Array<Resume>();
   }
-
 
   transformResume(resume: any): any {
     let body: any = {};
@@ -143,15 +141,24 @@ export class DatabaseServices {
     return promise;
   }
 
-  updateSelectedResumes(selected: Array<Resume>): void {
-    this.selectedResumes = selected;
-  }
+  skillQuery(queries: Array<Query>): Promise<any> {
+    let promise = new Promise<any>((resolve, reject) => {
+      this.http.post(`${environment.API_PATH}skillquery`, { query: JSON.stringify(queries)}).subscribe((response: any) => {
+        if(response.message === "OK") {
+          let success = [];
+          response.results.forEach((r: any) => {
+            success.push({
+              base: r.base,
+              bonus: r.bonus,
+              resume: this.parseResume(r.resume)
+            });
+          })
+          resolve(success);
+        }
+        if(!response.results) reject(response);
+      });
+    });
 
-  clearSelectedResumes(): void {
-    this.selectedResumes = new Array<Resume>();
-  }
-
-  getSelectedResumes(): Array<Resume> {
-    return this.selectedResumes;
+    return promise;
   }
 }
