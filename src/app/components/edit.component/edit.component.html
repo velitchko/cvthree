@@ -15,65 +15,77 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <!-- PICTURE -->
-    <div *ngIf="resume.profilePicture" class="profile-picture">
-      <img [src]="resume.profilePicture">
-      <button mat-mini-fab color="warn" (click)="clearPicture()">
-        <mat-icon>clear</mat-icon>
-      </button>
+    <div class="general-wrapper">
+      <div class="profile-picture general-column one" matTooltip="Drag and drop a picture to upload." matTooltipPosition="above">
+        <img [src]="resume.profilePicture">
+        <button class="clear-profile-picture" mat-mini-fab color="warn" matTooltip="Remove" (click)="clearPicture()">
+          <mat-icon>clear</mat-icon>
+        </button>
+        <app-file-upload class="profile-picture-overlay" (uploadedFilePaths)="updateProfilePicture($event)"></app-file-upload>
+      </div>
+      <div class="general-column two">
+        <div>
+          <mat-form-field>
+            <input matInput type="text" required placeholder="First Name" #firstName [(ngModel)]="resume.firstName" [formControl]="firstNameFormControl"> <!-- First Name -->
+            <mat-error *ngIf="firstNameFormControl.hasError('required')">
+                Name is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput type="text" required placeholder="Last Name" #lastName [(ngModel)]="resume.lastName" [formControl]="lastNameFormControl"> <!-- Last Name -->
+            <mat-error *ngIf="lastNameFormControl.hasError('required')">
+                Name is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <input matInput [matDatepicker]="birthday" required placeholder="Birthday" #birthDay [(ngModel)]="resume.birthDay" [formControl]="birthdayFormControl"> <!-- Birthday -->
+            <mat-error *ngIf="birthdayFormControl.hasError('required')">
+                Birthday is <strong>required</strong>
+            </mat-error>
+            <mat-datepicker-toggle matSuffix [for]="birthday"></mat-datepicker-toggle>
+            <mat-datepicker #birthday></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div>
+        <mat-form-field>
+          <input matInput type="text" required placeholder="Address" #generalAddress [(ngModel)]="resume.location.address" [formControl]="generalAddressFormControl">
+          <mat-error *ngIf="generalAddressFormControl.hasError('required')">
+              Address is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="number" placeholder="Postal code" #generalPostalcode [(ngModel)]="resume.location.postalCode">
+          <mat-hint align="end">Optional</mat-hint>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" required placeholder="City" #generalCity [(ngModel)]="resume.location.city" [formControl]="generalCityFormControl">
+          <mat-error *ngIf="generalCityFormControl.hasError('required')">
+              City is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" required placeholder="Country" #generalCountry [(ngModel)]="resume.location.country" [formControl]="generalCountryFormControl"> <!-- Location -->
+          <mat-error *ngIf="generalCountryFormControl.hasError('required')">
+              Country is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <input matInput type="text" required placeholder="Occupation" #generalOccupation [(ngModel)]="resume.label" [formControl]="occupationFormControl"> <!-- Occupation -->
+            <mat-error *ngIf="occupationFormControl.hasError('required')">
+              Occupation is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <textarea matInput placeholder="About me..." #generalAbout maxlength="500" [(ngModel)]="resume.summary"></textarea> <!-- Summary -->
+            <mat-hint align="end">Optional {{ generalAbout.value.length }} / 500</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
     </div>
-    <app-file-upload></app-file-upload>
-    <mat-form-field>
-      <input matInput type="text" required placeholder="First Name" #firstName [(ngModel)]="resume.firstName" [formControl]="firstNameFormControl"> <!-- First Name -->
-      <mat-error *ngIf="firstNameFormControl.hasError('required')">
-          Name is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="text" required placeholder="Last Name" #lastName [(ngModel)]="resume.lastName" [formControl]="lastNameFormControl"> <!-- Last Name -->
-      <mat-error *ngIf="lastNameFormControl.hasError('required')">
-          Name is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput [matDatepicker]="birthday" required placeholder="Birthday" #birthDay [(ngModel)]="resume.birthDay" [formControl]="birthdayFormControl"> <!-- Birthday -->
-      <mat-error *ngIf="birthdayFormControl.hasError('required')">
-          Birthday is <strong>required</strong>
-      </mat-error>
-      <mat-datepicker-toggle matSuffix [for]="birthday"></mat-datepicker-toggle>
-      <mat-datepicker #birthday></mat-datepicker>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="text" required placeholder="Occupation" #generalOccupation [(ngModel)]="resume.label" [formControl]="occupationFormControl"> <!-- Occupation -->
-      <mat-error *ngIf="occupationFormControl.hasError('required')">
-          Occupation is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="text" required placeholder="Address" #generalAddress [(ngModel)]="resume.location.address" [formControl]="generalAddressFormControl">
-      <mat-error *ngIf="generalAddressFormControl.hasError('required')">
-          Address is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="number" placeholder="Postal code" #generalPostalcode [(ngModel)]="resume.location.postalCode">
-      <mat-hint align="end">Optional</mat-hint>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="text" required placeholder="City" #generalCity [(ngModel)]="resume.location.city" [formControl]="generalCityFormControl">
-      <mat-error *ngIf="generalCityFormControl.hasError('required')">
-          City is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="text" required placeholder="Country" #generalCountry [(ngModel)]="resume.location.country" [formControl]="generalCountryFormControl"> <!-- Location -->
-      <mat-error *ngIf="generalCountryFormControl.hasError('required')">
-          Country is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <textarea matInput placeholder="About me..." #generalAbout maxlength="500" [(ngModel)]="resume.summary"></textarea> <!-- Summary -->
-      <mat-hint align="end">Optional {{ generalAbout.value.length }} / 500</mat-hint>
-    </mat-form-field>
     <mat-action-row>
       <button mat-button color="primary" (click)="nextStep()">Next</button>
     </mat-action-row>
@@ -94,26 +106,32 @@
 
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <mat-form-field>
-      <input matInput type="email" required placeholder="E-Mail" #personalEmail [(ngModel)]="resume.email" [formControl]="emailFormControl"> <!-- Email -->
-      <mat-error *ngIf="emailFormControl.hasError('pattern')">
-          Please enter a valid email address
-      </mat-error>
-      <mat-error *ngIf="emailFormControl.hasError('required')">
-          Email is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="tel" placeholder="Phone Number" #personalPhone [(ngModel)]="resume.phone"> <!-- Phone Number -->
-      <mat-hint align="end">Optional</mat-hint>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="url" placeholder="Website" #personalWebsite [(ngModel)]="resume.url" [formControl]="urlFormControl"> <!-- Website -->
-      <mat-hint align="end">Optional</mat-hint>
-      <mat-error *ngIf="urlFormControl.hasError('pattern')">
-          Please enter a valid website address
-      </mat-error>
-    </mat-form-field>
+    <div>
+      <mat-form-field>
+        <input matInput type="email" required placeholder="E-Mail" #personalEmail [(ngModel)]="resume.email" [formControl]="emailFormControl"> <!-- Email -->
+        <mat-error *ngIf="emailFormControl.hasError('pattern')">
+            Please enter a valid email address
+        </mat-error>
+        <mat-error *ngIf="emailFormControl.hasError('required')">
+            Email is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <input matInput type="tel" placeholder="Phone Number" #personalPhone [(ngModel)]="resume.phone"> <!-- Phone Number -->
+        <mat-hint align="end">Optional</mat-hint>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <input matInput type="url" placeholder="Website" #personalWebsite [(ngModel)]="resume.url" [formControl]="urlFormControl"> <!-- Website -->
+        <mat-hint align="end">Optional</mat-hint>
+        <mat-error *ngIf="urlFormControl.hasError('pattern')">
+            Please enter a valid website address
+        </mat-error>
+      </mat-form-field>
+    </div>
     <mat-action-row>
       <button mat-button color="warn" (click)="prevStep()">Previous</button>
       <button mat-button color="primary" (click)="nextStep()">Next</button>
@@ -228,9 +246,6 @@
         <mat-icon *ngIf="skillInfoOK()">check</mat-icon>
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <button mat-icon-button color="accent">
-      <mat-icon area-lable="Save skill" (click)="save()">check</mat-icon>
-    </button>
     <div *ngIf="resume.skills.length !== 0" >
       <app-tree [skills]="resume.skills" [edit]="true" (updatedSkills)="skillsUpdated($event)"></app-tree>
     </div>
@@ -252,7 +267,6 @@
         What do you like?
       </mat-panel-description>
     </mat-expansion-panel-header>
-
     <div *ngFor="let i of resume.interests">
       <div>
         <mat-form-field>
@@ -284,25 +298,20 @@
       </mat-panel-title>
       <mat-panel-description>
         Who can recommend you?
-        <mat-icon *ngIf="!referenceInfoOK()">warning</mat-icon>
-        <mat-icon *ngIf="referenceInfoOK()">check</mat-icon>
-
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <button mat-icon-button color="accent">
-      <mat-icon area-lable="Save reference" (click)="save()">check</mat-icon>
-    </button>
     <div *ngFor="let r of resume.references">
       <div>
         <mat-form-field>
           <input matInput type="text" placeholder="Reference" [(ngModel)]="r.reference"> <!-- References -->
         </mat-form-field>
         <mat-form-field>
-          <input matInput type="text" placeholder="Employer" [(ngModel)]="r.name"> <!-- Employer -->
+          <input matInput type="text" placeholder="Employer" [(ngModel)]="r.company"> <!-- Employer -->
         </mat-form-field>
-        <button mat-icon-button color="warn">
-          <mat-icon area-lable="Delete reference" (click)="deleteReference(r)">delete</mat-icon>
-        </button>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Position" [(ngModel)]="r.position"> <!-- Employer -->
+        </mat-form-field>
+        <button mat-mini-fab color="warn" (click)="deleteReference(r)"><mat-icon>remove</mat-icon></button>
       </div>
     </div>
     <div>
@@ -312,17 +321,19 @@
       <mat-form-field>
         <input matInput type="text" placeholder="Employer" #employer> <!-- References -->
       </mat-form-field>
-      <button mat-icon-button color="accent">
-        <mat-icon aria-label="Add more references" (click)="addReference(reference, employer)">add_circle</mat-icon>
-      </button>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Position" #position> <!-- References -->
+      </mat-form-field>
+      <button mat-mini-fab color="accent" (click)="addReference(reference, employer, position)"><mat-icon>add</mat-icon></button>
     </div>
+    <button mat-raised-button color="accent" (click)="save()"><mat-icon>check</mat-icon> Save</button>
     <mat-action-row>
       <button mat-button color="warn" (click)="prevStep()">Previous</button>
       <button mat-button color="primary" (click)="nextStep()">Next</button>
     </mat-action-row>
   </mat-expansion-panel>
 
-  <!-- EVENTS (TIMELINE) -->
+  <!-- EVENTS (TIMELINE) WORK + EDUCATION ? -->
   <mat-expansion-panel [expanded]="step === 7" (opened)="setStep(7)" hideToggle="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -332,14 +343,8 @@
       </mat-panel-title>
       <mat-panel-description>
         What have you done?
-        <mat-icon *ngIf="!eventInfoOK()">warning</mat-icon>
-        <mat-icon *ngIf="eventInfoOK()">check</mat-icon>
-
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <button mat-icon-button color="accent">
-      <mat-icon area-lable="Save event" (click)="save()">check</mat-icon>
-    </button>
     <div *ngFor="let e of work">
       <div>
         <mat-form-field>
@@ -371,9 +376,7 @@
           <mat-datepicker-toggle matSuffix [for]="end_date"></mat-datepicker-toggle>
           <mat-datepicker #end_date></mat-datepicker>
         </mat-form-field>
-        <button mat-icon-button color="warn">
-          <mat-icon area-lable="Delete reference" (click)="deleteEvent(e)">delete</mat-icon>
-        </button>
+        <button mat-mini-fab color="warn" (click)="deleteEvent(e)" ><mat-icon>remove</mat-icon></button>
       </div>
     </div>
     <div>
@@ -436,6 +439,7 @@
     </mat-action-row>
   </mat-expansion-panel>
 
+  <!-- PUBLICATIONS -->
   <mat-expansion-panel [expanded]="step === 8" (opened)="setStep(8)" hideToggle="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -445,9 +449,6 @@
       </mat-panel-title>
       <mat-panel-description>
         What have you published?
-        <mat-icon *ngIf="!eventInfoOK()">warning</mat-icon>
-        <mat-icon *ngIf="eventInfoOK()">check</mat-icon>
-
       </mat-panel-description>
     </mat-expansion-panel-header>
 
@@ -456,6 +457,8 @@
       <button mat-button color="primary" (click)="nextStep()">End</button>
     </mat-action-row>
   </mat-expansion-panel>
+
+  <!--CERTIFICATES -->
   <mat-expansion-panel [expanded]="step === 8" (opened)="setStep(8)" hideToggle="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -465,18 +468,15 @@
       </mat-panel-title>
       <mat-panel-description>
         Show your certificates!
-        <mat-icon *ngIf="!eventInfoOK()">warning</mat-icon>
-        <mat-icon *ngIf="eventInfoOK()">check</mat-icon>
-
       </mat-panel-description>
     </mat-expansion-panel-header>
-
     <mat-action-row>
       <button mat-button color="warn" (click)="prevStep()">Previous</button>
       <button mat-button color="primary" (click)="nextStep()">End</button>
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
+
 <div>
   <mat-progress-spinner *ngIf="saving" color="white" mode="indeterminate"></mat-progress-spinner>
   <button mat-raised-button *ngIf="unsaved" (click)="save()" color="accent"><mat-icon>check</mat-icon> Save</button>

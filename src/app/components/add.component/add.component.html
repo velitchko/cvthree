@@ -23,19 +23,19 @@
     </div>
     <app-file-upload></app-file-upload>
     <mat-form-field>
-      <input matInput type="text" required placeholder="First Name" #firstName [formControl]="firstNameFormControl"> <!-- First Name -->
+      <input matInput type="text" required placeholder="First Name" #firstName [(ngModel)]="resume.firstName" [formControl]="firstNameFormControl"> <!-- First Name -->
       <mat-error *ngIf="firstNameFormControl.hasError('required')">
           Name is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="text" required placeholder="Last Name" #lastName [formControl]="lastNameFormControl"> <!-- Last Name -->
+      <input matInput type="text" required placeholder="Last Name" #lastName [(ngModel)]="resume.lastName" [formControl]="lastNameFormControl"> <!-- Last Name -->
       <mat-error *ngIf="lastNameFormControl.hasError('required')">
           Name is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput [matDatepicker]="birthday" required placeholder="Birthday" #birthDay [formControl]="birthdayFormControl"> <!-- Birthday -->
+      <input matInput [matDatepicker]="birthday" required placeholder="Birthday" #birthDay [(ngModel)]="resume.birthDay" [formControl]="birthdayFormControl"> <!-- Birthday -->
       <mat-error *ngIf="birthdayFormControl.hasError('required')">
           Birthday is <strong>required</strong>
       </mat-error>
@@ -43,35 +43,35 @@
       <mat-datepicker #birthday></mat-datepicker>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="text" required placeholder="Occupation" #generalOccupation [formControl]="occupationFormControl"> <!-- Occupation -->
+      <input matInput type="text" required placeholder="Occupation" #generalOccupation [(ngModel)]="resume.label" [formControl]="occupationFormControl"> <!-- Occupation -->
       <mat-error *ngIf="occupationFormControl.hasError('required')">
           Occupation is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="text" required placeholder="Address" #generalAddress [formControl]="generalAddressFormControl">
+      <input matInput type="text" required placeholder="Address" #generalAddress [(ngModel)]="resume.location.address" [formControl]="generalAddressFormControl">
       <mat-error *ngIf="generalAddressFormControl.hasError('required')">
           Address is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="number" placeholder="Postal code" #generalPostalcode>
+      <input matInput type="number" placeholder="Postal code" #generalPostalcode [(ngModel)]="resume.location.postalCode">
       <mat-hint align="end">Optional</mat-hint>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="text" required placeholder="City" #generalCity [formControl]="generalCityFormControl">
+      <input matInput type="text" required placeholder="City" #generalCity [formControl]="generalCityFormControl" [(ngModel)]="resume.location.city">
       <mat-error *ngIf="generalCityFormControl.hasError('required')">
           City is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="text" required placeholder="Country" #generalCountry [formControl]="generalCountryFormControl"> <!-- Location -->
+      <input matInput type="text" required placeholder="Country" #generalCountry [(ngModel)]="resume.location.country" [formControl]="generalCountryFormControl"> <!-- Location -->
       <mat-error *ngIf="generalCountryFormControl.hasError('required')">
           Country is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <textarea matInput placeholder="About me..." #generalAbout maxlength="500"></textarea> <!-- Summary -->
+      <textarea matInput placeholder="About me..." #generalAbout maxlength="500" [(ngModel)]="resume.summary"></textarea> <!-- Summary -->
       <mat-hint align="end">Optional {{ generalAbout.value.length }} / 500</mat-hint>
     </mat-form-field>
     <mat-action-row>
@@ -95,7 +95,7 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <mat-form-field>
-      <input matInput type="email" required placeholder="E-Mail" #personalEmail [formControl]="emailFormControl"> <!-- Email -->
+      <input matInput type="email" required placeholder="E-Mail" #personalEmail [(ngModel)]="resume.email" [formControl]="emailFormControl"> <!-- Email -->
       <mat-error *ngIf="emailFormControl.hasError('pattern')">
           Please enter a valid email address
       </mat-error>
@@ -104,11 +104,11 @@
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="tel" placeholder="Phone Number" #personalPhone> <!-- Phone Number -->
+      <input matInput type="tel" placeholder="Phone Number" #personalPhone [(ngModel)]="resume.phone"> <!-- Phone Number -->
       <mat-hint align="end">Optional</mat-hint>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="url" placeholder="Website" #personalWebsite [formControl]="urlFormControl"> <!-- Website -->
+      <input matInput type="url" placeholder="Website" #personalWebsite [formControl]="urlFormControl" [(ngModel)]="resume.url"> <!-- Website -->
       <mat-hint align="end">Optional</mat-hint>
       <mat-error *ngIf="urlFormControl.hasError('pattern')">
           Please enter a valid website address
@@ -254,14 +254,8 @@
         <mat-icon *ngIf="skillInfoOK()">check</mat-icon>
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <button *ngIf="!edit && resume.skills.length > 0" mat-icon-button color="accent">
-      <mat-icon area-lable="Edit skill" (click)="editMode()">edit</mat-icon>
-    </button>
-    <button *ngIf="edit" mat-icon-button color="accent">
-      <mat-icon area-lable="Save skill" (click)="save()">check</mat-icon>
-    </button>
-    <div *ngFor="let s of resume.skills">
-      <div *ngIf="!edit"> <!-- VIEW MODE -->
+    <!-- <div *ngFor="let s of resume.skills">
+      <div *ngIf="!edit">
         {{ s.name }} | {{ s.level }}
       </div>
       <div *ngIf="edit">
@@ -282,7 +276,7 @@
     </div>
     <div *ngIf="!edit">
       <mat-form-field>
-        <input matInput type="text" placeholder="Skill" #skill> <!-- Skills -->
+        <input matInput type="text" placeholder="Skill" #skill>
       </mat-form-field>
       <mat-form-field>
         <mat-select placeholder="Proficiency" #proficiency>
@@ -294,7 +288,8 @@
       <button mat-icon-button color="accent">
         <mat-icon aria-label="Add more skills" (click)="addSkill(skill, proficiency)">add_circle</mat-icon>
       </button>
-    </div>
+    </div> -->
+    <app-tree [edit]="true" (updatedSkills)="saveSkills($event)"></app-tree>
     <mat-action-row>
       <button mat-button color="warn" (click)="prevStep()">Previous</button>
       <button mat-button color="primary" (click)="nextStep()">Next</button>

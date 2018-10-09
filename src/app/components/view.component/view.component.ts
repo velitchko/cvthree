@@ -7,7 +7,7 @@ import { Work } from '../../models/work';
 import { Education } from '../../models/education';
 import { DatabaseServices } from '../../services/db.service';
 import { UtilServices } from '../../services/util.service';
-import { ActivatedRoute, Params  } from '@angular/router';
+import { ActivatedRoute, Params, Router  } from '@angular/router';
 import * as d3 from 'd3';
 
 @Component({
@@ -34,8 +34,8 @@ export class ViewComponent implements AfterViewInit {
   constructor(
     private db: DatabaseServices,
     private route: ActivatedRoute,
-    @Inject(PLATFORM_ID)
-    private platformId: Object,
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object,
     private util: UtilServices,
     private differs: KeyValueDiffers
   ) {
@@ -53,7 +53,7 @@ export class ViewComponent implements AfterViewInit {
 
   ngDoCheck(): void {
       const changes = this.resumeDiff.diff(this.resume);
-      if (changes) {
+      if (changes && isPlatformBrowser(this.platformId)) {
         this.clearSVGs();
         this.createLanguages(this.resume.languages);
         this.createSkills(this.resume.skills);
@@ -71,8 +71,12 @@ export class ViewComponent implements AfterViewInit {
     }
   }
 
+  edit(id: string): void {
+    this.router.navigate(['/edit', id]);
+  }
+
   clearSVGs(): void {
-    d3.selectAll('svg').remove();
+    if(isPlatformBrowser(this.platformId)) d3.selectAll('svg').remove();
   }
 
 
@@ -101,6 +105,11 @@ export class ViewComponent implements AfterViewInit {
   }
 
   createSunburst(skills: Array<Skill>): void {
+    if(skills.length === 0) return;
+    let skillData = {
+      name: 'Skills',
+      children: skills
+    };
     // possibly check data structure here
     // TODO add highlighting
     // Use opacity or saturation to distinguish expertise
@@ -168,8 +177,9 @@ export class ViewComponent implements AfterViewInit {
          .attr('width', 300)
          .attr('height', 300);
 
-    let root = d3.hierarchy(skills);
-    root.sum((d: any) => d.size);
+    let root = d3.hierarchy(skillData);
+  // /  console.log(root);
+    root.sum((d: any) => d.size || 1);
 
     let slice = svg.selectAll('g.slice')
                      .data(partition(root).descendants());
@@ -189,6 +199,8 @@ export class ViewComponent implements AfterViewInit {
     newSlice.append('path')
             .attr('class', 'main-arc')
             .style('fill', (d: any) => {
+              console.log((d.children ? d : d.parent).data.name);
+              console.log(color((d.children ? d : d.parent).data.name));
               return color((d.children ? d : d.parent).data.name);
             })
             .attr('d', <any>arc);

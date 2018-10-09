@@ -28,6 +28,7 @@
   display: inline;
   &:hover {
     .node-hover {
+      left: -40px;
       opacity: 1;
     }
   }

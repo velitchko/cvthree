@@ -30,7 +30,7 @@ export class FileDatabase {
 
   initialize() {
     // Parse the string to json object.
-
+    console.log('Initializing tree');
     // Build the tree nodes from Json object. The result is a list of `Skill` with nested
     //     file node as children.
     // console.log(this.convertToObject(this.skillData));
@@ -40,7 +40,7 @@ export class FileDatabase {
   }
 
   updateTree(): void {
-    this.initialize();
+    if(this.skillData) this.initialize();
   }
 
   /**
@@ -95,6 +95,7 @@ export class TreeComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    if(!this.skills) this.skills = new Array<Skill>();
     this.database.data = this.skills;
     this.database.initialize();
     this.database.dataChange.subscribe(data => this.nestedDataSource.data = data);
@@ -107,7 +108,7 @@ export class TreeComponent implements AfterViewInit {
 
   addNode(parent: Skill, newNodeName: any, newNodeLevel: any): void {
     let found = null;
-
+    if(!newNodeLevel) newNodeLevel = { value: 'BASIC '};
     this.skills.forEach((s) => {
       if(!found) found = this.findNode(s, parent.name);
     });
@@ -191,8 +192,8 @@ export class TreeComponent implements AfterViewInit {
     if(found) return found.skill.level;
 
   }
-  addCategory(nodeName: any, nodeLevel: any): void {
-    this.skills.push(new Skill(nodeName.value, nodeLevel.value));
+  addCategory(nodeName: any): void {
+    this.skills.push(new Skill(nodeName.value));
     this.database.updateTree();
   }
 
@@ -201,8 +202,3 @@ export class TreeComponent implements AfterViewInit {
     this.updatedSkills.emit(this.skills);
   }
 }
-
-
-/**  Copyright 2018 Google Inc. All Rights Reserved.
-    Use of this source code is governed by an MIT-style license that
-    can be found in the LICENSE file at http://angular.io/license */

@@ -19,6 +19,7 @@ import { LanguageLevel } from '../../lists/language.level';
 import { SkillLevel } from '../../lists/skill.level';
 import { DatabaseServices } from '../../services/db.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 // regex for input validation
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -211,8 +212,14 @@ export class EditComponent implements OnInit {
 
   }
 
+  updateProfilePicture($event): void {
+    this.resume.profilePicture = `${environment.API_PATH}${$event}`;
+    this.cd.detectChanges();
+  }
+
   clearPicture(): void {
-    this.resume.profilePicture = '';
+    this.resume.profilePicture = `${environment.API_PATH}uploads/default.jpg`;
+    this.cd.detectChanges();
   }
 
   addNetwork(url: any, handle: any) {
@@ -257,10 +264,18 @@ export class EditComponent implements OnInit {
     this.resume.interests.splice(idx, 1);
   }
 
-  addReference(reference: any, employer: any): void {
+  addReference(reference: any, employer: any, position: any): void {
     this.reference = new Reference();
 
+    this.reference.reference = reference.value;
+    this.reference.company = employer.value;
+    this.reference.position = position.value;
+    
     this.resume.references.push(this.reference);
+
+    reference.value = '';
+    employer.value = '';
+    position.value = '';
   }
 
   deleteReference(idx: any): void {

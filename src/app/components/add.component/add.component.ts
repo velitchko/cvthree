@@ -223,6 +223,12 @@ export class AddComponent  {
     this.resume.skills.splice(idx, 1);
   }
 
+  saveSkills($event: any): void {
+    console.log('skills saved');
+    console.log($event);
+    this.resume.skills = $event;
+  }
+
   addInterest(interest: any): void {
     this.interest = new Interest();
 
@@ -265,7 +271,10 @@ export class AddComponent  {
   // TODO refactor
   saveResume(): void {
     this.saving = true;
-
+    this.db.createResume(this.resume).then((success: any) => {
+      if(success.message === "OK") this.saving = false;
+      else console.log(success);
+    });
   }
 
   view(): void {

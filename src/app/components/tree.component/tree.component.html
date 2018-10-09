@@ -59,11 +59,11 @@
   <mat-form-field>
     <input matInput placeholder="Add new category" #newCatNode> 
   </mat-form-field>
-  <mat-form-field>
+  <!-- <mat-form-field>
     <mat-select placeholder="Level" #newCatLevel>
         <mat-option *ngFor="let ll of levels()" [value]="ll">{{ ll }}</mat-option>
     </mat-select>
-  </mat-form-field>
-  <button mat-raised-button color="primary" (click)="addCategory(newCatNode, newCatLevel)"><mat-icon>add</mat-icon> Add Category</button>
+  </mat-form-field> -->
+  <button mat-raised-button color="primary" (click)="addCategory(newCatNode)"><mat-icon>add</mat-icon> Add Category</button>
 </div>
 <button mat-raised-button (click)="saveSkills()" color="accent">Save</button>
