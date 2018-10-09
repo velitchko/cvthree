@@ -1,16 +1,16 @@
 /* GENERAL STYLES */
-* {
+::ng-deep * {
  font-family: 'Roboto', sans-serif;
 }
 
-body {
+::ng-deep body {
     display: flex;
     /*min-height: 100vh;*/
     flex-direction: column;
-    background-color: #f0f3f9;
+    background-color: #fafafa;
 }
 
-a {
+::ng-deep a {
   color: #00d1b2;
   text-decoration: none;
 
