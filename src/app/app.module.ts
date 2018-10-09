@@ -14,7 +14,10 @@ import { EditComponent } from './components/edit.component/edit.component';
 import { CompareComponent } from './components/compare.component/compare.component';
 import { TreeComponent } from './components/tree.component/tree.component';
 import { FileUploadComponent } from './components/file.upload.component/file.upload.component';
+import { SearchComponent } from './components/search.component/search.component';
+import { ScatterPlotComponent } from './components/scatterplot.component/scatterplot.component';
 // SERVICES
+import { CompareService } from './services/compare.service';
 import { DatabaseServices } from './services/db.service';
 import { UtilServices } from './services/util.service';
 // PIPES
@@ -119,9 +122,12 @@ export const APP_ID = 'cvthree';
     EditComponent,
     CompareComponent,
     TreeComponent,
-    FileUploadComponent
+    FileUploadComponent,
+    SearchComponent,
+    ScatterPlotComponent
   ],
   providers: [
+    CompareService,
     DatabaseServices,
     UtilServices,
     {provide: MAT_DATE_LOCALE, useValue: 'en-GB'}, // Locale for datepicker
