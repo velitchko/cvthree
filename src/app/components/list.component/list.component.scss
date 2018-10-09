@@ -12,12 +12,22 @@
   bottom: 4em;
 }
 
+::ng-deep .resume-drawer {
+  position: fixed !important ;
+  width: 200px;
+}
+
+::ng-deep .fixed-button {
+  position: fixed !important;
+}
+
 .search {
   display: flex;
   flex-direction: row;
   flex: 0 1 auto;
   align-items: center;
   justify-content: center;
+  padding-top: 1em;
 }
 
 .list-wrapper {
@@ -62,6 +72,15 @@
     }
 }
 
+::ng-deep .scatter-plot {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  flex: 0 1 auto;
+  align-content: center;
+  justify-content: center;
+}
+
 .selected {
   border: 2px solid #00d1b2 !important;
   background-color: rgba(0, 209, 178, 0.2)
@@ -71,6 +90,7 @@
 }
 
 .list-entry {
+  padding-top: 1em;
   margin-bottom: 1em;
   width: 20em;
   height: 18em;
@@ -78,7 +98,7 @@
 
 .mat-card {
   border: 2px solid transparent;
-  padding-top: 0em;
+  // padding-top: 0em;
   // overflow: hidden;
 }
 

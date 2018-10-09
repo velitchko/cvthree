@@ -1,0 +1,28 @@
+<div *ngFor="let q of queries; let idx = index">
+    <mat-form-field>
+        <input matInput placeholder="Skill" [(ngModel)]="q.searchSkill">
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-select placeholder="Level" [(ngModel)]="q.searchLevel">
+            <mat-option *ngFor="let l of levels()"[value]='l'>{{ l }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <button mat-mini-fab color="warn" (click)="removeQuery(idx)"><mat-icon>clear</mat-icon></button>
+</div>
+
+<mat-form-field>
+    <input matInput placeholder="Skill" #searchSkill>
+</mat-form-field>
+
+<mat-form-field>
+    <mat-select placeholder="Level" #searchLevel>
+        <mat-option *ngFor="let l of levels()" [value]='l'>{{ l }}</mat-option>
+    </mat-select>
+</mat-form-field>
+
+<div class="action-buttons">
+    <button mat-raised-button color="primary" (click)="addQuery(searchSkill, searchLevel)"><mat-icon>add</mat-icon> Add skill</button>
+    <button mat-raised-button color="primary" (click)="submit()"><mat-icon>search</mat-icon> Search</button>
+</div>
