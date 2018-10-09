@@ -1,8 +1,8 @@
 <div *ngIf="uploading">
-  <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+  <mat-progress-spinner [diameter]="250" class="filedrop-loader" color="primary" mode="indeterminate"></mat-progress-spinner>
 </div>
-<div *ngIf="!uploading">
-  <file-drop headertext="Drop files here" (onFileDrop)="dropped($event)"
+<div *ngIf="!uploading" class="filedrop-wrapper">
+  <file-drop (onFileDrop)="dropped($event)"
   (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)" customstyle="filedrop">
   </file-drop>
 <!--  <div class="upload-table">

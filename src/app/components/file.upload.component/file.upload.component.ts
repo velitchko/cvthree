@@ -41,25 +41,27 @@ export class FileUploadComponent {
            this.http.post(`${environment.API_PATH}uploads`, formData)
            .subscribe( (success: any) => {
              // Sanitized logo returned from backend
-             this.uploading = false;
-             this.uploadedFilePaths.emit(success.path);
-             this.cd.detectChanges();
+            setTimeout(() => {
+              this.uploading = false;
+              this.uploadedFilePaths.emit(success.path);
+              this.cd.detectChanges();
+            }, 2500);
            });
          });
        } else {
          // It was a directory (empty directories are added, otherwise only files)
          const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
-         console.log(droppedFile.relativePath, fileEntry);
+        //  console.log(droppedFile.relativePath, fileEntry);
        }
      }
    }
 
 
   public fileOver(event: any): void {
-    console.log(event);
+    // console.log(event);
   }
 
   public fileLeave(event: any): void {
-    console.log(event);
+    // console.log(event);
   }
 }
