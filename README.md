@@ -9,6 +9,15 @@ v1.0.0 - Angular 2
 
 run `npm install`
 
+## Database Setup
+Go to `https://www.mongodb.com/` download and setup MongoDB.
+
+## Import Database
+With administrator open a command line interface navigate to where MongoDB is installed and execute the following command:
+`mongorestore --db cvthree db_dump/cvthree`
+
+This should create and import all records from the database dump.
+
 ## Running the application
 
 run `npm run dev` 
