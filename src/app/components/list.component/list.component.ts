@@ -2,7 +2,6 @@ import { Component, ViewChild, ElementRef  } from '@angular/core';
 import { DatabaseServices } from '../../services/db.service';
 import { Resume } from '../../models/resume';
 import { Router } from '@angular/router';
-import { DomSanitizer } from '@angular/platform-browser';
 import { UtilServices } from '../../services/util.service';
 import { CompareService } from '../../services/compare.service';
 @Component({
@@ -22,8 +21,7 @@ export class ListComponent  {
     private cs: CompareService,
     private db: DatabaseServices,
     private util: UtilServices,
-    private router: Router,
-    private sanitization: DomSanitizer) {
+    private router: Router) {
     this.resumes = new Array<Resume>();
     this.scatterPlotPoints = new Array<any>();
     this.db.getAllResumes().then((success: any) => {
@@ -39,6 +37,10 @@ export class ListComponent  {
   add(idx: number): void {
     this.resumes[idx].selected = true;
     this.cs.addResume(this.resumes[idx]);
+  }
+
+  getSanitizedPicture(picture: string): any {
+    return this.util.getSanitizedPicture(picture);
   }
 
   selectResumes($event: any): void {
@@ -75,10 +77,6 @@ export class ListComponent  {
 
   compareResumes(): void {
     this.router.navigate(['/compare']);
-  }
-
-  getSanitizedPicture(picture) {
-    return this.sanitization.bypassSecurityTrustStyle(`url(${picture})`);
   }
 
   scrollDown(): void {
