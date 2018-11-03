@@ -17,6 +17,8 @@ export class CompareComponent  {
   mapData: Array<any>;
   skillMap: Map<string, Array<any>>;
   resumes: Array<Resume>;
+  matchedSkills: number;
+
   constructor(
     private cs: CompareService,
     private util: UtilServices
@@ -105,12 +107,17 @@ export class CompareComponent  {
   }
   getMapData(): void {}
   getSkillData(): void {
+    this.skillData = new Array<any>();
+    this.skillMap = new Map<string, Array<any>>();
+
     this.cs.getResumes().forEach((r: Resume) => {
       r.skills.forEach((s: Skill) => {
         this.peopleWithSkill(s, r);
       });
     });
+    
     let uniqueSkills = new Map<string, any>();
+    
     this.skillMap.forEach((v, k) => {
       v.forEach((e: any) => {
         if(!uniqueSkills.has(e.skill)) {
@@ -120,6 +127,7 @@ export class CompareComponent  {
         }
       });
     });
+
     this.skillMap.forEach((v, k) => {
       let arr = new Array<any>();
       v.forEach((e: any) => {
@@ -136,8 +144,11 @@ export class CompareComponent  {
           });
         }
       });
+
       if(arr.length > 0) this.skillData.push(arr);
     });
+
+    this.matchedSkills = this.skillData[0].length;
   }
 
   peopleWithSkill(currentNode, resume): void {
@@ -174,5 +185,10 @@ export class CompareComponent  {
     }
   }
 
+  remove(idx: number): void {
+    this.cs.removeResume(this.resumes[idx].id);
+    this.getSkillData();
+
+  }
 
 }

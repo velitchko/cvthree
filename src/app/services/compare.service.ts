@@ -23,7 +23,6 @@ export class CompareService {
         this.resumes.forEach((r: Resume, idx: number) => {
             this.assignedColors.set(r.id, this.colors[idx]);
         });
-        console.log(this.assignedColors);
     }
 
     getColorForResume(id: string): string {
@@ -32,8 +31,6 @@ export class CompareService {
 
     addResume(resume: Resume): void {
         if(this.resumes.includes(resume)) return;
-        console.log('adding resume');
-        console.log(resume);
         this.resumes.push(resume);
         this.setupColors();
     }
@@ -48,7 +45,6 @@ export class CompareService {
 
     removeResume(id: string): void {
         let idx = this.resumes.map((r: Resume) => { return r.id; }).indexOf(id);
-        console.log(idx);
         if(idx < 0) return;
         this.resumes.splice(idx,1);
     }

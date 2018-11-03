@@ -40,7 +40,6 @@ export class ScatterPlotComponent implements AfterViewInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        console.log(this.points);
         if(!changes.points.firstChange) {
             if (isPlatformBrowser(this.platformId)) {
                 this.clearScatterPlot();
@@ -52,7 +51,6 @@ export class ScatterPlotComponent implements AfterViewInit, OnChanges {
 
 
     clearScatterPlot(): void {
-        console.log(this.svg.selectAll('*'));
         this.svg.selectAll('*').remove();
         d3.select('svg').remove();
     }

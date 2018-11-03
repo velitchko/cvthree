@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef, AfterViewInit  } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges  } from '@angular/core';
 import { DatabaseServices } from '../../services/db.service';
 import { Resume } from '../../models/resume';
 import { Router } from '@angular/router';
@@ -14,22 +14,26 @@ import * as d3 from 'd3';
   styleUrls: ['radarchart.component.scss']
 })
 
-export class RadarChartComponent implements AfterViewInit {
+export class RadarChartComponent implements OnChanges {
     @Input() data: any;
+    private config = {
+      w: 600,
+      h: 600,
+      maxValue: 100,
+      levels: 5,
+      ExtraWidthX: 100
+    };
     constructor(private cs: CompareService) {
      
     }
-    ngAfterViewInit(): void {
-        let config = {
-            w: 600,
-            h: 600,
-            maxValue: 100,
-            levels: 5,
-            ExtraWidthX: 100
-        }
+    ngOnChanges(changes: SimpleChanges): void {
+      if(changes) {
+        console.log('changes');
+        console.log(changes);
         if(this.data) {
-            this.drawRadarChart('#chart', this.data, config);
+          this.drawRadarChart('#chart', this.data, this.config);
         }
+      }
     }
 
     getSkillAsText(level: number): string {
@@ -37,6 +41,7 @@ export class RadarChartComponent implements AfterViewInit {
     }
 
     drawRadarChart(id: string, d: any, options: any): void {
+        console.log('redraw');
         let initialData = d;
         let cfg = {
          radius: 0,
@@ -68,48 +73,48 @@ export class RadarChartComponent implements AfterViewInit {
         let allAxis = d[0].map((i, j) => { return i.area; });
         let total = allAxis.length;
     
-        d3.select(id).select("svg").remove();
+        d3.select(id).select('svg').remove();
     
         let g = d3.select(id)
-            .append("svg")
-            .attr("width", cfg.w+cfg.ExtraWidthX)
-            .attr("height", cfg.h+cfg.ExtraWidthY)
-            .append("g")
-            .attr("transform", "translate(" + cfg.TranslateX + "," + cfg.TranslateY + ")");
+            .append('svg')
+            .attr('width', cfg.w+cfg.ExtraWidthX)
+            .attr('height', cfg.h+cfg.ExtraWidthY)
+            .append('g')
+            .attr('transform', 'translate(' + cfg.TranslateX + ',' + cfg.TranslateY + ')');
     
         let series = 0;
     
-        let axis = g.selectAll(".axis")
+        let axis = g.selectAll('.axis')
             .data(allAxis)
             .enter()
-            .append("g")
-            .attr("class", "axis");
+            .append('g')
+            .attr('class', 'axis');
         
-        axis.append("line")
-          .attr("x1", cfg.w/2)
-          .attr("y1", cfg.h/2)
-          .attr("x2", (d, i) => { return cfg.w/2*(1-cfg.factor*Math.sin(i*cfg.radians/total)); })
-          .attr("y2", (d, i) => { return cfg.h/2*(1-cfg.factor*Math.cos(i*cfg.radians/total)); })
-          .attr("class", "line")
-          .style("stroke", "black")
-          .style("stroke-width", "2px");
+        axis.append('line')
+          .attr('x1', cfg.w/2)
+          .attr('y1', cfg.h/2)
+          .attr('x2', (d, i) => { return cfg.w/2*(1-cfg.factor*Math.sin(i*cfg.radians/total)); })
+          .attr('y2', (d, i) => { return cfg.h/2*(1-cfg.factor*Math.cos(i*cfg.radians/total)); })
+          .attr('class', 'line')
+          .style('stroke', 'black')
+          .style('stroke-width', '2px');
         
     
-        axis.append("text")
-          .attr("class", "legend")
+        axis.append('text')
+          .attr('class', 'legend')
           .text((d: any) => { return d; })
-          .style("font-family", "sans-serif")
-          .style("font-size", "11px")
-          .attr("text-anchor", "middle")
-          .attr("dy", "1.5em")
-          .attr("transform", (d, i) => { return "translate(0, -10)"; })
-          .attr("x", (d, i) => { return cfg.w/2*(1-cfg.factorLegend*Math.sin(i*cfg.radians/total))-60*Math.sin(i*cfg.radians/total); })
-          .attr("y", (d, i) => { return cfg.h/2*(1-Math.cos(i*cfg.radians/total))-20*Math.cos(i*cfg.radians/total); });
+          .style('font-family', 'sans-serif')
+          .style('font-size', '11px')
+          .attr('text-anchor', 'middle')
+          .attr('dy', '1.5em')
+          .attr('transform', (d, i) => { return 'translate(0, -10)'; })
+          .attr('x', (d, i) => { return cfg.w/2*(1-cfg.factorLegend*Math.sin(i*cfg.radians/total))-60*Math.sin(i*cfg.radians/total); })
+          .attr('y', (d, i) => { return cfg.h/2*(1-Math.cos(i*cfg.radians/total))-20*Math.cos(i*cfg.radians/total); });
     
      
         d.forEach((y, x) => {
           let dataValues = [];
-          g.selectAll(".nodes")
+          g.selectAll('.nodes')
            .data(y, (j: any, i: any): any => {
             // console.log(j, i);
             let value = (j.value - j.minValue) / (j.maxValue - j.minValue) * 100;
@@ -119,60 +124,60 @@ export class RadarChartComponent implements AfterViewInit {
             ]);
           });
           dataValues.push(dataValues[0]);
-          g.selectAll(".area")
+          g.selectAll('.area')
                  .data([dataValues])
                  .enter()
-                 .append("polygon")
-                 .attr("class", "radar-chart-serie" + series)
-                 .style("stroke-width", "2px")
-                 .style("stroke", () => { 
+                 .append('polygon')
+                 .attr('class', 'radar-chart-serie' + series)
+                 .style('stroke-width', '2px')
+                 .style('stroke', () => { 
                      console.log(y[0]);
                      console.log(this.cs.getColorForResume(y[0].resumeID));
                      return this.cs.getColorForResume(y[0].resumeID);
                     //  return this.cs.getColorForResume(); 
                     })
-                 .attr("points",(d) => {
-                   let str = "";
+                 .attr('points',(d) => {
+                   let str = '';
                    for(let pti = 0; pti < d.length; pti++){
-                     str = str + d[pti][0] + "," + d[pti][1] + " ";
+                     str = str + d[pti][0] + ',' + d[pti][1] + ' ';
                    }
                    return str;
                   })
-                 .style("fill", () => { return this.cs.getColorForResume(y[0].resumeID); })
-                 .style("fill-opacity", cfg.opacityArea)
+                 .style('fill', () => { return this.cs.getColorForResume(y[0].resumeID); })
+                 .style('fill-opacity', cfg.opacityArea)
                  .on('mouseover', function() {
-                          let z = "polygon." + d3.select(this).attr("class");
-                          g.selectAll("polygon")
+                          let z = 'polygon.' + d3.select(this).attr('class');
+                          g.selectAll('polygon')
                            .transition()
-                           .style("fill-opacity", 0.1); 
+                           .style('fill-opacity', 0.1); 
                           g.selectAll(z)
                            .transition()
-                           .style("fill-opacity", .7);
+                           .style('fill-opacity', .7);
                           })
                  .on('mouseout', () => {
-                          g.selectAll("polygon")
+                          g.selectAll('polygon')
                            .transition()
-                           .style("fill-opacity", cfg.opacityArea);
+                           .style('fill-opacity', cfg.opacityArea);
                  });
           series++;
         });
         series = 0;
         
-        let axis2 = g.selectAll(".axis2")
+        let axis2 = g.selectAll('.axis2')
             .data(allAxis)
             .enter()
-            .append("g")
-            .attr("class", "axis2");
+            .append('g')
+            .attr('class', 'axis2');
     
-    let tooltip = d3.select("body").append("div").attr("class", "toolTip");
-        axis2.append("line")
-          .attr("x1", cfg.w/2)
-          .attr("y1", cfg.h/2)
-          .attr("x2", (d, i) => { return cfg.w/2*(1-cfg.factor*Math.sin(i*cfg.radians/total)); })
-          .attr("y2", (d, i) => { return cfg.h/2*(1-cfg.factor*Math.cos(i*cfg.radians/total)); })
-          .attr("class", "line")
-          .style("stroke", "transparent")
-          .style("stroke-width", "10px")
+    let tooltip = d3.select('body').append('div').attr('class', 'toolTip');
+        axis2.append('line')
+          .attr('x1', cfg.w/2)
+          .attr('y1', cfg.h/2)
+          .attr('x2', (d, i) => { return cfg.w/2*(1-cfg.factor*Math.sin(i*cfg.radians/total)); })
+          .attr('y2', (d, i) => { return cfg.h/2*(1-cfg.factor*Math.cos(i*cfg.radians/total)); })
+          .attr('class', 'line')
+          .style('stroke', 'transparent')
+          .style('stroke-width', '10px')
         .on('mouseover', (d) => {
           let html = '<div>';
               for(let i = 0; i < initialData.length; i++){
@@ -186,12 +191,12 @@ export class RadarChartComponent implements AfterViewInit {
             }
               html += '</div>';
                 tooltip
-                  .style("left", d3.event.pageX - 80 + "px")
-                  .style("top", d3.event.pageY - 80 + "px")
-                  .style("display", "inline-block")
+                  .style('left', d3.event.pageX - 80 + 'px')
+                  .style('top', d3.event.pageY - 80 + 'px')
+                  .style('display', 'inline-block')
                   .html(html);
                 })
-            .on("mouseout", (d) => { tooltip.style("display", "none");});
+            .on('mouseout', (d) => { tooltip.style('display', 'none');});
     
         }
 }

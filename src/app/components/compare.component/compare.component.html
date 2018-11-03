@@ -3,7 +3,7 @@
 </div>
 <div *ngIf="resumes.length > 0">
     <div class="cards-compare">
-        <mat-card *ngFor="let r of resumes" [style.border-color]="getColor(r.id)">
+        <mat-card *ngFor="let r of resumes; let idx = index" [style.border-color]="getColor(r.id)">
             <button mat-icon-button (click)="remove(idx)" class="button-top-right" [style.color]="getColor(r.id)"><mat-icon>clear</mat-icon></button>
             <mat-card-header>
                 <div class="list-entry-avatar" mat-card-avatar [style.border-color]="getColor(r.id)" [style.backgroundImage]="getSanitizedPicture(r.profilePicture)" (click)="view(idx)">
@@ -20,7 +20,15 @@
         </mat-card>
     </div>
     <div class="skill-compare">
-        <app-radarchart [data]="skillData"></app-radarchart>
+        <div *ngIf="matchedSkills === 1">
+            line chart
+        </div>
+        <div *ngIf="matchedSkills === 2">
+            scatter plot
+        </div>
+        <div *ngIf="matchedSkills >= 3">        
+            <app-radarchart [data]="skillData"></app-radarchart>
+        </div>
     </div>
     <div class="language-compare">
 

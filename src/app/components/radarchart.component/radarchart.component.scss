@@ -16,11 +16,8 @@
 }
 
 ::ng-deep #chart svg {
-    position: absolute;
     top: 0;
-    width: 100%;
     left: 0;
-    height: 100%
 }
 
 ::ng-deep .toolTip {
