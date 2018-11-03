@@ -23,9 +23,6 @@ This should create and import all records from the database dump.
 run `npm run dev` 
 the application should be available at `http://localhost:8000`
 
-## Database 
-This project uses MongoDB (locally installed)
-
 ## About
 
 Interactive exploration environment for comparing multiple CVs.
