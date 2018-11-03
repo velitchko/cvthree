@@ -77,7 +77,8 @@ let ResumeSchema = new mongoose.Schema({
   skills: [{
     name: String,
     level: String,
-    children: [] // TODO create skill schema and nest somehow
+    experience: Number,
+    children: []
   }],
   languages: [{
     name: String,
@@ -88,7 +89,7 @@ let ResumeSchema = new mongoose.Schema({
     keywords: [String]
   }],
   references: [{
-    name: String,
+    // name: String,
     company: String,
     position: String,
     reference: String
@@ -110,8 +111,9 @@ let ResumeSchema = new mongoose.Schema({
 // make all text fields indexable
 ResumeSchema.index({'$**': 'text'});
 
-function setSkillSizes(skills: any): void {
+function setSkillSizes(skills: any[]): void {
   skills.forEach((s: any) => {
+    console.log(s);
     if(s.children) setSkillSizes(s);
     else s.size = 1;
   });
@@ -120,45 +122,44 @@ function setSkillSizes(skills: any): void {
 // set dates - geocode things pre save
 ResumeSchema.pre('save', function(next) {
   let _self: any = this;
-  let promiseArr = new Array<Promise<any>>();
+//  let promiseArr = new Array<Promise<any>>();
   setSkillSizes(_self.skills);
-  console.log(_self.skills);
-  _self.work.forEach((w: any) => {
-    // geocode location
-    let address = `${w.address} ${w.postalCode} ${w.city} ${w.country}`;
-    let options = {
-      method: 'GET',
-      url: 'https://maps.googleapis.com/maps/api/geocode/json',
-      qs: {
-        address: address,
-        key: environment.GMAPS_API_KEY
-      }
-    };
+  // _self.work.forEach((w: any) => {
+  //   // geocode location
+  //   let address = `${w.address} ${w.postalCode} ${w.city} ${w.country}`;
+  //   let options = {
+  //     method: 'GET',
+  //     url: 'https://maps.googleapis.com/maps/api/geocode/json',
+  //     qs: {
+  //       address: address,
+  //       key: environment.GMAPS_API_KEY
+  //     }
+  //   };
+  //
+  //   promiseArr.push(new Promise<any>((resolve, reject) => {
+  //     request(options).then((response: any) => {
+  //     // check if everything is aite
+  //     // save coords
+  //     // do a resolve
+  //     let coords = JSON.parse(response).results[0].geometry.location;
+  //     w.location.lat = +coords.lat;
+  //     w.location.lng = +coords.lng;
+  //     resolve(w);
+  //   })
+  //   }));
+  // });
 
-    promiseArr.push(new Promise<any>((resolve, reject) => {
-      request(options).then((response: any) => {
-      // check if everything is aite
-      // save coords
-      // do a resolve
-      let coords = JSON.parse(response).results[0].geometry.location;
-      w.location.lat = +coords.lat;
-      w.location.lng = +coords.lng;
-      resolve(w);
-    })
-    }));
-  });
 
-
-  // once everything resolves rewrite work array and save
-  Promise.all(promiseArr).then((success) => {
-    console.log('all promises resolved');
+  // // once everything resolves rewrite work array and save
+  // Promise.all(promiseArr).then((success) => {
+  //   console.log('all promises resolved');
     //console.log(success);
     next();
-  }).catch((err) => {
-    console.log('ERROR');
-    console.log(err);
-    return;
-  })
+  // }).catch((err) => {
+  //   console.log('ERROR');
+  //   console.log(err);
+  //   return;
+  // })
 });
 
 let Resume = mongoose.model('Resumes', ResumeSchema);
