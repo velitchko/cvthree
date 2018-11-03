@@ -4,4 +4,5 @@ export class Project {
   endDate: Date;
   url: string;
   summary: string;
+  // TODO: add location?
 }
