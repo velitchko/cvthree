@@ -13,7 +13,7 @@ import { SkillLevel } from '../../lists/skill.level';
  */
 
 @Injectable()
-export class FileDatabase {
+export class FileDatabase implements AfterViewInit {
   skillData: Skill[];
   dataChange = new BehaviorSubject<Skill[]>([]);
   
@@ -24,16 +24,17 @@ export class FileDatabase {
   set data(skills: Skill[]) { this.skillData = skills; }
 
   constructor() {
+  }
+
+  ngAfterViewInit(): void {
     if(this.skillData) this.initialize();
   }
 
-
-  initialize() {
+  initialize(): void {
+    // if(!this.skillData) this.skillData = new Array<Skill>();
     // Parse the string to json object.
-    console.log('Initializing tree');
     // Build the tree nodes from Json object. The result is a list of `Skill` with nested
     //     file node as children.
-    // console.log(this.convertToObject(this.skillData));
     this._DATA = this.buildFileTree(this.skillData, 0); //JSON.parse(TREE_DATA)
     // Notify the change.
     this.dataChange.next(this._DATA);
@@ -113,8 +114,7 @@ export class TreeComponent implements AfterViewInit {
       if(!found) found = this.findNode(s, parent.name);
     });
 
-    if(found) found.skill.children.push(new Skill(newNodeName.value, newNodeLevel.value, 0));
-
+    if(found) found.skill.children.push(new Skill(newNodeName.value, newNodeLevel.value, 0))
     this.database.updateTree();
   }
 
@@ -188,12 +188,13 @@ export class TreeComponent implements AfterViewInit {
     this.skills.forEach((s) => {
       if(!found) found = this.findNode(s, node.name);
     });
-    console.log(`found ${node.name} : ${found.skill.level}`);
     if(found) return found.skill.level;
 
   }
   addCategory(nodeName: any): void {
     this.skills.push(new Skill(nodeName.value));
+    this.database.data = this.skills;
+    nodeName.value = '';
     this.database.updateTree();
   }
 
