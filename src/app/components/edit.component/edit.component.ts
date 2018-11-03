@@ -1,5 +1,5 @@
 // angular
-import { Component, OnInit, KeyValueChanges, KeyValueDiffer, KeyValueDiffers, ChangeDetectorRef, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, KeyValueChanges, KeyValueDiffer, KeyValueDiffers, ChangeDetectorRef, Inject, PLATFORM_ID, AfterViewInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { Resume } from '../../models/resume';
@@ -128,21 +128,22 @@ export class EditComponent implements OnInit {
     private differs: KeyValueDiffers,
     private router: Router,
     private route: ActivatedRoute) {
-    this.resume = new Resume();
-    this.route.params.subscribe( (param: Params) => {
-      this.selectedId = param['id'];
-      this.db.getResume(this.selectedId).then((success: any) => {
-        this.resume = success;
+      this.route.params.subscribe( (param: Params) => {
+        this.selectedId = param['id'];
+        this.db.getResume(this.selectedId).then((success: any) => {
+          this.resume = success;
+          this.resumeDiff = this.differs.find(this.resume).create();
+        });
       });
-    });
   }
 
   ngOnInit(): void {
-    this.resumeDiff = this.differs.find(this.resume).create();
+    
   }
 
   
   ngDoCheck(): void {
+    if(!this.resumeDiff) return;
     const changes = this.resumeDiff.diff(this.resume);
     if (changes) {
       this.resumeChanged(changes);
@@ -298,6 +299,7 @@ export class EditComponent implements OnInit {
 
   skillsUpdated($event: any): void {
     this.resume.skills = $event;
+    console.log(this.resume.skills);
   }
 
   deleteEvent(idx: any): void {

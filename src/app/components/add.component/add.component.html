@@ -15,43 +15,51 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <!-- PICTURE -->
-    <div *ngIf="resume.profilePicture">
-      <img [src]="resume.profilePicture">
-      <button mat-mini-fab color="warn" (click)="clearPicture()">
-        <mat-icon>clear</mat-icon>
-      </button>
-    </div>
-    <app-file-upload></app-file-upload>
+    <div class="general-wrapper">
+        <div class="profile-picture general-column one" matTooltip="Drag and drop a picture to upload." matTooltipPosition="above">
+            <img [src]="resume.profilePicture">
+            <button class="clear-profile-picture" mat-mini-fab color="warn" matTooltip="Remove" (click)="clearPicture()">
+              <mat-icon>clear</mat-icon>
+            </button>
+            <app-file-upload class="profile-picture-overlay" (uploadedFilePaths)="updateProfilePicture($event)"></app-file-upload>
+          </div>
+    
+          <div class="general-column two">
     <mat-form-field>
-      <input matInput type="text" required placeholder="First Name" #firstName [(ngModel)]="resume.firstName" [formControl]="firstNameFormControl"> <!-- First Name -->
+      <input matInput type="text" required placeholder="First Name" #firstName [(ngModel)]="resume.firstName"
+        [formControl]="firstNameFormControl"> <!-- First Name -->
       <mat-error *ngIf="firstNameFormControl.hasError('required')">
-          Name is <strong>required</strong>
+        Name is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="text" required placeholder="Last Name" #lastName [(ngModel)]="resume.lastName" [formControl]="lastNameFormControl"> <!-- Last Name -->
+      <input matInput type="text" required placeholder="Last Name" #lastName [(ngModel)]="resume.lastName"
+        [formControl]="lastNameFormControl"> <!-- Last Name -->
       <mat-error *ngIf="lastNameFormControl.hasError('required')">
-          Name is <strong>required</strong>
+        Name is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput [matDatepicker]="birthday" required placeholder="Birthday" #birthDay [(ngModel)]="resume.birthDay" [formControl]="birthdayFormControl"> <!-- Birthday -->
+      <input matInput [matDatepicker]="birthday" required placeholder="Birthday" #birthDay [(ngModel)]="resume.birthDay"
+        [formControl]="birthdayFormControl"> <!-- Birthday -->
       <mat-error *ngIf="birthdayFormControl.hasError('required')">
-          Birthday is <strong>required</strong>
+        Birthday is <strong>required</strong>
       </mat-error>
       <mat-datepicker-toggle matSuffix [for]="birthday"></mat-datepicker-toggle>
       <mat-datepicker #birthday></mat-datepicker>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="text" required placeholder="Occupation" #generalOccupation [(ngModel)]="resume.label" [formControl]="occupationFormControl"> <!-- Occupation -->
+      <input matInput type="text" required placeholder="Occupation" #generalOccupation [(ngModel)]="resume.label"
+        [formControl]="occupationFormControl"> <!-- Occupation -->
       <mat-error *ngIf="occupationFormControl.hasError('required')">
-          Occupation is <strong>required</strong>
+        Occupation is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="text" required placeholder="Address" #generalAddress [(ngModel)]="resume.location.address" [formControl]="generalAddressFormControl">
+      <input matInput type="text" required placeholder="Address" #generalAddress [(ngModel)]="resume.location.address"
+        [formControl]="generalAddressFormControl">
       <mat-error *ngIf="generalAddressFormControl.hasError('required')">
-          Address is <strong>required</strong>
+        Address is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field>
@@ -59,21 +67,26 @@
       <mat-hint align="end">Optional</mat-hint>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="text" required placeholder="City" #generalCity [formControl]="generalCityFormControl" [(ngModel)]="resume.location.city">
+      <input matInput type="text" required placeholder="City" #generalCity [formControl]="generalCityFormControl"
+        [(ngModel)]="resume.location.city">
       <mat-error *ngIf="generalCityFormControl.hasError('required')">
-          City is <strong>required</strong>
+        City is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="text" required placeholder="Country" #generalCountry [(ngModel)]="resume.location.country" [formControl]="generalCountryFormControl"> <!-- Location -->
+      <input matInput type="text" required placeholder="Country" #generalCountry [(ngModel)]="resume.location.country"
+        [formControl]="generalCountryFormControl"> <!-- Location -->
       <mat-error *ngIf="generalCountryFormControl.hasError('required')">
-          Country is <strong>required</strong>
+        Country is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <textarea matInput placeholder="About me..." #generalAbout maxlength="500" [(ngModel)]="resume.summary"></textarea> <!-- Summary -->
+      <textarea matInput placeholder="About me..." #generalAbout maxlength="500" [(ngModel)]="resume.summary"></textarea>
+      <!-- Summary -->
       <mat-hint align="end">Optional {{ generalAbout.value.length }} / 500</mat-hint>
     </mat-form-field>
+    </div>
+    </div>
     <mat-action-row>
       <button mat-button color="primary" (click)="nextStep()">Next</button>
     </mat-action-row>
@@ -84,7 +97,7 @@
     <mat-expansion-panel-header>
       <mat-panel-title>
         <div class="cvthree-panel-with-icon">
-        <mat-icon>contacts</mat-icon> Contact information
+          <mat-icon>contacts</mat-icon> Contact information
         </div>
       </mat-panel-title>
       <mat-panel-description>
@@ -95,23 +108,26 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <mat-form-field>
-      <input matInput type="email" required placeholder="E-Mail" #personalEmail [(ngModel)]="resume.email" [formControl]="emailFormControl"> <!-- Email -->
+      <input matInput type="email" required placeholder="E-Mail" #personalEmail [(ngModel)]="resume.email"
+        [formControl]="emailFormControl"> <!-- Email -->
       <mat-error *ngIf="emailFormControl.hasError('pattern')">
-          Please enter a valid email address
+        Please enter a valid email address
       </mat-error>
       <mat-error *ngIf="emailFormControl.hasError('required')">
-          Email is <strong>required</strong>
+        Email is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="tel" placeholder="Phone Number" #personalPhone [(ngModel)]="resume.phone"> <!-- Phone Number -->
+      <input matInput type="tel" placeholder="Phone Number" #personalPhone [(ngModel)]="resume.phone">
+      <!-- Phone Number -->
       <mat-hint align="end">Optional</mat-hint>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="url" placeholder="Website" #personalWebsite [formControl]="urlFormControl" [(ngModel)]="resume.url"> <!-- Website -->
+      <input matInput type="url" placeholder="Website" #personalWebsite [formControl]="urlFormControl" [(ngModel)]="resume.url">
+      <!-- Website -->
       <mat-hint align="end">Optional</mat-hint>
       <mat-error *ngIf="urlFormControl.hasError('pattern')">
-          Please enter a valid website address
+        Please enter a valid website address
       </mat-error>
     </mat-form-field>
     <mat-action-row>
@@ -135,41 +151,41 @@
 
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <button *ngIf="!edit && resume.profiles.length > 0" mat-icon-button color="accent">
-      <mat-icon area-lable="Edit networks" (click)="editMode()">edit</mat-icon>
-    </button>
-    <button *ngIf="edit" mat-icon-button color="accent">
-      <mat-icon area-lable="Save network" (click)="save()">check</mat-icon>
-    </button>
-    <div *ngFor="let n of work">
-      <div *ngIf="!edit"> <!-- VIEW MODE -->
-        {{ n.socialNetwork }} | {{ n.accountName }}
-      </div>
-      <div *ngIf="edit">  <!-- EDIT MODE -->
-        <mat-form-field>
-          <input matInput type="text" [(ngModel)]="n.accountName">
-        </mat-form-field>
-        <mat-form-field>
+    <div *ngFor="let n of resume.profiles; let idx = index">
+      <!-- EDIT MODE -->
+      <mat-form-field>
+        <input matInput type="text" placeholder="Account" [(ngModel)]="n.username">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Network" [(ngModel)]="n.network">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Website" [(ngModel)]="n.url">
+      </mat-form-field>
+
+      <!-- <mat-form-field>
           <mat-select placeholder="Social Network" [(ngModel)]="n.socialNetwork">
             <mat-option *ngFor="let nn of networks()" [value]="nn">
               {{ nn }}
             </mat-option>
           </mat-select>
-        </mat-form-field>
-        <button mat-icon-button color="warn">
-          <mat-icon area-lable="Delete Social network" (click)="deleteSocialNetwork(l)">delete</mat-icon>
-        </button>
-      </div>
+        </mat-form-field> -->
+      <button mat-icon-button color="warn">
+        <mat-icon area-lable="Delete Social network" (click)="deleteNetwork(idx)">delete</mat-icon>
+      </button>
     </div>
-    <div *ngIf="!edit">
+    <div>
       <mat-form-field>
         <input matInput type="text" placeholder="Account" #accountName> <!-- Languages -->
       </mat-form-field>
       <mat-form-field>
         <input matInput type="text" placeholder="Network" #socialNetwork>
       </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Website" #website>
+      </mat-form-field>
       <button mat-icon-button color="primary">
-        <mat-icon aria-label="Add more networks" (click)="addNetwork(socialNetwork, accountName)">add_circle</mat-icon>
+        <mat-icon aria-label="Add more networks" (click)="addNetwork(socialNetwork, accountName, website)">add_circle</mat-icon>
       </button>
     </div>
     <mat-action-row>
@@ -193,33 +209,23 @@
 
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <button *ngIf="!edit && resume.languages.length > 0" mat-icon-button color="accent">
-      <mat-icon area-lable="Edit language" (click)="editMode()">edit</mat-icon>
-    </button>
-    <button *ngIf="edit" mat-icon-button color="accent">
-      <mat-icon area-lable="Save language" (click)="save()">check</mat-icon>
-    </button>
-    <div *ngFor="let l of resume.languages">
-      <div *ngIf="!edit"> <!-- VIEW MODE -->
-        {{ l.name }} | {{ l.level }}
-      </div>
-      <div *ngIf="edit">  <!-- EDIT MODE -->
-        <mat-form-field>
-          <input matInput type="text" [(ngModel)]="l.name">
-        </mat-form-field>
-        <mat-form-field>
-          <mat-select placeholder="Proficiency" [(ngModel)]="l.level">
-            <mat-option *ngFor="let ll of levels()" [value]="ll">
-              {{ ll }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <button mat-icon-button color="warn">
-          <mat-icon area-lable="Delete language" (click)="deleteLanguage(l)">delete</mat-icon>
-        </button>
-      </div>
+    <div *ngFor="let l of resume.languages; let idx = index">
+      <!-- EDIT MODE -->
+      <mat-form-field>
+        <input matInput type="text" [(ngModel)]="l.name">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="Proficiency" [(ngModel)]="l.level">
+          <mat-option *ngFor="let ll of levels()" [value]="ll">
+            {{ ll }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-icon-button color="warn">
+        <mat-icon area-lable="Delete language" (click)="deleteLanguage(idx)">delete</mat-icon>
+      </button>
     </div>
-    <div *ngIf="!edit">
+    <div>
       <mat-form-field>
         <input matInput type="text" placeholder="Language" #lang> <!-- Languages -->
       </mat-form-field>
@@ -308,29 +314,17 @@
         What do you like?
         <mat-icon *ngIf="!interestInfoOK()">warning</mat-icon>
         <mat-icon *ngIf="interestInfoOK()">check</mat-icon>
-
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <button *ngIf="!edit && resume.interests.length > 0" mat-icon-button color="accent">
-      <mat-icon area-lable="Edit interest" (click)="editMode()">edit</mat-icon>
-    </button>
-    <button *ngIf="edit" mat-icon-button color="accent">
-      <mat-icon area-lable="Save interest" (click)="save()">check</mat-icon>
-    </button>
-    <div *ngFor="let i of resume.interests">
-      <div *ngIf="!edit">
-        {{ i.name }}
-      </div>
-      <div *ngIf="edit">
-        <mat-form-field>
-          <input matInput type="text" placeholder="Interest" [(ngModel)]="i.name"> <!-- Interests -->
-        </mat-form-field>
-        <button *ngIf="!edit" mat-icon-button color="warn">
-          <mat-icon area-lable="Delete interest" (click)="deleteInterest(i)">delete</mat-icon>
-        </button>
-      </div>
+    <div *ngFor="let i of resume.interests; let idx = index">
+      <mat-form-field>
+        <input matInput type="text" placeholder="Interest" [(ngModel)]="i.name"> <!-- Interests -->
+      </mat-form-field>
+      <button mat-icon-button color="warn">
+        <mat-icon area-lable="Delete interest" (click)="deleteInterest(idx)">delete</mat-icon>
+      </button>
     </div>
-    <div *ngIf="!edit">
+    <div>
       <mat-form-field>
         <input matInput type="text" placeholder="Interest" #interest> <!-- Interests -->
       </mat-form-field>
@@ -356,41 +350,36 @@
         Who can recommend you?
         <mat-icon *ngIf="!referenceInfoOK()">warning</mat-icon>
         <mat-icon *ngIf="referenceInfoOK()">check</mat-icon>
-
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <button *ngIf="!edit && resume.references.length > 0" mat-icon-button color="accent">
-      <mat-icon area-lable="Edit reference" (click)="editMode()">edit</mat-icon>
-    </button>
-    <button *ngIf="edit" mat-icon-button color="accent">
-      <mat-icon area-lable="Save reference" (click)="save()">check</mat-icon>
-    </button>
-    <div *ngFor="let r of resume.references">
-      <div *ngIf="!edit">
-        {{ r.reference }}
-        <span>from {{ r.name }}</span>
-      </div>
-      <div *ngIf="edit">
+    <div *ngFor="let r of resume.references; let idx = index">
+      <div>
         <mat-form-field>
           <input matInput type="text" placeholder="Reference" [(ngModel)]="r.reference"> <!-- References -->
         </mat-form-field>
         <mat-form-field>
-          <input matInput type="text" placeholder="Employer" [(ngModel)]="r.name"> <!-- Employer -->
+          <input matInput type="text" placeholder="Position" [(ngModel)]="r.position">
         </mat-form-field>
-        <button *ngIf="!edit" mat-icon-button color="warn">
-          <mat-icon area-lable="Delete reference" (click)="deleteReference(r)">delete</mat-icon>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Employer" [(ngModel)]="r.company"> <!-- Employer -->
+        </mat-form-field>
+        <button mat-icon-button color="warn">
+          <mat-icon area-lable="Delete reference" (click)="deleteReference(idx)">delete</mat-icon>
         </button>
       </div>
     </div>
-    <div *ngIf="!edit">
+    <div>
       <mat-form-field>
         <input matInput type="text" placeholder="Reference" #reference> <!-- References -->
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Position" #position>
       </mat-form-field>
       <mat-form-field>
         <input matInput type="text" placeholder="Employer" #employer> <!-- References -->
       </mat-form-field>
       <button mat-icon-button color="accent">
-        <mat-icon aria-label="Add more references" (click)="addReference(reference, employer)">add_circle</mat-icon>
+        <mat-icon aria-label="Add more references" (click)="addReference(reference, position, employer)">add_circle</mat-icon>
       </button>
     </div>
     <mat-action-row>
@@ -399,12 +388,12 @@
     </mat-action-row>
   </mat-expansion-panel>
 
-  <!-- EVENTS (TIMELINE) -->
+  <!-- EVENTS (WORK) -->
   <mat-expansion-panel [expanded]="step === 7" (opened)="setStep(7)" hideToggle="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
         <div class="cvthree-panel-with-icon">
-          <mat-icon>work</mat-icon> Events
+          <mat-icon>work</mat-icon> Work
         </div>
       </mat-panel-title>
       <mat-panel-description>
@@ -414,25 +403,26 @@
 
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <button *ngIf="!edit && resume.work.length > 0" mat-icon-button color="accent">
-      <mat-icon area-lable="Edit event" (click)="editMode()">edit</mat-icon>
-    </button>
-    <button *ngIf="edit" mat-icon-button color="accent">
-      <mat-icon area-lable="Save event" (click)="save()">check</mat-icon>
-    </button>
-    <div *ngFor="let e of work">
-      <div *ngIf="!edit">
-        {{ e.title }}
-        <span>{{ e.startDate }} - {{ e.endDate }}</span>
-      </div>
-      <div *ngIf="edit">
+    <div *ngFor="let e of resume.work; let idx = index">
+      <div>
         <mat-form-field>
-          <input matInput type="text" [(ngModel)]="e.title">
+          <input matInput placeholder="Title" type="text" [(ngModel)]="e.summary">
         </mat-form-field>
         <mat-form-field>
-          <textarea matInput [(ngModel)]="e.description" maxlength="500"></textarea>
+          <textarea matInput placeholder="Description" [(ngModel)]="e.description" maxlength="500"></textarea>
           <mat-hint align="end">{{ e.description.length }} / 500</mat-hint>
         </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Company" [(ngModel)]="e.company">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Position" [(ngModel)]="e.position">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Website" [(ngModel)]="e.url">
+        </mat-form-field>
+      </div>
+      <div>
         <mat-form-field>
           <input matInput type="text" [(ngModel)]="e.location.address">
         </mat-form-field>
@@ -445,58 +435,73 @@
         <mat-form-field>
           <input matInput type="text" [(ngModel)]="e.location.country">
         </mat-form-field>
+      </div>
+      <div>
         <mat-form-field>
-          <input matInput [matDatepicker]="start_date" [(ngModel)]="e.startDate">
-          <mat-datepicker-toggle matSuffix [for]="start_date"></mat-datepicker-toggle>
-          <mat-datepicker #start_date></mat-datepicker>
+          <input matInput placeholder="Start Date" [matDatepicker]="start_dateA" [(value)]="e.startDate">
+          <mat-datepicker-toggle matSuffix [for]="start_dateA"></mat-datepicker-toggle>
+          <mat-datepicker #start_dateA></mat-datepicker>
         </mat-form-field>
         <mat-form-field>
-          <input matInput [matDatepicker]="end_date" [(ngModel)]="e.endDate">
-          <mat-datepicker-toggle matSuffix [for]="end_date"></mat-datepicker-toggle>
-          <mat-datepicker #end_date></mat-datepicker>
+          <input matInput placeholder="End Date" [matDatepicker]="end_dateA" [(value)]="e.endDate">
+          <mat-datepicker-toggle matSuffix [for]="end_dateA"></mat-datepicker-toggle>
+          <mat-datepicker #end_dateA></mat-datepicker>
         </mat-form-field>
-        <button *ngIf="!edit" mat-icon-button color="warn">
-          <mat-icon area-lable="Delete reference" (click)="deleteEvent(e)">delete</mat-icon>
+        <button mat-icon-button color="warn">
+          <mat-icon area-lable="Delete reference" (click)="deleteEvent(idx)">delete</mat-icon>
         </button>
       </div>
     </div>
-    <div *ngIf="!edit">
-      <mat-form-field>
-        <input matInput type="text" required placeholder="Title" #title [formControl]="eventTitleFormControl">
-        <mat-error *ngIf="eventTitleFormControl.hasError('required')">
+    <div>
+      <div>
+        <mat-form-field>
+          <input matInput type="text" required placeholder="Title" #title [formControl]="eventTitleFormControl">
+          <mat-error *ngIf="eventTitleFormControl.hasError('required')">
             Title is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field>
-        <textarea matInput placeholder="Description" #desc maxlength="500"></textarea>
-        <mat-hint align="end">Optional {{ desc.value.length }} / 500</mat-hint>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="text" required placeholder="Address" #address [formControl]="eventAddressFormControl">
-        <mat-error *ngIf="eventAddressFormControl.hasError('required')">
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <textarea matInput placeholder="Description" #desc maxlength="500"></textarea>
+          <mat-hint align="end">Optional {{ desc.value.length }} / 500</mat-hint>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Company" #company>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Position" #position>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Website" #url>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field>
+          <input matInput type="text" required placeholder="Address" #address [formControl]="eventAddressFormControl">
+          <mat-error *ngIf="eventAddressFormControl.hasError('required')">
             Address is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="number" placeholder="Postal code" #postalcode>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="number" placeholder="Postal code" #postalcode>
           <mat-hint align="end">Optional</mat-hint>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="text" required placeholder="City" #city [formControl]="eventCityFormControl">
-        <mat-error *ngIf="eventCityFormControl.hasError('required')">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" required placeholder="City" #city [formControl]="eventCityFormControl">
+          <mat-error *ngIf="eventCityFormControl.hasError('required')">
             City is <strong>required</strong>.
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="text" required placeholder="Country" #country [formControl]="eventCountryFormControl">
-        <mat-error *ngIf="eventCountryFormControl.hasError('required')">
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" required placeholder="Country" #country [formControl]="eventCountryFormControl">
+          <mat-error *ngIf="eventCountryFormControl.hasError('required')">
             Country is <strong>required</strong>.
-        </mat-error>
-      </mat-form-field>
+          </mat-error>
+        </mat-form-field>
+      </div>
       <mat-form-field>
         <input matInput [matDatepicker]="start_date" required placeholder="Start date" #startDate [formControl]="eventStartdateFormControl">
         <mat-error *ngIf="eventStartdateFormControl.hasError('required')">
-           Startdate is <strong>required</strong>.
+          Startdate is <strong>required</strong>.
         </mat-error>
         <mat-datepicker-toggle matSuffix [for]="start_date"></mat-datepicker-toggle>
         <mat-datepicker #start_date></mat-datepicker>
@@ -504,14 +509,14 @@
       <mat-form-field>
         <input matInput [matDatepicker]="end_date" placeholder="End date" #endDate [formControl]="eventEnddateFormControl">
         <mat-error *ngIf="eventEnddateFormControl.hasError('required')">
-            Enddate needs to occur <strong>after startdate</strong>.
+          Enddate needs to occur <strong>after startdate</strong>.
         </mat-error>
         <mat-hint align="end">Optional</mat-hint>
         <mat-datepicker-toggle matSuffix [for]="end_date"></mat-datepicker-toggle>
         <mat-datepicker #end_date></mat-datepicker>
       </mat-form-field>
       <button mat-icon-button color="accent">
-        <mat-icon aria-label="Add more events" (click)="addEvent()">add_circle</mat-icon>
+        <mat-icon aria-label="Add more events" (click)="addEvent(title, desc, company, position, url, address, postalcode, city, country, startDate, endDate)">add_circle</mat-icon>
       </button>
     </div>
     <mat-action-row>
@@ -520,7 +525,146 @@
     </mat-action-row>
   </mat-expansion-panel>
 
+  <!-- EVENTS (EDUCATION) -->
   <mat-expansion-panel [expanded]="step === 8" (opened)="setStep(8)" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="cvthree-panel-with-icon">
+          <mat-icon>school</mat-icon> Education
+        </div>
+      </mat-panel-title>
+      <mat-panel-description>
+        Schools, Universities, Colleges.
+        <mat-icon *ngIf="!eventInfoOK()">warning</mat-icon>
+        <mat-icon *ngIf="eventInfoOK()">check</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div>
+      <div *ngFor="let e of resume.education; let idx = index">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Institution" [(ngModel)]="e.institution">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Field of studies" [(ngModel)]="e.studies">
+        </mat-form-field>
+        <mat-form-field>
+          <textarea matInput type="text" placeholder="Degree" [(ngModel)]="e.degree"></textarea>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="e_start_date" placeholder="Start Date" [(ngModel)]="e.startDate">
+          <mat-datepicker-toggle matSuffix [for]="e_start_date"></mat-datepicker-toggle>
+          <mat-datepicker #e_start_date></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="e_end_date" placeholder="End Date" [(ngModel)]="e.endDate">
+          <mat-datepicker-toggle matSuffix [for]="e_end_date"></mat-datepicker-toggle>
+          <mat-datepicker #e_end_date></mat-datepicker>
+        </mat-form-field>
+        <button mat-icon-button color="warn">
+          <mat-icon area-lable="Delete reference" (click)="deleteEducation(idx)">delete</mat-icon>
+        </button>
+      </div>
+      <div>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Institution" #eInstitution>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Field of studies" #eStudies>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Degree" #eDegree>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="e_start_date" placeholder="Start Date" #eStartDate>
+          <mat-datepicker-toggle matSuffix [for]="e_start_date"></mat-datepicker-toggle>
+          <mat-datepicker #e_start_date></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="e_end_date" placeholder="End Date" #eEndDate>
+          <mat-datepicker-toggle matSuffix [for]="e_end_date"></mat-datepicker-toggle>
+          <mat-datepicker #e_end_date></mat-datepicker>
+        </mat-form-field>
+        <button mat-icon-button color="accent">
+          <mat-icon aria-label="Add more events" (click)="addEducation(eInstitution, eStudies, eDegree, eStartDate, eEndDate)">add_circle</mat-icon>
+        </button>
+      </div>
+    </div>
+    <mat-action-row>
+      <button mat-button color="warn" (click)="prevStep()">Previous</button>
+      <button mat-button color="primary" (click)="nextStep()">End</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+  <mat-expansion-panel [expanded]="step === 9" (opened)="setStep(9)" hideToggle="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="cvthree-panel-with-icon">
+          <mat-icon>assignment</mat-icon> Projects
+        </div>
+      </mat-panel-title>
+      <mat-panel-description>
+        Any projects or internships you've done?
+        <mat-icon *ngIf="!eventInfoOK()">warning</mat-icon>
+        <mat-icon *ngIf="eventInfoOK()">check</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div>
+      <div *ngFor="let e of resume.projects; let idx = index">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Title" [(ngModel)]="e.title">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Website" [(ngModel)]="e.url">
+        </mat-form-field>
+        <mat-form-field>
+          <textarea matInput type="text" placeholder="Summary" [(ngModel)]="e.summary"></textarea>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="pr_start_date" placeholder="Start Date" [(ngModel)]="e.startDate">
+          <mat-datepicker-toggle matSuffix [for]="pr_start_date"></mat-datepicker-toggle>
+          <mat-datepicker #pr_start_date></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="pr_end_date" placeholder="End Date" [(ngModel)]="e.endDate">
+          <mat-datepicker-toggle matSuffix [for]="pr_end_date"></mat-datepicker-toggle>
+          <mat-datepicker #pr_end_date></mat-datepicker>
+        </mat-form-field>
+        <button mat-icon-button color="warn">
+          <mat-icon area-lable="Delete reference" (click)="deleteProject(idx)">delete</mat-icon>
+        </button>
+      </div>
+      <div>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Title" #prTitle>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Website" #prUrl>
+        </mat-form-field>
+        <mat-form-field>
+          <textarea matInput type="text" placeholder="Summary" #prSummary></textarea>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="pr_start_dateA" placeholder="Start Date" #prStartDate>
+          <mat-datepicker-toggle matSuffix [for]="pr_start_dateA"></mat-datepicker-toggle>
+          <mat-datepicker #pr_start_dateA></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="pr_end_dateA" placeholder="End Date" #prEndDate>
+          <mat-datepicker-toggle matSuffix [for]="pr_end_dateA"></mat-datepicker-toggle>
+          <mat-datepicker #pr_end_dateA></mat-datepicker>
+        </mat-form-field>
+        <button mat-icon-button color="accent">
+          <mat-icon aria-label="Add more events" (click)="addProject(prTitle, prUrl, prSummary, prStartDate, prEndDate)">add_circle</mat-icon>
+        </button>
+      </div>
+    </div>
+    <mat-action-row>
+      <button mat-button color="warn" (click)="prevStep()">Previous</button>
+      <button mat-button color="primary" (click)="nextStep()">End</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+  <!-- EVENTS (PUBLICATIONS) -->
+  <mat-expansion-panel [expanded]="step === 10" (opened)="setStep(10)" hideToggle="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
         <div class="cvthree-panel-with-icon">
@@ -531,16 +675,62 @@
         What have you published?
         <mat-icon *ngIf="!eventInfoOK()">warning</mat-icon>
         <mat-icon *ngIf="eventInfoOK()">check</mat-icon>
-
       </mat-panel-description>
     </mat-expansion-panel-header>
-
+    <div>
+      <div *ngFor="let e of resume.publications; let idx = index">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Title" [(ngModel)]="e.title">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Publisher" [(ngModel)]="e.publisher">
+        </mat-form-field>
+        <mat-form-field>
+          <textarea matInput type="text" placeholder="Summary" [(ngModel)]="e.summary"></textarea>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Website" [(ngModel)]="e.url">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="p_date" placeholder="Date published">
+          <mat-datepicker-toggle matSuffix [for]="p_date"></mat-datepicker-toggle>
+          <mat-datepicker #p_date></mat-datepicker>
+        </mat-form-field>
+        <button mat-icon-button color="warn">
+          <mat-icon area-lable="Delete publications" (click)="deletePublication(idx)">delete</mat-icon>
+        </button>
+      </div>
+      <div>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Title" #pTitle>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Publisher" #pPublisher>
+        </mat-form-field>
+        <mat-form-field>
+          <textarea matInput type="text" placeholder="Summary" #pSummary></textarea>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Website" #pUrl>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="p_date" placeholder="Date published" #pDate>
+          <mat-datepicker-toggle matSuffix [for]="p_date"></mat-datepicker-toggle>
+          <mat-datepicker #p_date></mat-datepicker>
+        </mat-form-field>
+        <button mat-icon-button color="accent">
+          <mat-icon aria-label="Add more events" (click)="addPublication(pTitle, pPublisher, pSummary, pUrl, pDate)">add_circle</mat-icon>
+        </button>
+      </div>
+    </div>
     <mat-action-row>
       <button mat-button color="warn" (click)="prevStep()">Previous</button>
       <button mat-button color="primary" (click)="nextStep()">End</button>
     </mat-action-row>
   </mat-expansion-panel>
-  <mat-expansion-panel [expanded]="step === 8" (opened)="setStep(8)" hideToggle="true">
+
+  <!-- EVENTS (CERTIFICATES) -->
+  <mat-expansion-panel [expanded]="step === 11" (opened)="setStep(11)" hideToggle="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
         <div class="cvthree-panel-with-icon">
@@ -551,10 +741,48 @@
         Show your certificates!
         <mat-icon *ngIf="!eventInfoOK()">warning</mat-icon>
         <mat-icon *ngIf="eventInfoOK()">check</mat-icon>
-
       </mat-panel-description>
     </mat-expansion-panel-header>
-
+    <div>
+      <div *ngFor="let e of resume.awards; let idx = index">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Title" [(ngModel)]="e.title">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Awarder" [(ngModel)]="e.awarder">
+        </mat-form-field>
+        <mat-form-field>
+          <textarea matInput type="text" placeholder="Summary" [(ngModel)]="e.summary"></textarea>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="ca_date" placeholder="Date published">
+          <mat-datepicker-toggle matSuffix [for]="ca_date"></mat-datepicker-toggle>
+          <mat-datepicker #ca_date></mat-datepicker>
+        </mat-form-field>
+        <button mat-icon-button color="warn">
+          <mat-icon area-lable="Delete reference" (click)="deleteCertificateAward(idx)">delete</mat-icon>
+        </button>
+      </div>
+      <div>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Title" #caTitle>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Awarder" #caAwarder>
+        </mat-form-field>
+        <mat-form-field>
+          <textarea matInput type="text" placeholder="Summary" #caSummary></textarea>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="ca_date" placeholder="Date published" #caDate>
+          <mat-datepicker-toggle matSuffix [for]="ca_date"></mat-datepicker-toggle>
+          <mat-datepicker #ca_date></mat-datepicker>
+        </mat-form-field>
+        <button mat-icon-button color="accent">
+          <mat-icon aria-label="Add more events" (click)="addCertificateAward(caTitle, caAwarder, caSummary, caDate)">add_circle</mat-icon>
+        </button>
+      </div>
+    </div>
     <mat-action-row>
       <button mat-button color="warn" (click)="prevStep()">Previous</button>
       <button mat-button color="primary" (click)="nextStep()">End</button>
@@ -564,7 +792,7 @@
 <div>
   <mat-progress-spinner *ngIf="saving" color="white" mode="indeterminate"></mat-progress-spinner>
   <button mat-raised-button color="accent" (click)="saveResume()">
-    Save<span *ngIf="saved">d  <mat-icon>check</mat-icon></span>
+    Save<span *ngIf="saved">d <mat-icon>check</mat-icon></span>
   </button>
   <button mat-menu-item *ngIf="saved" (click)="view()">
     <mat-icon>link</mat-icon>

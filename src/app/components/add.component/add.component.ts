@@ -19,6 +19,8 @@ import { LanguageLevel } from '../../lists/language.level';
 import { SkillLevel } from '../../lists/skill.level';
 import { DatabaseServices } from '../../services/db.service';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
+import { environment } from '../../../environments/environment';
 
 // regex for input validation
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -187,40 +189,45 @@ export class AddComponent  {
     return this.resume.references.length > 0; // reference + employer required
   }
 
-  onFileInput(event: any): void {
-
+  updateProfilePicture($event: any): void {
+    this.resume.profilePicture = `${environment.API_PATH}${$event}`;
+    this.ref.detectChanges();
   }
 
   clearPicture(): void {
     this.resume.profilePicture = '';
   }
 
-  addNetwork() {
+  addNetwork(acc: any, network: any, url: any) {
     this.profile = new Profile();
+    this.profile.network = network.value;
+    this.profile.username = acc.value;
+    this.profile.url = url.value;
 
     this.resume.profiles.push(this.profile);
+
+    url.value = '';
+    acc.value = '';
+    network.value = '';
+  }
+
+  deleteNetwork(idx: any): void {
+    this.resume.profiles.splice(idx, 1);
   }
 
   addLanguage(lang: any, level: any): void {
     this.language = new Language();
+    this.language.name = lang.value;
+    this.language.level = level.value;
 
     this.resume.languages.push(this.language);
+    
     lang.value = '';
     level.value = '';
   }
 
   deleteLanguage(idx: any): void {
     this.resume.languages.splice(idx, 1);
-  }
-
-  addSkill(skill: any, proficiency: any): void {
-    this.skill = new Skill();
-
-    this.resume.skills.push(this.skill);
-  }
-
-  deleteSkill(idx: any): void {
-    this.resume.skills.splice(idx, 1);
   }
 
   saveSkills($event: any): void {
@@ -231,20 +238,26 @@ export class AddComponent  {
 
   addInterest(interest: any): void {
     this.interest = new Interest();
-
+    this.interest.name = interest.value;
     this.resume.interests.push(this.interest);
 
+    interest.value = '';
   }
 
   deleteInterest(idx: any): void {
     this.resume.interests.splice(idx, 1);
   }
 
-  addReference(reference: any, employer: any): void {
+  addReference(reference: any, position: any, employer: any): void {
     this.reference = new Reference();
-
+    this.reference.company = employer.value;
+    this.reference.reference = reference.value;
+    this.reference.position = position.value;
     this.resume.references.push(this.reference);
 
+    reference.value = '';
+    position.value = '';
+    employer.value = '';
   }
 
   deleteReference(idx: any): void {
@@ -260,15 +273,136 @@ export class AddComponent  {
     return promise;
   }
 
-  addEvent(): void {
+  addEvent(title: any, desc: any, company: any, position: any, url: any, address: any, postalcode: any, city: any, country: any, startDate: any, endDate: any): void {
+    let location = new Location();
+    location.address = address.value;
+    location.postalCode = postalcode.value;
+    location.city = city.value;
+    location.country = country.value;
 
+    let work = new Work();
+    work.startDate = moment(startDate.value, 'DD-MM-YYYY').toDate();
+    work.endDate = moment(endDate.value, 'DD-MM-YYYY').toDate();
+    work.location = location;
+    work.description = desc.value;
+    work.summary = title.value;
+    work.company = company.value;
+    work.position = position.value;
+    work.url = url.value;
+
+    this.resume.work.push(work);
+
+    title.value = '';
+    desc.value = '';
+    company.value = '';
+    position.value = '';
+    url.value = '';
+    address.value = '';
+    postalcode.value = '';
+    city.value = '';
+    country.value = '';
+    startDate.value = '';
+    endDate.value = '';
+
+    this.ref.detectChanges();
   }
 
   deleteEvent(idx: any): void {
     this.resume.work.splice(idx, 1);
   }
 
-  // TODO refactor
+  addEducation(institution: any, studies: any, degree: any, startDate: any, endDate: any): void {
+    let education = new Education();
+
+    education.institution = institution.value;
+    education.studies = studies.value;
+    education.degree = degree.value;
+    education.startDate = moment(startDate.value, 'DD-MM-YYYY').toDate();
+    education.endDate = moment(endDate.value, 'DD-MM-YYYY').toDate();
+
+    this.resume.education.push(education);
+
+    institution.value = '';
+    studies.value = '';
+    degree.value = '';
+    startDate.value = '';
+    endDate.value = '';
+
+    this.ref.detectChanges();
+  }
+
+  deleteEducation(idx: any): void {
+    this.resume.education.splice(idx, 1);
+  }
+
+  addProject(title: any, url: any, summary: any, startDate: any, endDate: any): void {
+    let project = new Project();
+
+    project.title = title.value;
+    project.url = url.value;
+    project.summary = summary.value;
+    project.startDate = moment(startDate.value, 'DD-MM-YYYY').toDate();
+    project.endDate = moment(endDate.value, 'DD-MM-YYYY').toDate();
+
+    this.resume.projects.push(project);
+
+    title.value = '';
+    url.value = '';
+    summary.value = '';
+    startDate.value = '';
+    endDate.value = '';
+
+    this.ref.detectChanges();
+  }
+
+  deleteProject(idx: any): void {
+    this.resume.projects.splice(idx, 1);
+  }
+
+  addPublication(title: any, publisher: any, summary: any, url: any, date: any): void {
+    let publication = new Publication();
+    publication.title = title.value;
+    publication.publisher = publisher.value;
+    publication.summary = summary.value;
+    publication.url = url.value;
+    publication.date = moment(date.value, 'DD-MM-YYYY').toDate();
+
+    this.resume.publications.push(publication);
+
+    title.value = '';
+    publisher.value = '';
+    summary.value = '';
+    url.value = '';
+    date.value = '';
+
+    this.ref.detectChanges();
+  }
+
+  deletePublication(idx: any): void {
+    this.resume.publications.splice(idx, 1);
+  }
+
+  addCertificateAward(title: any, awarder: any, summary: any, date: any): void {
+    let award = new Award();
+    award.title = title.value;
+    award.awarder = awarder.value;
+    award.summary = summary.value;
+    award.date = moment(date.value, 'DD-MM-YYYY').toDate();
+
+    this.resume.awards.push(award);
+
+    title.value = '';
+    summary.value = '';
+    awarder.value = '';
+    date.value =  '';
+    this.ref.detectChanges();
+  }
+
+  deleteCertificateAward(idx: any): void { 
+    this.resume.awards.splice(idx, 1);
+  }
+
+
   saveResume(): void {
     this.saving = true;
     this.db.createResume(this.resume).then((success: any) => {

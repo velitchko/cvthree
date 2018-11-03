@@ -10,6 +10,7 @@ import { Interest } from './interest';
 import { Language } from './language';
 import { Reference } from './reference';
 import { Project }  from './project';
+import { environment } from '../../environments/environment';
 
 export class Resume {
   id: string; // Managed by MongoDB
@@ -35,8 +36,11 @@ export class Resume {
   languages: Array<Language>;
   references: Array<Reference>;
   projects: Array<Project>;
+  // used for frontend highlighting
+  selected?: boolean = false;
 
   constructor() {
+    this.profilePicture = `${environment.API_PATH}uploads/default.jpg`;
     this.profiles = new Array<Profile>();
     this.publications = new Array<Publication>();
     this.work = new Array<Work>();
@@ -52,10 +56,7 @@ export class Resume {
     this.location = new Location();
   }
 
-  //TODO Implement this function when saving (POST/PUT)
   toJSON(): any {
-    let json = '';
-
-    return json;
+    return JSON.stringify(this);
   }
 }

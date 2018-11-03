@@ -1,6 +1,6 @@
 export class Education {
   institution: string;
-  sutdies: string;
+  studies: string;
   degree: string;
   startDate: Date;
   endDate: Date;
