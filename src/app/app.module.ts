@@ -16,6 +16,9 @@ import { TreeComponent } from './components/tree.component/tree.component';
 import { FileUploadComponent } from './components/file.upload.component/file.upload.component';
 import { SearchComponent } from './components/search.component/search.component';
 import { ScatterPlotComponent } from './components/scatterplot.component/scatterplot.component';
+import { RadarChartComponent } from './components/radarchart.component/radarchart.component';
+import { TimelineComponent } from './components/timeline.component/timeline.component';
+import { MapComponent } from './components/map.component/map.component';
 // SERVICES
 import { CompareService } from './services/compare.service';
 import { DatabaseServices } from './services/db.service';
@@ -124,7 +127,10 @@ export const APP_ID = 'cvthree';
     TreeComponent,
     FileUploadComponent,
     SearchComponent,
-    ScatterPlotComponent
+    ScatterPlotComponent,
+    RadarChartComponent,
+    TimelineComponent,
+    MapComponent
   ],
   providers: [
     CompareService,
