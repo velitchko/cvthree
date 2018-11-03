@@ -10,7 +10,7 @@ v1.0.0 - Angular 2
 run `npm install`
 
 ## Database Setup
-Go to `https://www.mongodb.com/` download and setup MongoDB.
+Go to [MongoDB]: https://www.mongodb.com/ download and setup MongoDB.
 
 ## Import Database
 With administrator open a command line interface navigate to where MongoDB is installed and execute the following command:
