@@ -86,6 +86,7 @@ export class CompareComponent  {
           });
           identifier++;
         });
+        
         // EDUCATION
         r.education.forEach((e: any, jdx: number) => {
           this.timelineData.push({
@@ -102,7 +103,57 @@ export class CompareComponent  {
           });
           identifier++;
         });
-        // TODO: Projects, Publications, Awards/Certificates, Volunteer work???        
+
+        // PROJECTS
+        r.projects.forEach((e: any, jdx: number) => {
+          this.timelineData.push({
+            id: identifier,
+            item: jdx,
+            group: idx,
+            category: 'PROJECT',
+            location: null, // should we add a location?
+            start: e.startDate,
+            end: e.endDate,
+            title: this.getTimelineTitle(e, identifier),
+            content: this.getTimelineContent(e),
+            className: `timeline-color-${idx}`
+          });
+          identifier++;
+        });
+
+        // PUBLICATIONS
+        r.publications.forEach((e: any, jdx: number) => {
+          this.timelineData.push({
+            id: identifier,
+            item: jdx,
+            group: idx,
+            category: 'PUBLICATION',
+            location: null,
+            startDate: e.date,
+            endDate: null,
+            title: this.getTimelineTitle(e, identifier),
+            content: this.getTimelineContent(e),
+            className: `timeline-color-${idx}`
+          });
+          identifier++;
+        });
+
+        // AWARDS/CERTIFICATES
+        r.awards.forEach((e: any, jdx: number) => {
+          this.timelineData.push({
+            id: identifier,
+            item: jdx,
+            group: idx,
+            category: 'AWARD/CERTIFICATE',
+            location: null,
+            startDate: e.date,
+            endDate: null,
+            title: this.getTimelineTitle(e, identifier),
+            content: this.getTimelineContent(e),
+            className: `timeline-color-${idx}`
+          });
+          identifier++;
+        });
     })
   }
   getMapData(): void {}
