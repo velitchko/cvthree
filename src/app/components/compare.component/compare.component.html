@@ -21,10 +21,10 @@
     </div>
     <div class="skill-compare">
         <div *ngIf="matchedSkills === 1">
-            line chart
+            <app-compare-lineplot></app-compare-lineplot>
         </div>
         <div *ngIf="matchedSkills === 2">
-            scatter plot
+            <app-compare-scatterplot></app-compare-scatterplot>
         </div>
         <div *ngIf="matchedSkills >= 3">        
             <app-radarchart [data]="skillData"></app-radarchart>
