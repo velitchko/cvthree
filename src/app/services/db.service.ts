@@ -52,7 +52,7 @@ export class DatabaseServices {
     resume.lastName = json.lastName;
     resume.location = json.location;
     resume.birthDay = new Date(json.birthday) || null;
-    resume.profilePicture = json.profilePicture ? json.profilePicture : `${environment.API_PATH}uploads/default.jpg`;
+    resume.profilePicture = json.profilePicture !== 'default.png' ? json.profilePicture : `${environment.API_PATH}uploads/default.jpg`;
     resume.email = json.email;
     resume.phone = json.phone;
     resume.summary = json.summary;
