@@ -1,0 +1,73 @@
+.cards-compare {
+    display: flex;
+    flex: 0 1 auto;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.list-entry-avatar {
+    width: 150px;
+    height: 150px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    .list-entry-avatar-overlay {
+    opacity: 0;
+    }
+    &:hover,
+    &:focus {
+    cursor: pointer;
+    opacity: 0.5;
+    .list-entry-avatar-overlay {
+        opacity: 1.0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        vertical-align: middle;
+        width: 150px;
+        height: 150px;
+        > .view {
+        text-decoration: none;
+        font-size: 3em;
+        color: #707070;
+        }
+    }
+    }
+}
+
+.button-top-right {
+    position: absolute;
+    top: 0em;
+    right: 0em;
+}
+
+.list-entry-wrapper {
+padding: 1em;
+}
+
+.list-entry {
+padding-top: 1em;
+margin-bottom: 1em;
+width: 20em;
+height: 18em;
+}
+
+.mat-card {
+    margin: 0.5em;
+    border-top: 6px solid;
+    border-radius: 2% 2% 0 0;
+}
+
+.mat-card-avatar {
+    border: 6px solid;
+}
+
+.mat-card-header {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+text-align: center;
+}

@@ -1,0 +1,34 @@
+<div *ngIf="resumes.length === 0">
+    <p>No resumes selected...</p>
+</div>
+<div *ngIf="resumes.length > 0">
+    <div class="cards-compare">
+        <mat-card *ngFor="let r of resumes" [style.border-color]="getColor(r.id)">
+            <button mat-icon-button (click)="remove(idx)" class="button-top-right" [style.color]="getColor(r.id)"><mat-icon>clear</mat-icon></button>
+            <mat-card-header>
+                <div class="list-entry-avatar" mat-card-avatar [style.border-color]="getColor(r.id)" [style.backgroundImage]="getSanitizedPicture(r.profilePicture)" (click)="view(idx)">
+                <div class="list-entry-avatar-overlay">
+                    <a class="view" href="javascript:void(0)">VIEW</a>
+                </div>
+                </div>
+                <mat-card-title><h2><span [style.color]="getColor(r.id)">{{ r.firstName }}</span> <span style="color: #707070">{{ r.lastName }} |</span> {{ getAge(r.birthDay) }}</h2></mat-card-title>
+                <mat-card-subtitle>{{ r.label }} @ {{ r.location.city }}, {{ r.location.country }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+            <!-- honors, certificates, awards-->
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="skill-compare">
+        <app-radarchart [data]="skillData"></app-radarchart>
+    </div>
+    <div class="language-compare">
+
+    </div>
+    <div class="timeline-compare">
+        <app-timeline [events]="timelineData"></app-timeline>
+    </div>
+    <div class="map-compare">
+        <app-map [events]="mapData"></app-map>
+    </div>
+</div>
