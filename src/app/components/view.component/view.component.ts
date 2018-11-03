@@ -104,6 +104,22 @@ export class ViewComponent implements AfterViewInit {
     this.createSunburst(skills);
   }
 
+  getSkillOpacity(level: string): string {
+    switch(level) {
+      case 'BASIC': return '33';
+      case 'NOVICE': return '66';
+      case 'INTERMEDIATE': return '99';
+      case 'ADVANCED': return 'CC';
+      case 'EXPERT': return 'FF';
+      default: return 'FF';
+    }
+    // 20% - #33
+    // 40% - #66
+    // 60% - #99
+    // 80% - #CC
+    // 100% - #FF
+  }
+
   createSunburst(skills: Array<Skill>): void {
     if(skills.length === 0) return;
     let skillData = {
@@ -125,7 +141,7 @@ export class ViewComponent implements AfterViewInit {
     let y = d3.scaleSqrt()
                 .range([maxRadius*.1, maxRadius]);
 
-    let color = d3.scaleOrdinal(d3.schemeSet3);
+    let color = d3.scaleOrdinal(d3.schemeSet1);
 
     let partition = d3.partition();
 
@@ -178,6 +194,7 @@ export class ViewComponent implements AfterViewInit {
          .attr('height', 300);
 
     let root = d3.hierarchy(skillData);
+    console.log(root);
   // /  console.log(root);
     root.sum((d: any) => d.size || 1);
 
@@ -199,9 +216,9 @@ export class ViewComponent implements AfterViewInit {
     newSlice.append('path')
             .attr('class', 'main-arc')
             .style('fill', (d: any) => {
-              console.log((d.children ? d : d.parent).data.name);
-              console.log(color((d.children ? d : d.parent).data.name));
-              return color((d.children ? d : d.parent).data.name);
+              console.log(d);
+              console.log(d.children);
+              return color((d.children ? d : d.parent).data.name) + this.getSkillOpacity(d.data.level);
             })
             .attr('d', <any>arc);
 
