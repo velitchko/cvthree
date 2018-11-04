@@ -21,7 +21,7 @@
     </div>
     <div class="skill-compare">
         <div *ngIf="matchedSkills === 1">
-            <app-compare-lineplot></app-compare-lineplot>
+            <app-compare-lineplot [data]="skillData" (selection)="linePlotSelection($event)"></app-compare-lineplot>
         </div>
         <div *ngIf="matchedSkills === 2">
             <app-compare-scatterplot></app-compare-scatterplot>

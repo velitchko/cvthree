@@ -1,0 +1,20 @@
+::ng-deep #line-plot {
+    width: 100%;
+    position: relative;
+}
+
+::ng-deep #line-plot svg {
+    top: 0;
+    left: 0;
+}
+
+::ng-deep .axis-bottom line {
+    stroke: lightgrey;
+    stroke-opacity: 0.7;
+    shape-rendering: crispEdges;
+}
+  
+::ng-deep .axis-bottom path {
+    stroke: lightgrey;
+    stroke-width: 2px;
+}

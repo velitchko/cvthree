@@ -236,6 +236,10 @@ export class CompareComponent  {
     }
   }
 
+  linePlotSelection($event: any): void {
+    console.log($event);
+  }
+
   remove(idx: number): void {
     this.cs.removeResume(this.resumes[idx].id);
     this.getSkillData();
