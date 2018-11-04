@@ -62,9 +62,9 @@ export class RadarChartComponent implements OnChanges {
       
         if('undefined' !== typeof options){
           for(let i in options){
-          if('undefined' !== typeof options[i]){
-            cfg[i] = options[i];
-          }
+            if('undefined' !== typeof options[i]){
+              cfg[i] = options[i];
+            }
           }
         }
         
