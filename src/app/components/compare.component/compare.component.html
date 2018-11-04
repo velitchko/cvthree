@@ -30,6 +30,9 @@
             <app-radarchart [data]="skillData"></app-radarchart>
         </div>
     </div>
+    <div class="tree-compare">
+        <app-treechart [data]="treeChartData" (selection)="treeChartSeleection($event)"></app-treechart>
+    </div>
     <div class="language-compare">
 
     </div>

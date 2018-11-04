@@ -14,6 +14,7 @@ import { UtilServices } from 'src/app/services/util.service';
 export class CompareComponent  {
   skillData: Array<any>;
   timelineData: Array<any>;
+  treeChartData: Skill;
   mapData: Array<any>;
   skillMap: Map<string, Array<any>>;
   resumes: Array<Resume>;
@@ -25,12 +26,15 @@ export class CompareComponent  {
     ) {
     this.resumes = this.cs.getResumes() || new Array<Resume>();
     this.skillData = new Array<any>();
+    this.treeChartData = new Skill();
+    this.treeChartData.name = 'Skills'; //root
     this.timelineData = new Array<any>();
     this.mapData = new Array<any>();
     this.skillMap = new Map<string, Array<any>>();
 
     // go through resumes and find matching skills 
     this.getSkillData();
+    this.getTreeChartData();
     this.getTimelineData();
     this.getMapData();
     // skill, person, skillLevel, minSkillLevel, maxSkillLevel
@@ -157,6 +161,62 @@ export class CompareComponent  {
     })
   }
   getMapData(): void {}
+
+  getTreeChartData(): void {
+    // FIXME: structure 
+    this.cs.getResumes().forEach((r: Resume) => {
+      r.skills.forEach((s: Skill, idx: number) => {
+        
+        let found = this.getExistingNode(this.treeChartData, s.name);
+        
+        if(found) {
+          if(!found.people) found.people = new Array<string>();
+          found.people.push(r.id);
+          console.log('appending to existing');
+        } else {
+          // TODO: if node does not exist
+          // see if we can find a matching parent to append to
+          let parent = this.getParentOfChild(this.treeChartData, s.name);
+          if(parent) {
+            console.log('appending to parent')
+            let node = parent.children.find((c: Skill) => { return c.name === s.name });
+            if(!node.people) node.people = new Array<string>();
+            node.people.push(r.id);
+          } else {
+            console.log('creating child');
+            // need to add people that know the skill additionally
+            if(!s.people) s.people = new Array<string>();
+            s.people.push(r.id);
+            this.treeChartData.children.push(s);
+          }
+        }
+      });
+    });
+    console.log(this.treeChartData);
+  }
+
+  getParentOfChild(currentNode, target): Skill  {
+    if(currentNode.children.filter((s) => {return s.name === target;}).length > 0) return currentNode;
+
+    for(let i = 0; i < currentNode.children.length; i++) {
+        let currentChild = currentNode.children[i];
+        let result = this.getParentOfChild(currentChild, target);
+        if(result) return result;
+    }
+    return null;
+  }
+
+
+  getExistingNode(currentNode: any, target: any): Skill {
+    if(currentNode.name === target) return currentNode;
+
+    for(let i = 0; i < currentNode.children.length; i++) {
+      let currentChild = currentNode.children[i];
+      let exists = this.getExistingNode(currentChild, target);
+      if(exists) return exists;
+    }
+  }
+
   getSkillData(): void {
     this.skillData = new Array<any>();
     this.skillMap = new Map<string, Array<any>>();
@@ -237,6 +297,10 @@ export class CompareComponent  {
   }
 
   linePlotSelection($event: any): void {
+    console.log($event);
+  }
+
+  treeChartSelection($event: any): void {
     console.log($event);
   }
 

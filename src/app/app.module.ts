@@ -18,6 +18,7 @@ import { SearchComponent } from './components/search.component/search.component'
 import { ScatterPlotComponent } from './components/scatterplot.component/scatterplot.component';
 import { CompareScatterPlotComponent } from './components/compare.scatterplot.component/compare.scatterplot.component';
 import { CompareLinePlotComponent } from './components/compare.lineplot.component/compare.lineplot.component';
+import { TreeChartComponent } from './components/treechart.component/treechart.component';
 import { RadarChartComponent } from './components/radarchart.component/radarchart.component';
 import { TimelineComponent } from './components/timeline.component/timeline.component';
 import { MapComponent } from './components/map.component/map.component';
@@ -132,6 +133,7 @@ export const APP_ID = 'cvthree';
     ScatterPlotComponent,
     CompareScatterPlotComponent,
     CompareLinePlotComponent,
+    TreeChartComponent,
     RadarChartComponent,
     TimelineComponent,
     MapComponent

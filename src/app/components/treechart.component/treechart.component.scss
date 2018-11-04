@@ -1,0 +1,19 @@
+::ng-deep .node {
+    cursor: pointer;
+}
+
+::ng-deep .node circle {
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+
+::ng-deep .node text {
+    font: 10px sans-serif;
+}
+
+::ng-deep .link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1.5px;
+}
