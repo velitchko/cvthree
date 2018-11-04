@@ -39,10 +39,8 @@ export class AddComponent  {
   step = 0;
 
   // loading spinner trigger
-  uploading: boolean = false;
   saving: boolean = false;
   saved: boolean = false;
-  edit: boolean = false;
 
   // internal objects used for data-binding
   language: Language;
@@ -146,16 +144,6 @@ export class AddComponent  {
 
   prevStep(): void {
     this.step--;
-  }
-
-  editMode(): void {
-    // enter edit mode
-    this.edit = true;
-  }
-
-  save(): void {
-    // edit edit model
-    this.edit = false;
   }
 
   generalInfoOK(): boolean {
@@ -406,7 +394,12 @@ export class AddComponent  {
   saveResume(): void {
     this.saving = true;
     this.db.createResume(this.resume).then((success: any) => {
-      if(success.message === "OK") this.saving = false;
+      if(success.message === "OK") {
+        this.resume.id = success.results._id;
+        this.saving = false;
+        this.saved = true;
+        this.ref.detectChanges();
+      }
       else console.log(success);
     });
   }

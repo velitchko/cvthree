@@ -370,16 +370,16 @@
     </div>
     <div>
       <mat-form-field>
-        <input matInput type="text" placeholder="Reference" #reference> <!-- References -->
+        <input matInput type="text" placeholder="Reference" #Rreference> <!-- References -->
       </mat-form-field>
       <mat-form-field>
-        <input matInput type="text" placeholder="Position" #position>
+        <input matInput type="text" placeholder="Position" #Rposition>
       </mat-form-field>
       <mat-form-field>
-        <input matInput type="text" placeholder="Employer" #employer> <!-- References -->
+        <input matInput type="text" placeholder="Employer" #Remployer> <!-- References -->
       </mat-form-field>
       <button mat-icon-button color="accent">
-        <mat-icon aria-label="Add more references" (click)="addReference(reference, position, employer)">add_circle</mat-icon>
+        <mat-icon aria-label="Add more references" (click)="addReference(Rreference, Rposition, Remployer)">add_circle</mat-icon>
       </button>
     </div>
     <mat-action-row>
@@ -755,7 +755,7 @@
           <textarea matInput type="text" placeholder="Summary" [(ngModel)]="e.summary"></textarea>
         </mat-form-field>
         <mat-form-field>
-          <input matInput [matDatepicker]="ca_date" placeholder="Date published">
+          <input matInput [matDatepicker]="ca_date" placeholder="Date published" [(ngModel)]="e.date">
           <mat-datepicker-toggle matSuffix [for]="ca_date"></mat-datepicker-toggle>
           <mat-datepicker #ca_date></mat-datepicker>
         </mat-form-field>
@@ -791,11 +791,6 @@
 </mat-accordion>
 <div>
   <mat-progress-spinner *ngIf="saving" color="white" mode="indeterminate"></mat-progress-spinner>
-  <button mat-raised-button color="accent" (click)="saveResume()">
-    Save<span *ngIf="saved">d <mat-icon>check</mat-icon></span>
-  </button>
-  <button mat-menu-item *ngIf="saved" (click)="view()">
-    <mat-icon>link</mat-icon>
-    <span>View</span>
-  </button>
+  <button mat-raised-button *ngIf="!saved" (click)="saveResume()" color="accent"><mat-icon>check</mat-icon> Save</button>
+  <button mat-raised-button *ngIf="saved" (click)="view()" color="primary"><mat-icon>link</mat-icon> View</button>
 </div>

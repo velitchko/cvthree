@@ -121,9 +121,9 @@ function setSkillSizes(skills: any[]): void {
 
 // set dates - geocode things pre save
 ResumeSchema.pre('save', function(next) {
-  let _self: any = this;
+  // let _self: any = this;
 //  let promiseArr = new Array<Promise<any>>();
-  setSkillSizes(_self.skills);
+  // setSkillSizes(_self.skills);
   // _self.work.forEach((w: any) => {
   //   // geocode location
   //   let address = `${w.address} ${w.postalCode} ${w.city} ${w.country}`;
