@@ -36,8 +36,9 @@ export class Resume {
   languages: Array<Language>;
   references: Array<Reference>;
   projects: Array<Project>;
-  // used for frontend highlighting
+  // used for frontend highlighting & compare view selection
   selected?: boolean = false;
+  hidden?: boolean = false
 
   constructor() {
     this.profilePicture = `${environment.API_PATH}uploads/default.jpg`;
