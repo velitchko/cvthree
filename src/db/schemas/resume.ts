@@ -1,6 +1,8 @@
 import * as mongoose from 'mongoose';
 import * as request from 'request-promise';
 import { environment } from '../../environments/environment';
+import { resolve } from 'q';
+let NodeGeocoder  = require('node-geocoder');
 
 // resource: https://jsonresume.org/schema/
 let ResumeSchema = new mongoose.Schema({
@@ -109,58 +111,62 @@ let ResumeSchema = new mongoose.Schema({
 // error catching and reporting
 
 // make all text fields indexable
-ResumeSchema.index({'$**': 'text'});
+ResumeSchema.index({ '$**': 'text' });
 
 function setSkillSizes(skills: any[]): void {
-  skills.forEach((s: any) => {
-    console.log(s);
-    if(s.children) setSkillSizes(s);
+  for(let i = 0; i < skills.length; i++) {
+    let s = skills[i];
+    if (s.children) setSkillSizes(s);
     else s.size = 1;
+  }
+}
+
+function preSave(_self: any, next: any): void {
+  setSkillSizes(_self.skills);
+  let options = {
+    provider: 'google',
+    httpAdapter: 'https',
+    apiKey: environment.GMAPS_API_KEY,
+    formatter: null
+  };
+  let geocoder = NodeGeocoder(options);
+  let addrArr = new Array<string>();
+  _self.work.forEach((w: any) => {
+    // geocode location
+    // if(w.location.lat && w.location.lng) return; // already has lat and lng
+    addrArr.push(`${w.location.address} ${w.location.postalCode} ${w.location.city} ${w.location.country}`);
   });
+  geocoder.batchGeocode(addrArr).then((success) => {
+    success.forEach((s: any, idx: number) => {
+      _self.work[idx].location.lat = s.value[0].latitude;
+      _self.work[idx].location.lng = s.value[0].longitude;
+    });
+    next();
+  }).catch((err) => {
+    console.log('Could not geocode');
+    console.log(err);
+    next();
+  })
 }
 
 // set dates - geocode things pre save
-ResumeSchema.pre('save', function(next) {
-  // let _self: any = this;
-//  let promiseArr = new Array<Promise<any>>();
-  // setSkillSizes(_self.skills);
-  // _self.work.forEach((w: any) => {
-  //   // geocode location
-  //   let address = `${w.address} ${w.postalCode} ${w.city} ${w.country}`;
-  //   let options = {
-  //     method: 'GET',
-  //     url: 'https://maps.googleapis.com/maps/api/geocode/json',
-  //     qs: {
-  //       address: address,
-  //       key: environment.GMAPS_API_KEY
-  //     }
-  //   };
-  //
-  //   promiseArr.push(new Promise<any>((resolve, reject) => {
-  //     request(options).then((response: any) => {
-  //     // check if everything is aite
-  //     // save coords
-  //     // do a resolve
-  //     let coords = JSON.parse(response).results[0].geometry.location;
-  //     w.location.lat = +coords.lat;
-  //     w.location.lng = +coords.lng;
-  //     resolve(w);
-  //   })
-  //   }));
-  // });
-
-
-  // // once everything resolves rewrite work array and save
-  // Promise.all(promiseArr).then((success) => {
-  //   console.log('all promises resolved');
-    //console.log(success);
+ResumeSchema.pre('save', function (next) {
+  preSave(this, function(){
+    console.log('presave - next');
     next();
-  // }).catch((err) => {
-  //   console.log('ERROR');
-  //   console.log(err);
-  //   return;
-  // })
+  });
+});
+
+ResumeSchema.pre('findOneAndUpdate', function (next) {
+  this.findOne({_id: this.getQuery()._id }, (err, doc) => {
+    if(err) return;  
+    preSave(doc, function() {
+      console.log('preupdate - next');
+      next();
+    })
+  });
 });
 
 let Resume = mongoose.model('Resumes', ResumeSchema);
 module.exports = Resume;
+
