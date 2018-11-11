@@ -13,6 +13,7 @@ import { Timeline } from 'vis';
 
 export class TimelineComponent implements AfterViewInit {
     @Input() events: Array<any>;
+    @Input() groups: Array<any>;
     @ViewChild('timeline') timelineContainer: any;
     timeline: any;
 
@@ -21,13 +22,12 @@ export class TimelineComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        console.log(this.events);
         this.createTimeline();
     }
 
     createTimeline(): void {
         let options = {
-            showMinorLabels : false,
+            showMinorLabels : true,
 			showMajorLabels : true,
 			zoomMin			: 86400000*365, // 1 year in ms
 			zoomMax			: 86400000*365*20, // 10 years in ms
@@ -38,7 +38,7 @@ export class TimelineComponent implements AfterViewInit {
 				overflowMethod: 'cap'
 			}
         }
-        this.timeline = new Timeline(this.timelineContainer.nativeElement, this.events);
+        this.timeline = new Timeline(this.timelineContainer.nativeElement, this.events, this.groups);
         this.timeline.setOptions(options);
 
         this.timeline.on('select', (properties: any) => {

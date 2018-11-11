@@ -39,3 +39,96 @@
     border-color: hsl(341, 81%, 41%);
   }
   
+
+  
+
+::ng-deep .timeline-profile-pic {
+  width: 3em;
+  height: 3em;
+  border-radius: 50%;
+  position: absolute;
+  border: 4px solid;
+}
+
+::ng-deep .timeline-profile-initials {
+  color: white;
+  width: 4em;
+  padding-right: 1em;
+  border-radius: 20px;
+  text-align: right;
+  margin-left: 1em;
+  margin-top: 1.15em;
+}
+
+
+::ng-deep .timeline-pic-color-0 {
+  background-color: #3065ff;
+}
+::ng-deep .timeline-pic-color-1 {
+  background-color: #00ccff;
+}
+::ng-deep .timeline-pic-color-2 {
+  background-color: #01FF89;
+}
+::ng-deep .timeline-pic-color-3 {
+  background-color: #87FC70;
+}
+::ng-deep .timeline-pic-color-4 {
+  background-color: #FFDB4C;
+}
+::ng-deep .timeline-pic-color-5 {
+  background-color: #FF9500;
+}
+::ng-deep .timeline-pic-color-6 {
+  background-color: #FF5E3A;
+}
+::ng-deep .timeline-pic-color-7 {
+  background-color: #C644FC;
+}
+::ng-deep .timeline-pic-color-8 {
+  background-color: #ef2ecf;
+}
+::ng-deep .timeline-pic-color-9 {
+  background-color: #f02e6b;
+}
+
+
+::ng-deep .timeline-profile-pic-color-0 {
+  border-color: #3065ff;
+}
+::ng-deep .timeline-profile-pic-color-1 {
+  border-color: #00ccff;
+}
+::ng-deep .timeline-profile-pic-color-2 {
+  border-color: #01FF89;
+}
+::ng-deep .timeline-profile-pic-color-3 {
+  border-color: #87FC70;
+}
+::ng-deep .timeline-profile-pic-color-4 {
+  border-color: #FFDB4C;
+}
+::ng-deep .timeline-profile-pic-color-5 {
+  border-color: #FF9500;
+}
+::ng-deep .timeline-profile-pic-color-6 {
+  border-color: #FF5E3A;
+}
+::ng-deep .timeline-profile-pic-color-7 {
+  border-color: #C644FC;
+}
+::ng-deep .timeline-profile-pic-color-8 {
+  border-color: #ef2ecf;
+}
+::ng-deep .timeline-profile-pic-color-9 {
+  border-color: #f02e6b;
+}
+
+::ng-deep .vis-panel .vis-center,
+::ng-deep .vis-timeline,
+::ng-deep .vis-labelset .vis-label,
+::ng-deep .vis-panel.vis-center, .vis-panel.vis-left, .vis-panel.vis-right, .vis-panel.vis-top, .vis-panel.vis-bottom,
+::ng-deep .vis-foreground .vis-group {
+  border: transparent !important;
+}
+
