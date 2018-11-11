@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Resume } from '../../models/resume';
 import { Skill } from '../../models/skill';
+import { Work } from '../../models/work';
 import { SkillLevel } from '../../lists/skill.level';
 import { CompareService } from '../../services/compare.service';
 import { UtilServices } from 'src/app/services/util.service';
@@ -14,6 +15,7 @@ import { UtilServices } from 'src/app/services/util.service';
 export class CompareComponent  {
   skillData: Array<any>;
   timelineData: Array<any>;
+  timelineGroups: Array<any>;
   treeChartData: Skill;
   mapData: Array<any>;
   skillMap: Map<string, Array<any>>;
@@ -29,6 +31,7 @@ export class CompareComponent  {
     this.treeChartData = new Skill();
     this.treeChartData.name = 'Skills'; //root
     this.timelineData = new Array<any>();
+    this.timelineGroups = new Array<any>();
     this.mapData = new Array<any>();
     this.skillMap = new Map<string, Array<any>>();
 
@@ -38,6 +41,33 @@ export class CompareComponent  {
     this.getTimelineData();
     this.getMapData();
     // skill, person, skillLevel, minSkillLevel, maxSkillLevel
+  }
+
+  calculateAvgJobDuration(resume: Resume): number {
+    let avg = 0;
+    // console.log('job')
+    resume.work.forEach((w: Work) => {
+      // console.log(w.startDate, w.endDate, this.util.getDateDifference(w.startDate, w.endDate))
+      avg += this.util.getDateDifference(w.startDate, w.endDate);
+    });
+
+    return avg/resume.work.length;
+  }
+
+  getNumberOfLocations(resume: Resume): number {
+    let locations = new Set();
+    // console.log('location')
+    resume.work.forEach((w: Work) => {
+      locations.add(w.location.city);
+      // console.log(w.location.city);
+    });
+    return locations.size;
+  }
+
+  getNumberOfLanguages(resume: Resume): number {
+    // console.log('language');
+    // console.log(resume.languages);
+    return resume.languages.length;
   }
 
   getLevelAsNumber(level: string): number {
@@ -50,6 +80,10 @@ export class CompareComponent  {
 
   getColor(id: string): string {
     return this.cs.getColorForResume(id);
+  }
+
+  toggleVisibility(idx: number): void {
+    this.resumes[idx].hidden = !this.resumes[idx].hidden;
   }
 
   getAge(bday: Date): number {
@@ -75,6 +109,12 @@ export class CompareComponent  {
     let identifier = 0;
     this.resumes.forEach((r: Resume, idx: number) => {
         // WORK
+        let initials = this.util.getInitials(r.firstName, r.lastName);
+        let group = {
+          id: idx,
+          content: '<img src="' + r.profilePicture + '" class="timeline-profile-pic timeline-profile-pic-color-' + idx  + '"><div class="timeline-profile-initials timeline-pic-color-' + idx +'"><p class="upper-case">' + initials + '</p></div>'
+        };
+        this.timelineGroups.push(group);
         r.work.forEach((w: any, jdx: number) => {
           this.timelineData.push({
             id: identifier,
@@ -84,7 +124,7 @@ export class CompareComponent  {
             location: w.location,
             start: w.startDate,
             end: w.endDate,
-            title:  this.getTimelineTitle(w, identifier),
+            title:  this.getTimelineTitle(w, idx),
             content: this.getTimelineContent(w),
             className: `timeline-color-${idx}`
           });
@@ -101,7 +141,7 @@ export class CompareComponent  {
             location: e.location,
             start: e.startDate,
             end: e.endDate,
-            title:  this.getTimelineTitle(e, identifier),
+            title:  this.getTimelineTitle(e, idx),
             content: this.getTimelineContent(e),
             className: `timeline-color-${idx}`
           });
@@ -118,7 +158,7 @@ export class CompareComponent  {
             location: null, // should we add a location?
             start: e.startDate,
             end: e.endDate,
-            title: this.getTimelineTitle(e, identifier),
+            title: this.getTimelineTitle(e, idx),
             content: this.getTimelineContent(e),
             className: `timeline-color-${idx}`
           });
@@ -135,7 +175,7 @@ export class CompareComponent  {
             location: null,
             startDate: e.date,
             endDate: null,
-            title: this.getTimelineTitle(e, identifier),
+            title: this.getTimelineTitle(e, idx),
             content: this.getTimelineContent(e),
             className: `timeline-color-${idx}`
           });
@@ -152,19 +192,21 @@ export class CompareComponent  {
             location: null,
             startDate: e.date,
             endDate: null,
-            title: this.getTimelineTitle(e, identifier),
+            title: this.getTimelineTitle(e, idx),
             content: this.getTimelineContent(e),
             className: `timeline-color-${idx}`
           });
           identifier++;
         });
-    })
+    });
+    console.log(this.timelineData);    
   }
-  getMapData(): void {}
+  getMapData(): void {
+    this.mapData = this.resumes;
+  }
 
   getTreeChartData(): void {
-    // FIXME: structure 
-    this.cs.getResumes().forEach((r: Resume) => {
+    this.resumes.forEach((r: Resume) => {
       r.skills.forEach((s: Skill, idx: number) => {
         
         let found = this.getExistingNode(this.treeChartData, s.name);
@@ -221,7 +263,7 @@ export class CompareComponent  {
     this.skillData = new Array<any>();
     this.skillMap = new Map<string, Array<any>>();
 
-    this.cs.getResumes().forEach((r: Resume) => {
+    this.resumes.forEach((r: Resume) => {
       r.skills.forEach((s: Skill) => {
         this.peopleWithSkill(s, r);
       });
@@ -242,9 +284,9 @@ export class CompareComponent  {
     this.skillMap.forEach((v, k) => {
       let arr = new Array<any>();
       v.forEach((e: any) => {
-        if(uniqueSkills.get(e.skill).value === this.cs.getResumes().length) {
+        if(uniqueSkills.get(e.skill).value === this.resumes.length) {
           // match
-          let person = this.cs.getResume(this.cs.getResumes().map((r: Resume) => { return r.id; }).indexOf(k));
+          let person = this.cs.getResume(this.resumes.map((r: Resume) => { return r.id; }).indexOf(k));
           arr.push({
             area: e.skill,
             name: `${person.firstName} ${person.lastName}`,
@@ -259,7 +301,7 @@ export class CompareComponent  {
       if(arr.length > 0) this.skillData.push(arr);
     });
 
-    this.matchedSkills = this.skillData[0].length;
+    this.matchedSkills = this.skillData[0] ? this.skillData[0].length : 0;
   }
 
   peopleWithSkill(currentNode, resume): void {

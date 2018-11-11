@@ -42,6 +42,11 @@
     top: 0em;
     right: 0em;
 }
+.button-top-left {
+    position: absolute;
+    top: 0em;
+    left: 0em;
+}
 
 .list-entry-wrapper {
 padding: 1em;
@@ -70,4 +75,33 @@ flex-direction: column;
 align-items: center;
 justify-content: center;
 text-align: center;
+}
+
+.compare-navigation {
+    position: fixed;
+    left: 0em;
+    top: 40%;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
+.compare-navigation button {
+    margin-bottom: 5em;
+}
+
+.skill-compare {
+    display: flex;
+    flex-direction: row;
+    flex: 0 1 auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.skill-compare,
+.tree-compare,
+.language-compare,
+.timeline-compare,
+.map-compare, {
+    margin-left: 6em;
+    margin-right: 6em;
 }

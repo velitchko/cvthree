@@ -2,9 +2,15 @@
     <p>No resumes selected...</p>
 </div>
 <div *ngIf="resumes.length > 0">
+    <div class="compare-navigation">
+        <button mat-icon-button><mat-icon>people</mat-icon></button>
+        <button mat-icon-button><mat-icon>timeline</mat-icon></button>
+        <button mat-icon-button><mat-icon>place</mat-icon></button>
+    </div>
     <div class="cards-compare">
         <mat-card *ngFor="let r of resumes; let idx = index" [style.border-color]="getColor(r.id)">
             <button mat-icon-button (click)="remove(idx)" class="button-top-right" [style.color]="getColor(r.id)"><mat-icon>clear</mat-icon></button>
+            <button mat-icon-button (click)="toggleVisibility(idx)" class="button-top-left" [style.color]="getColor(r.id)"><mat-icon>{{ r.hidden ? 'visibility' : 'visibility_off' }}</mat-icon></button>
             <mat-card-header>
                 <div class="list-entry-avatar" mat-card-avatar [style.border-color]="getColor(r.id)" [style.backgroundImage]="getSanitizedPicture(r.profilePicture)" (click)="view(idx)">
                 <div class="list-entry-avatar-overlay">
@@ -13,6 +19,15 @@
                 </div>
                 <mat-card-title><h2><span [style.color]="getColor(r.id)">{{ r.firstName }}</span> <span style="color: #707070">{{ r.lastName }} |</span> {{ getAge(r.birthDay) }}</h2></mat-card-title>
                 <mat-card-subtitle>{{ r.label }} @ {{ r.location.city }}, {{ r.location.country }}</mat-card-subtitle>
+                <div>
+                    {{ calculateAvgJobDuration(r) }}
+                </div>
+                <div>
+                    {{ getNumberOfLanguages(r) }}
+                </div>
+                <div>
+                    {{ getNumberOfLocations(r) }}
+                </div>
             </mat-card-header>
             <mat-card-content>
             <!-- honors, certificates, awards-->
@@ -20,6 +35,9 @@
         </mat-card>
     </div>
     <div class="skill-compare">
+        <div *ngIf="matchedSkills === 0">
+            <p>Not enough data dimensions.</p>
+        </div>
         <div *ngIf="matchedSkills === 1">
             <app-compare-lineplot [data]="skillData" (selection)="linePlotSelection($event)"></app-compare-lineplot>
         </div>
@@ -29,17 +47,18 @@
         <div *ngIf="matchedSkills >= 3">        
             <app-radarchart [data]="skillData"></app-radarchart>
         </div>
+        <div class="tree-compare">
+                <app-treechart [data]="treeChartData" (selection)="treeChartSeleection($event)"></app-treechart>
+            </div>
     </div>
-    <div class="tree-compare">
-        <app-treechart [data]="treeChartData" (selection)="treeChartSeleection($event)"></app-treechart>
-    </div>
+  
     <div class="language-compare">
 
     </div>
     <div class="timeline-compare">
-        <app-timeline [events]="timelineData"></app-timeline>
+        <app-timeline [events]="timelineData" [groups]="timelineGroups"></app-timeline>
     </div>
     <div class="map-compare">
-        <app-map [events]="mapData"></app-map>
+        <app-map [resumes]="mapData"></app-map>
     </div>
 </div>
