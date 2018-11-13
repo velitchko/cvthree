@@ -11,11 +11,26 @@ export class CompareService {
     resumes: Array<Resume>;
     colors: Array<string>;
     assignedColors: Map<string, string>; // resume._id, hex(color)
+    
+    private selectedEvents = new BehaviorSubject<Array<any>>(null);
+    currentlySelectedEvents = this.selectedEvents.asObservable();
+
+    private selectedResume = new BehaviorSubject<string>('');
+    currentlySelectedResume = this.selectedResume.asObservable();
+    
     constructor() {
         this.resumes = new Array<Resume>();
         this.colors = new Array<string>('#3065ff', '#00ccff', '#01ff89', '#87fc70', '#ffdb4c', '#ff9500', '#ff5e3a', '#c644fc', '#ef2ecf', '#f02e6b'); // hex
         this.assignedColors = new Map<string, string>();
         this.setupColors();
+    }
+
+    setEventIDs(objectIdArr: any): void {
+        this.selectedEvents.next(objectIdArr);
+    }
+
+    setResumeID(id: string): void {
+        this.selectedResume.next(id);
     }
 
     setupColors(): void {

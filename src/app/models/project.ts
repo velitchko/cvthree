@@ -5,4 +5,5 @@ export class Project {
   url: string;
   summary: string;
   // TODO: add location?
+  identifier?: string;
 }

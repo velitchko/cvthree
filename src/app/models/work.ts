@@ -10,7 +10,8 @@ export class Work {
   summary: string;
   highlights: Array<string>;
   location: Location;
-
+  identifier?: string;
+  
   constructor() {
     this.highlights = new Array<string>()
   }

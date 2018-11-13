@@ -4,4 +4,5 @@ export class Education {
   degree: string;
   startDate: Date;
   endDate: Date;
+  identifier?: string;
 }
