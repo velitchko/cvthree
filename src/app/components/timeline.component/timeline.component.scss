@@ -124,11 +124,13 @@
   border-color: #f02e6b;
 }
 
-::ng-deep .vis-panel .vis-center,
 ::ng-deep .vis-timeline,
 ::ng-deep .vis-labelset .vis-label,
-::ng-deep .vis-panel.vis-center, .vis-panel.vis-left, .vis-panel.vis-right, .vis-panel.vis-top, .vis-panel.vis-bottom,
+::ng-deep .vis-panel.vis-center, 
+::ng-deep .vis-panel.vis-left, 
+::ng-deep .vis-panel.vis-right, 
+::ng-deep .vis-panel.vis-top, 
+::ng-deep .vis-panel.vis-bottom,
 ::ng-deep .vis-foreground .vis-group {
   border: transparent !important;
 }
-

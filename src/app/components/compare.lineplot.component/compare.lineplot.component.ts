@@ -15,9 +15,9 @@ import { svg } from 'leaflet';
 })
 export class CompareLinePlotComponent implements OnChanges {
     @Input() data: any;
-    @Output() selection: EventEmitter<string>;
+    @Output() selectedResume: EventEmitter<string>;
     constructor(private cs: CompareService) {
-        this.selection = new EventEmitter<string>();
+        this.selectedResume = new EventEmitter<string>();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -138,7 +138,7 @@ export class CompareLinePlotComponent implements OnChanges {
                     })
                     .style('stroke-width', '5')
                     .on('mouseover', () => {
-                        this.selection.emit(skill.resumeID);
+                        this.selectedResume.emit(skill.resumeID);
                     });
                     // .attr('transform', 'translate(' + xScale(skill.value) + ', ' + (cfg.h - cfg.ExtraWidthX - 100) + ')')
         });

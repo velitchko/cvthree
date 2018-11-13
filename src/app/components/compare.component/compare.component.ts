@@ -45,13 +45,10 @@ export class CompareComponent  {
 
   calculateAvgJobDuration(resume: Resume): number {
     let avg = 0;
-    // console.log('job')
     resume.work.forEach((w: Work) => {
-      // console.log(w.startDate, w.endDate, this.util.getDateDifference(w.startDate, w.endDate))
       avg += this.util.getDateDifference(w.startDate, w.endDate);
     });
-
-    return avg/resume.work.length;
+    return Math.ceil((avg/resume.work.length) * 100) / 100;
   }
 
   getNumberOfLocations(resume: Resume): number {
@@ -78,12 +75,18 @@ export class CompareComponent  {
     return this.util.getSanitizedPicture(picture);
   }
 
+  scrollTo(element: any): void {
+    console.log(element);
+    element.scrollIntoView({behavior:"smooth"});
+  }
+
   getColor(id: string): string {
     return this.cs.getColorForResume(id);
   }
 
   toggleVisibility(idx: number): void {
     this.resumes[idx].hidden = !this.resumes[idx].hidden;
+    this.cs.setResumeID(this.resumes[idx].id);
   }
 
   getAge(bday: Date): number {
@@ -114,16 +117,21 @@ export class CompareComponent  {
           id: idx,
           content: '<img src="' + r.profilePicture + '" class="timeline-profile-pic timeline-profile-pic-color-' + idx  + '"><div class="timeline-profile-initials timeline-pic-color-' + idx +'"><p class="upper-case">' + initials + '</p></div>'
         };
+        let type = 'range';
         this.timelineGroups.push(group);
         r.work.forEach((w: any, jdx: number) => {
+          w.identifier = identifier;
+          type = w.endDate ? 'range' : 'point';
           this.timelineData.push({
             id: identifier,
             item: jdx,
             group: idx,
             category: 'WORK',
-            location: w.location,
+            resumeID: r.id,
+            location: `${w.location.address ? w.location.address : ''} ${w.location.city ? w.location.city : ''} ${w.location.country ? w.location.country : ''}`,
             start: w.startDate,
             end: w.endDate,
+            type: type,
             title:  this.getTimelineTitle(w, idx),
             content: this.getTimelineContent(w),
             className: `timeline-color-${idx}`
@@ -133,14 +141,18 @@ export class CompareComponent  {
         
         // EDUCATION
         r.education.forEach((e: any, jdx: number) => {
+          e.identifier = identifier;
+          type = e.endDate ? 'range' : 'point';
           this.timelineData.push({
             id: identifier,
             item: jdx,
             group: idx,
-            category: 'WORK',
+            category: 'EDUCATION',
+            resumeID: r.id,
             location: e.location,
             start: e.startDate,
             end: e.endDate,
+            type: type,
             title:  this.getTimelineTitle(e, idx),
             content: this.getTimelineContent(e),
             className: `timeline-color-${idx}`
@@ -150,14 +162,18 @@ export class CompareComponent  {
 
         // PROJECTS
         r.projects.forEach((e: any, jdx: number) => {
+          e.identifier = identifier;
+          type = e.endDate ? 'range' : 'point';
           this.timelineData.push({
             id: identifier,
             item: jdx,
             group: idx,
             category: 'PROJECT',
+            resumeID: r.id,
             location: null, // should we add a location?
             start: e.startDate,
             end: e.endDate,
+            type: type,
             title: this.getTimelineTitle(e, idx),
             content: this.getTimelineContent(e),
             className: `timeline-color-${idx}`
@@ -167,14 +183,17 @@ export class CompareComponent  {
 
         // PUBLICATIONS
         r.publications.forEach((e: any, jdx: number) => {
+          e.identifier = identifier;
           this.timelineData.push({
             id: identifier,
             item: jdx,
             group: idx,
             category: 'PUBLICATION',
+            resumeID: r.id,
             location: null,
             startDate: e.date,
             endDate: null,
+            type: 'point',
             title: this.getTimelineTitle(e, idx),
             content: this.getTimelineContent(e),
             className: `timeline-color-${idx}`
@@ -184,14 +203,17 @@ export class CompareComponent  {
 
         // AWARDS/CERTIFICATES
         r.awards.forEach((e: any, jdx: number) => {
+          e.identifier = identifier;
           this.timelineData.push({
             id: identifier,
             item: jdx,
             group: idx,
-            category: 'AWARD/CERTIFICATE',
+            category: 'CERTIFICATE/AWARD',
+            resumeID: r.id,
             location: null,
             startDate: e.date,
             endDate: null,
+            type: 'point',
             title: this.getTimelineTitle(e, idx),
             content: this.getTimelineContent(e),
             className: `timeline-color-${idx}`
@@ -199,7 +221,7 @@ export class CompareComponent  {
           identifier++;
         });
     });
-    console.log(this.timelineData);    
+    console.log(this.timelineData);
   }
   getMapData(): void {
     this.mapData = this.resumes;
@@ -234,7 +256,6 @@ export class CompareComponent  {
         }
       });
     });
-    console.log(this.treeChartData);
   }
 
   getParentOfChild(currentNode, target): Skill  {
@@ -338,18 +359,21 @@ export class CompareComponent  {
     }
   }
 
-  linePlotSelection($event: any): void {
-    console.log($event);
-  }
-
-  treeChartSelection($event: any): void {
+  highlightResume($event): void {
     console.log($event);
   }
 
   remove(idx: number): void {
     this.cs.removeResume(this.resumes[idx].id);
     this.getSkillData();
-
   }
 
+  onResumeSelected($event: any): void {
+    console.log('resume selected ' + $event)
+  }
+
+  onEventSelected($event: any): void {
+    console.log($event);
+    this.cs.setEventIDs($event);
+  }
 }

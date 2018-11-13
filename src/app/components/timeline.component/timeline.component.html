@@ -1,1 +1,21 @@
+<div class="timeline-control">
+    <mat-form-field>
+        <input matInput placeholder="Search by location" (keyup)="filterByLocation($event)" #locationFilter>
+        <button mat-button *ngIf="locationFilter.value" matSuffix mat-icon-button aria-label="Clear" (click)="locationFilter.value=''; clearFilter();">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-select placeholder="Search by event type" (selectionChange)="filterByEventType($event)" #eventFilter>
+            <mat-option value="WORK">Work</mat-option>
+            <mat-option value="EDUCATION">Education</mat-option>
+            <mat-option value="PROJECT">Project</mat-option>
+            <mat-option value="PUBLICATION">Publication</mat-option>
+            <mat-option value="CERTIFICATE">Certificate/Award</mat-option>
+        </mat-select>
+        <button mat-button *ngIf="eventFilter.value" matSuffix mat-icon-button aria-label="Clear" (click)="eventFilter.value=''; clearFilter();">
+                <mat-icon>close</mat-icon>
+            </button>
+    </mat-form-field>
+</div>
 <div id="timeline" #timeline></div>

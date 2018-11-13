@@ -17,9 +17,16 @@ import * as d3 from 'd3';
 
 export class TreeChartComponent implements OnChanges {
   @Input() data: any;
-  @Output() selection: EventEmitter<string>;
-  constructor() {
-    this.selection = new EventEmitter<string>();
+  @Output() selectedResume: EventEmitter<string>;
+  constructor(private cs: CompareService) {
+    this.selectedResume = new EventEmitter<string>();
+
+    this.cs.currentlySelectedResume.subscribe((selection: any) => {
+      if(selection) {
+        console.log('selecting ');
+        console.log(selection);
+      }
+    })
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes) {

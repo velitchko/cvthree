@@ -3,3 +3,30 @@
     height: 66vh;
     overflow-y: hidden;
   }
+
+.map-legend {
+  position: absolute;
+  z-index: 1000;
+  bottom: 1em;
+  display: flex;
+  flex-direction: row;
+  flex: 0 1 auto;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.map-legend-resume {
+  .map-profile-pic {
+    width: 4em;
+    height: 4em;
+    margin-right: 2em;
+    & img {
+      border: 4px solid;
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+    }
+
+  }
+}

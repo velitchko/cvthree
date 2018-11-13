@@ -1,8 +1,9 @@
-<div id="map" #map></div>
-<div class="map-legend">
-    <div *ngFor="let r of resumes" class="map-legend-resume">
-        <div class="map-profile-pic">
-            <img [src]="r.profilePicture">
+<div id="map" #map>
+    <div class="map-legend">
+        <div *ngFor="let r of resumes" class="map-legend-resume">
+            <div class="map-profile-pic" (click)="selectResume(r)">
+                <img [src]="r.profilePicture" [style.border-color]="getColor(r.id)">
+            </div>
         </div>
     </div>
 </div>

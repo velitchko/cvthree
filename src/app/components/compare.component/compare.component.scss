@@ -6,6 +6,10 @@
     align-items: center;
 }
 
+.compare-wrapper > div {
+    padding-bottom: 3em;
+}
+
 .list-entry-avatar {
     width: 150px;
     height: 150px;
@@ -80,7 +84,7 @@ text-align: center;
 .compare-navigation {
     position: fixed;
     left: 0em;
-    top: 40%;
+    top: 30%;
     display: flex;
     flex-direction: column;
     z-index: 1000;
