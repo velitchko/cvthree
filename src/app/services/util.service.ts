@@ -27,9 +27,10 @@ export class UtilServices {
   }
 
   getDateDifference(a: Date, b: Date): number {
-    let start = moment(a, 'DD/MM/YYYY');
-    let end = b ? moment(b, 'DD/MM/YYYY') : moment(Date.now(), 'DD/MM/YYYY');
-    return end.diff(b, 'years');
+    if(!b) return 0;
+    let start = moment(a, 'YYYY-MM-DD');
+    let end = b ? moment(b, 'YYYY-MM-DD') : moment(Date.now(), 'YYYY-MM-DD');
+    return end.diff(start, 'years');
   }
 
 }
