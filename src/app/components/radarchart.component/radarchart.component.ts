@@ -28,16 +28,12 @@ export class RadarChartComponent implements OnChanges {
     this.selectedResume = new EventEmitter<string>();
     this.cs.currentlySelectedResume.subscribe((selection: any) => {
       if (selection) {
-        console.log('should highlight');
-        console.log(selection);
         this.highlightArea(selection);
       }
     })
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes) {
-      console.log('changes');
-      console.log(changes);
       if (this.data) {
         this.drawRadarChart('#chart', this.data, this.config);
       }
@@ -57,11 +53,9 @@ export class RadarChartComponent implements OnChanges {
     let area = d3.select(`[id="${selection}"]`);
     area.transition()
       .style('fill-opacity', .7);
-    console.log(area);
   }
 
   drawRadarChart(id: string, d: any, options: any): void {
-    console.log('redraw');
     let initialData = d;
     let cfg = {
       radius: 0,
@@ -184,13 +178,13 @@ export class RadarChartComponent implements OnChanges {
           return str;
         })
         .style('fill', () => { return this.cs.getColorForResume(y[0].resumeID); })
-        .style('fill-opacity', cfg.opacityArea)
+        .style('fill-opacity', .1)
         .on('mouseover', (d: any, i: any, n: any) => {
           this.selectedResume.emit(y[0].resumeID);
           let z = 'polygon.' + d3.select(n[i]).attr('class');
-          g.selectAll('polygon')
-            .transition()
-            .style('fill-opacity', 0.1);
+          // g.selectAll('polygon')
+          //   .transition()
+          //   .style('fill-opacity', 0.1);
           g.selectAll(z)
             .transition()
             .style('fill-opacity', .7);
@@ -199,7 +193,7 @@ export class RadarChartComponent implements OnChanges {
           this.selectedResume.emit('none');
           g.selectAll('polygon')
             .transition()
-            .style('fill-opacity', cfg.opacityArea);
+            .style('fill-opacity', .1);
         });
       series++;
     });
