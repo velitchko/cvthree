@@ -37,6 +37,23 @@ export class TreeChartComponent implements OnChanges {
     }
   }
 
+  getSkillOpacity(level: string): number {
+    switch(level) {
+      case 'BASIC': return 0.2;
+      case 'NOVICE': return 0.4;
+      case 'INTERMEDIATE': return 0.6;
+      case 'ADVANCED': return 0.8;
+      case 'EXPERT': return 1;
+      default: return 1;
+    }
+    // 20% - #33
+    // 40% - #66
+    // 60% - #99
+    // 80% - #CC
+    // 100% - #FF
+  }
+
+
   unhighlightNodes(): void {
     d3.selectAll('circle.node')
       .each((d: any, i: any, n: any) => {
@@ -62,7 +79,9 @@ export class TreeChartComponent implements OnChanges {
         if (d.data.people.includes(resumeID) || d.data.name === 'Skills') {
           d3.select(n[i])
             .transition()
-            .attr('stroke-opacity', .7)
+            .attr('stroke-opacity', () => {
+              return this.getSkillOpacity(d.data.level);
+            })
             .attr('stroke-width', 4)
             .attr('stroke', () => {
               return this.cs.getColorForResume(resumeID);
