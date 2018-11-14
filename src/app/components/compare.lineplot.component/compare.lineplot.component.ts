@@ -21,8 +21,6 @@ export class CompareLinePlotComponent implements OnChanges {
 
         this.cs.currentlySelectedResume.subscribe((selection: any) => {
             if(selection) {
-                console.log('lineplot')
-                console.log(selection)
                 this.highlightNode(selection);
             }
         })
@@ -30,10 +28,8 @@ export class CompareLinePlotComponent implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         if(changes) {
-            console.log('changes');
-            console.log(changes);
             if(this.data) {
-                this.drawScatterPlot('#line-plot', this.data);
+                this.drawLinePlot('#line-plot', this.data);
             }
         }
     }
@@ -58,7 +54,7 @@ export class CompareLinePlotComponent implements OnChanges {
         }
     }
 
-    drawScatterPlot(id: string, d: any, options?: any): void {
+    drawLinePlot(id: string, data: any, options?: any): void {
         let yCoords = new Map<number, number>();
         d3.select(id).select('svg').remove(); 
         let cfg = {
@@ -76,7 +72,7 @@ export class CompareLinePlotComponent implements OnChanges {
             TranslateY: 50,
             ExtraWidthX: 100,
             ExtraWidthY: 100,
-           };
+        };
 
         if('undefined' !== typeof options){
             for(let i in options){
@@ -110,7 +106,17 @@ export class CompareLinePlotComponent implements OnChanges {
             skills.push(d[0]);
             return;
         });
-    
+        let skillName = this.data[0][0].area;
+
+        let text = g.append('text')
+            .text(skillName);
+
+        let textBBox = (<any>text.node()).getBBox();
+
+        text.attr('x', cfg.w/2 - textBBox.width/2)
+            .attr('y', cfg.h - cfg.TranslateY);
+            // .attr('font-weight', 'bold');
+
         skills.forEach((skill: any) => {  
            g.append('svg:defs')
             .append('svg:pattern')
