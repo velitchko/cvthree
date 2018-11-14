@@ -12,7 +12,7 @@ import { UtilServices } from 'src/app/services/util.service';
   styleUrls: ['compare.component.scss']
 })
 
-export class CompareComponent  {
+export class CompareComponent {
   skillData: Array<any>;
   timelineData: Array<any>;
   timelineGroups: Array<any>;
@@ -26,7 +26,7 @@ export class CompareComponent  {
     private cs: CompareService,
     private cd: ChangeDetectorRef,
     private util: UtilServices
-    ) {
+  ) {
     this.resumes = this.cs.getResumes() || new Array<Resume>();
     this.skillData = new Array<any>();
     this.treeChartData = new Skill();
@@ -49,22 +49,18 @@ export class CompareComponent  {
     resume.work.forEach((w: Work) => {
       avg += this.util.getDateDifference(w.startDate, w.endDate);
     });
-    return Math.ceil((avg/resume.work.length) * 100) / 100;
+    return Math.ceil((avg / resume.work.length) * 100) / 100;
   }
 
   getNumberOfLocations(resume: Resume): number {
     let locations = new Set();
-    // console.log('location')
     resume.work.forEach((w: Work) => {
       locations.add(w.location.city);
-      // console.log(w.location.city);
     });
     return locations.size;
   }
 
   getNumberOfLanguages(resume: Resume): number {
-    // console.log('language');
-    // console.log(resume.languages);
     return resume.languages.length;
   }
 
@@ -77,8 +73,7 @@ export class CompareComponent  {
   }
 
   scrollTo(element: any): void {
-    console.log(element);
-    element.scrollIntoView({behavior:"smooth"});
+    element.scrollIntoView({ behavior: "smooth" });
   }
 
   getColor(id: string): string {
@@ -87,7 +82,7 @@ export class CompareComponent  {
 
   toggleVisibility(idx: number): void {
     this.resumes[idx].highlighted = !this.resumes[idx].highlighted;
-    if(this.resumes[idx].highlighted) {
+    if (this.resumes[idx].highlighted) {
       this.cs.setResumeID(this.resumes[idx].id);
     } else {
       this.cs.setResumeID('none');
@@ -116,117 +111,116 @@ export class CompareComponent  {
   getTimelineData(): void {
     let identifier = 0;
     this.resumes.forEach((r: Resume, idx: number) => {
-        // WORK
-        let initials = this.util.getInitials(r.firstName, r.lastName);
-        let group = {
-          id: idx,
-          content: '<img src="' + r.profilePicture + '" class="timeline-profile-pic timeline-profile-pic-color-' + idx  + '"><div class="timeline-profile-initials timeline-pic-color-' + idx +'"><p class="upper-case">' + initials + '</p></div>'
-        };
-        let type = 'range';
-        this.timelineGroups.push(group);
-        r.work.forEach((w: any, jdx: number) => {
-          w.identifier = identifier;
-          type = w.endDate ? 'range' : 'point';
-          this.timelineData.push({
-            id: identifier,
-            item: jdx,
-            group: idx,
-            category: 'WORK',
-            resumeID: r.id,
-            location: `${w.location.address ? w.location.address : ''} ${w.location.city ? w.location.city : ''} ${w.location.country ? w.location.country : ''}`,
-            start: w.startDate,
-            end: w.endDate,
-            type: type,
-            title:  this.getTimelineTitle(w, idx),
-            content: this.getTimelineContent(w),
-            className: `timeline-color-${idx}`
-          });
-          identifier++;
+      // WORK
+      let initials = this.util.getInitials(r.firstName, r.lastName);
+      let group = {
+        id: idx,
+        content: '<img src="' + r.profilePicture + '" class="timeline-profile-pic timeline-profile-pic-color-' + idx + '"><div class="timeline-profile-initials timeline-pic-color-' + idx + '"><p class="upper-case">' + initials + '</p></div>'
+      };
+      let type = 'range';
+      this.timelineGroups.push(group);
+      r.work.forEach((w: any, jdx: number) => {
+        w.identifier = identifier;
+        type = w.endDate ? 'range' : 'point';
+        this.timelineData.push({
+          id: identifier,
+          item: jdx,
+          group: idx,
+          category: 'WORK',
+          resumeID: r.id,
+          location: `${w.location.address ? w.location.address : ''} ${w.location.city ? w.location.city : ''} ${w.location.country ? w.location.country : ''}`,
+          start: w.startDate,
+          end: w.endDate,
+          type: type,
+          title: this.getTimelineTitle(w, idx),
+          content: this.getTimelineContent(w),
+          className: `timeline-color-${idx}`
         });
-        
-        // EDUCATION
-        r.education.forEach((e: any, jdx: number) => {
-          e.identifier = identifier;
-          type = e.endDate ? 'range' : 'point';
-          this.timelineData.push({
-            id: identifier,
-            item: jdx,
-            group: idx,
-            category: 'EDUCATION',
-            resumeID: r.id,
-            location: e.location,
-            start: e.startDate,
-            end: e.endDate,
-            type: type,
-            title:  this.getTimelineTitle(e, idx),
-            content: this.getTimelineContent(e),
-            className: `timeline-color-${idx}`
-          });
-          identifier++;
-        });
+        identifier++;
+      });
 
-        // PROJECTS
-        r.projects.forEach((e: any, jdx: number) => {
-          e.identifier = identifier;
-          type = e.endDate ? 'range' : 'point';
-          this.timelineData.push({
-            id: identifier,
-            item: jdx,
-            group: idx,
-            category: 'PROJECT',
-            resumeID: r.id,
-            location: null, // should we add a location?
-            start: e.startDate,
-            end: e.endDate,
-            type: type,
-            title: this.getTimelineTitle(e, idx),
-            content: this.getTimelineContent(e),
-            className: `timeline-color-${idx}`
-          });
-          identifier++;
+      // EDUCATION
+      r.education.forEach((e: any, jdx: number) => {
+        e.identifier = identifier;
+        type = e.endDate ? 'range' : 'point';
+        this.timelineData.push({
+          id: identifier,
+          item: jdx,
+          group: idx,
+          category: 'EDUCATION',
+          resumeID: r.id,
+          location: e.location,
+          start: e.startDate,
+          end: e.endDate,
+          type: type,
+          title: this.getTimelineTitle(e, idx),
+          content: this.getTimelineContent(e),
+          className: `timeline-color-${idx}`
         });
+        identifier++;
+      });
 
-        // PUBLICATIONS
-        r.publications.forEach((e: any, jdx: number) => {
-          e.identifier = identifier;
-          this.timelineData.push({
-            id: identifier,
-            item: jdx,
-            group: idx,
-            category: 'PUBLICATION',
-            resumeID: r.id,
-            location: null,
-            startDate: e.date,
-            endDate: null,
-            type: 'point',
-            title: this.getTimelineTitle(e, idx),
-            content: this.getTimelineContent(e),
-            className: `timeline-color-${idx}`
-          });
-          identifier++;
+      // PROJECTS
+      r.projects.forEach((e: any, jdx: number) => {
+        e.identifier = identifier;
+        type = e.endDate ? 'range' : 'point';
+        this.timelineData.push({
+          id: identifier,
+          item: jdx,
+          group: idx,
+          category: 'PROJECT',
+          resumeID: r.id,
+          location: null, // should we add a location?
+          start: e.startDate,
+          end: e.endDate,
+          type: type,
+          title: this.getTimelineTitle(e, idx),
+          content: this.getTimelineContent(e),
+          className: `timeline-color-${idx}`
         });
+        identifier++;
+      });
 
-        // AWARDS/CERTIFICATES
-        r.awards.forEach((e: any, jdx: number) => {
-          e.identifier = identifier;
-          this.timelineData.push({
-            id: identifier,
-            item: jdx,
-            group: idx,
-            category: 'CERTIFICATE/AWARD',
-            resumeID: r.id,
-            location: null,
-            startDate: e.date,
-            endDate: null,
-            type: 'point',
-            title: this.getTimelineTitle(e, idx),
-            content: this.getTimelineContent(e),
-            className: `timeline-color-${idx}`
-          });
-          identifier++;
+      // PUBLICATIONS
+      r.publications.forEach((e: any, jdx: number) => {
+        e.identifier = identifier;
+        this.timelineData.push({
+          id: identifier,
+          item: jdx,
+          group: idx,
+          category: 'PUBLICATION',
+          resumeID: r.id,
+          location: null,
+          startDate: e.date,
+          endDate: null,
+          type: 'point',
+          title: this.getTimelineTitle(e, idx),
+          content: this.getTimelineContent(e),
+          className: `timeline-color-${idx}`
         });
+        identifier++;
+      });
+
+      // AWARDS/CERTIFICATES
+      r.awards.forEach((e: any, jdx: number) => {
+        e.identifier = identifier;
+        this.timelineData.push({
+          id: identifier,
+          item: jdx,
+          group: idx,
+          category: 'CERTIFICATE/AWARD',
+          resumeID: r.id,
+          location: null,
+          startDate: e.date,
+          endDate: null,
+          type: 'point',
+          title: this.getTimelineTitle(e, idx),
+          content: this.getTimelineContent(e),
+          className: `timeline-color-${idx}`
+        });
+        identifier++;
+      });
     });
-    console.log(this.timelineData);
   }
   getMapData(): void {
     this.mapData = this.resumes;
@@ -235,52 +229,79 @@ export class CompareComponent  {
   getTreeChartData(): void {
     this.resumes.forEach((r: Resume) => {
       r.skills.forEach((s: Skill) => {
-        console.log(s.name);
-        this.generateTreeData(this.treeChartData, r.id, s);
+        this.generateTreeData(this.treeChartData, r.id, s, r.skills);
       });
     });
   }
 
-  generateTreeData(currentNode: Skill, resumeID: string, currentSkill: Skill): void {
-    let found = this.getExistingNode(currentNode, currentSkill.name);
-    console.log(found);
-    if(found) {
-      if(!found.people) found.people = new Array<string>();
+  generateTreeData(currentNode: Skill, resumeID: string, currentSkill: Skill, skillArray: Array<Skill>): void {
+    let found = this.getExistingNode(this.treeChartData, currentSkill.name);
+    if (found) {
+      if (!found.people) found.people = new Array<string>();
       found.people.push(resumeID);
-      console.log('appending to existing');
     } else {
-        console.log('creating child');
-        // need to add people that know the skill additionally
-        if(!currentSkill.people) currentSkill.people = new Array<string>();
-        currentSkill.people.push(resumeID);
-        this.treeChartData.children.push(currentSkill);
+      let skillParent = this.findParent(skillArray, currentSkill.name);
+      if(skillParent) {
+        let foundParent = this.getExistingNode(this.treeChartData, skillParent.name);
+        if(foundParent) {
+          let skill = new Skill();
+          skill.name = currentSkill.name;
+          skill.level = currentSkill.level;
+          skill.experience = currentSkill.experience;
+          skill.people = new Array<string>();
+          skill.people.push(resumeID);
+          foundParent.children.push(skill);
+        } else {
+          let skill = new Skill();
+          skill.name = currentSkill.name;
+          skill.level = currentSkill.level;
+          skill.experience = currentSkill.experience;
+          skill.people = new Array<string>();
+          skill.people.push(resumeID);
+          this.treeChartData.children.push(skill);
+        }
+      } else {
+        let skill = new Skill();
+        skill.name = currentSkill.name;
+        skill.level = currentSkill.level;
+        skill.experience = currentSkill.experience;
+        skill.people = new Array<string>();
+        skill.people.push(resumeID);
+        this.treeChartData.children.push(skill);
+      }
     }
 
-    for(let i = 0; i < currentSkill.children.length; i++) {
+    for (let i = 0; i < currentSkill.children.length; i++) {
       let currentChild = currentSkill.children[i];
-      this.generateTreeData(currentNode, resumeID, currentChild);
+      this.generateTreeData(currentNode, resumeID, currentChild, skillArray);
     }
   }
 
-  getParentOfChild(currentNode, target): Skill  {
-    if(currentNode.children.filter((s) => {return s.name === target;}).length > 0) return currentNode;
+  findParent(skillArray: Array<Skill>, targetNode: string): Skill {
+    let found;
+    skillArray.forEach((n: Skill) => {
+      found = this.getParentOfChild(n, targetNode);
+    });
+    return found;
+  }
 
-    for(let i = 0; i < currentNode.children.length; i++) {
-        let currentChild = currentNode.children[i];
-        let result = this.getParentOfChild(currentChild, target);
-        if(result) return result;
+  getParentOfChild(currentNode: Skill, target: string): Skill {
+    if (currentNode.children.filter((s) => { return s.name === target; }).length > 0) return currentNode;
+    for (let i = 0; i < currentNode.children.length; i++) {
+      let currentChild = currentNode.children[i];
+      let result = this.getParentOfChild(currentChild, target);
+      if (result) return result;
     }
     return null;
   }
 
-
   getExistingNode(currentNode: any, target: any): Skill {
-    if(currentNode.name === target) return currentNode;
+    if (currentNode.name === target) return currentNode;
 
-    for(let i = 0; i < currentNode.children.length; i++) {
+    for (let i = 0; i < currentNode.children.length; i++) {
       let currentChild = currentNode.children[i];
       let exists = this.getExistingNode(currentChild, target);
-      if(exists) return exists;
+      if (exists) return exists;
     }
   }
 
@@ -293,12 +314,12 @@ export class CompareComponent  {
         this.peopleWithSkill(s, r);
       });
     });
-    
+
     let uniqueSkills = new Map<string, any>();
-    
+
     this.skillMap.forEach((v, k) => {
       v.forEach((e: any) => {
-        if(!uniqueSkills.has(e.skill)) {
+        if (!uniqueSkills.has(e.skill)) {
           uniqueSkills.set(e.skill, { value: 1 });
         } else {
           uniqueSkills.get(e.skill).value += 1;
@@ -309,7 +330,7 @@ export class CompareComponent  {
     this.skillMap.forEach((v, k) => {
       let arr = new Array<any>();
       v.forEach((e: any) => {
-        if(uniqueSkills.get(e.skill).value === this.resumes.length) {
+        if (uniqueSkills.get(e.skill).value === this.resumes.length) {
           // match
           let person = this.cs.getResume(this.resumes.map((r: Resume) => { return r.id; }).indexOf(k));
           arr.push({
@@ -323,22 +344,22 @@ export class CompareComponent  {
         }
       });
 
-      if(arr.length > 0) this.skillData.push(arr);
+      if (arr.length > 0) this.skillData.push(arr);
     });
 
     this.matchedSkills = this.skillData[0] ? this.skillData[0].length : 0;
   }
 
   peopleWithSkill(currentNode, resume): void {
-    if(currentNode.level !== '' && currentNode.children.length === 0) {
+    if (currentNode.level !== '' && currentNode.children.length === 0) {
       // if exists push result ontop
-      if(this.skillMap.has(resume.id)) {
+      if (this.skillMap.has(resume.id)) {
         let value = {
           skill: currentNode.name,
-          level: this.getLevelAsNumber(currentNode.level), 
+          level: this.getLevelAsNumber(currentNode.level),
           name: `${resume.firstName} ${resume.lastName}`,
-          person: resume, 
-          minLevel: 0, 
+          person: resume,
+          minLevel: 0,
           maxLevel: 5
         };
         this.skillMap.get(resume.id).push(value);
@@ -347,17 +368,17 @@ export class CompareComponent  {
         let values = new Array<any>();
         values.push({
           skill: currentNode.name,
-          level: this.getLevelAsNumber(currentNode.level), 
+          level: this.getLevelAsNumber(currentNode.level),
           name: `${resume.firstName} ${resume.lastName}`,
-          person: resume, 
-          minLevel: 0, 
+          person: resume,
+          minLevel: 0,
           maxLevel: 5
         })
         this.skillMap.set(resume.id, values);
       }
     }
 
-    for(let i = 0; i < currentNode.children.length; i++) {
+    for (let i = 0; i < currentNode.children.length; i++) {
       let currentChild = currentNode.children[i];
       this.peopleWithSkill(currentChild, resume);
     }
@@ -366,7 +387,7 @@ export class CompareComponent  {
   highlightResume($event): void {
     // de-highlight all
     this.resumes.forEach((r: Resume) => { r.highlighted = false; });
-    if($event === 'none') return;
+    if ($event === 'none') return;
     // highlight selection
     let resume = this.resumes.find((r: Resume) => { return r.id === $event; });
     resume.highlighted = true;
@@ -380,7 +401,6 @@ export class CompareComponent  {
   }
 
   onEventSelected($event: any): void {
-    console.log($event);
     this.cs.setEventIDs($event);
   }
 }
