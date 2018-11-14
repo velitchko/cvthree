@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef, AfterViewInit, Output, EventEmitter  } from '@angular/core';
+import { Component, Input, ViewChild, SimpleChanges, OnChanges, Output, EventEmitter  } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UtilServices } from '../../services/util.service';
 import { CompareService } from '../../services/compare.service';
@@ -11,7 +11,7 @@ import { Timeline } from 'vis';
   styleUrls: ['timeline.component.scss']
 })
 
-export class TimelineComponent implements AfterViewInit {
+export class TimelineComponent implements OnChanges {
     @Input() events: Array<any>;
     @Input() groups: Array<any>;
     @Output() selectedEvent: EventEmitter<any>;
@@ -21,7 +21,7 @@ export class TimelineComponent implements AfterViewInit {
     constructor(private cs: CompareService) {
         this.selectedEvent = new EventEmitter<any>();
         this.cs.currentlySelectedResume.subscribe((selection: any) => {
-            if(selection) {
+            if(selection && this.events) {
                 let selectedIDs = new Array<number>();
                 this.events.forEach((e: any) => {
                     if(e.resumeID === selection) selectedIDs.push(e.id);
@@ -42,8 +42,10 @@ export class TimelineComponent implements AfterViewInit {
         });
     }
 
-    ngAfterViewInit(): void {
-        this.createTimeline();
+    ngOnChanges(changes: SimpleChanges): void {
+        if(changes) {
+            this.createTimeline();
+        }
     }
 
     clearFilter(): void {
