@@ -18,30 +18,82 @@ import * as d3 from 'd3';
 export class TreeChartComponent implements OnChanges {
   @Input() data: any;
   @Output() selectedResume: EventEmitter<string>;
+
   constructor(private cs: CompareService) {
     this.selectedResume = new EventEmitter<string>();
 
     this.cs.currentlySelectedResume.subscribe((selection: any) => {
-      if(selection) {
-        console.log('selecting ');
+      if (selection) {
         console.log(selection);
+        selection === 'none' ? this.unhighlightNodes() : this.highlightNodes(selection);
       }
-    })
+    });
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes) {
       console.log(changes);
-      if(this.data) this.drawTree('#tree-chart', this.data);
+      if (this.data) this.drawTree('#tree-chart', this.data);
     }
+  }
+
+  unhighlightNodes(): void {
+    d3.selectAll('circle.node')
+      .each((d: any, i: any, n: any) => {
+        d3.select(n[i])
+          .transition()
+          .attr('stroke-width', 2)
+          .attr('stroke', '#D4D8DA');
+      });
+
+      d3.selectAll('path.link')
+      .each((d: any, i: any, n: any) => {
+        d3.select(n[i])
+        .transition()
+        .attr('stroke-width', 2)
+        .attr('stroke', '#D4D8DA');
+      });
+  }
+
+  highlightNodes(resumeID: string): void {
+    // highlight nodes
+    d3.selectAll('circle.node')
+      .each((d: any, i: any, n: any) => {
+        if (d.data.people.includes(resumeID) || d.data.name === 'Skills') {
+          d3.select(n[i])
+            .transition()
+            .attr('stroke-opacity', .7)
+            .attr('stroke-width', 4)
+            .attr('stroke', () => {
+              return this.cs.getColorForResume(resumeID);
+            });
+        }
+      });
+    // highlight edges
+    let root = d3.hierarchy(this.data, function (d: any) { return d.children; });
+    let links = root.links();
+    links.forEach((l: any) => {
+      d3.selectAll('path.link').each((dl: any, il: any, nl: any) => {
+        if(!dl.data.people.includes(resumeID)) return;
+        if (l.source.data.name === dl.parent.data.name && l.target.data.name === dl.data.name) {
+          d3.select(nl[il])
+            .transition()
+            .attr('stroke-width', 4)
+            .attr('stroke', () => {
+              return this.cs.getColorForResume(resumeID);
+            });
+        }
+      });
+    })
   }
 
   drawTree(id: string, treeData: any): void {
     // First check this out : https://medium.com/@c_behrens/enter-update-exit-6cafc6014c36 to understand how enter, update, exit works
     // Tree already in proper format
-    
+
     // Setup SVG Element - Start
 
-    let margin = { top: 20, right: 20, bottom: 30, left: 20 },
+    let margin = { top: 30, right: 20, bottom: 30, left: 20 },
       width = 960 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
 
@@ -79,11 +131,11 @@ export class TreeChartComponent implements OnChanges {
     // root.children = null;
 
     // Let's draw the tree
-    draw(root);
+    draw(root, this);
 
     // console.log(root);
 
-    function draw(source) {
+    function draw(source, _self) {
 
       // Get the treemap, so that we can get nodes and links
       let treeData = treemap(root);
@@ -115,7 +167,7 @@ export class TreeChartComponent implements OnChanges {
       nodeEnter.append('circle')
         .attr('class', 'node')
         .attr('r', 0)
-        .style('fill', function (d: any) {
+        .attr('fill', function (d: any) {
           return d._children ? 'lightsteelblue' : '#fff';
         });
 
@@ -124,7 +176,7 @@ export class TreeChartComponent implements OnChanges {
       nodeEnter.append('text')
         .attr('dy', '.35em')
         .attr('x', function (d: any) {
-          return d.children || d._children ? -1*circleSize : circleSize;
+          return d.children || d._children ? -1 * circleSize : circleSize;
         })
         .attr('text-anchor', function (d: any) {
           return d.children || d._children ? 'end' : 'start';
@@ -143,13 +195,26 @@ export class TreeChartComponent implements OnChanges {
 
 
       // Let's update the radius now, which was previously zero.
-
       nodeUpdate.select('circle.node')
         .attr('r', circleSize)
-        .style('fill', function (d: any) {
+        .attr('stroke-width', 2)
+        .attr('stroke', '#D4D8DA')
+        .attr('fill', function (d: any) {
           return d._children ? 'lightsteelblue' : '#fff';
         })
-        .attr('cursor', 'pointer');
+        .attr('cursor', 'pointer')
+            .on('mouseover', (d: any) => {
+          if(d.data.people[0]) _self.selectedResume.emit(d.data.people[0]);
+        })
+        .on('mouseout', (d: any) => {
+          console.log('mouseout');          _self.selectedResume.emit('none');
+        })
+        .each((d: any) => {
+          // TODO: create a circle packed representation where people = dots of color
+          // console.log(d.data.name)
+          // console.log(d.data.people);
+          // console.log('----------');
+        });
 
       // Let's work on exiting nodes
 
@@ -168,11 +233,10 @@ export class TreeChartComponent implements OnChanges {
 
       // On exit reduce the opacity of text labels
       nodeExit.select('text')
-        .style('fill-opacity', 0);
+        .attr('fill-opacity', 0);
 
 
       // Let's draw links
-
       let link = g.selectAll('path.link')
         .data(links, function (d: any) { return d.id; });
 
@@ -180,6 +244,14 @@ export class TreeChartComponent implements OnChanges {
 
       let linkEnter = link.enter().insert('path', 'g')
         .attr('class', 'link')
+        .attr('stroke-width', 2)
+        .attr('source', (d: any) => {
+          return d.parent.data.name;
+        })
+        .attr('target', (d: any) => {
+          return d.data.name;
+        })
+        .attr('stroke', '#D4D8DA')
         .attr('d', function (d) {
           let o = { x: source.x0, y: source.y0 }
           return diagonal(o, o)
@@ -244,7 +316,7 @@ export class TreeChartComponent implements OnChanges {
         d._children = null;
       }
       let children = d._children ? d._children : d.children;
-      children.forEach((function(child) {
+      children.forEach((function (child) {
         collapse(child);
       }));
       // // If d has a parent, collapse other children of that parent
@@ -255,7 +327,7 @@ export class TreeChartComponent implements OnChanges {
       //     }
       //   });
       // }
-      draw(d);
+      draw(d, this);
     }
   }
 

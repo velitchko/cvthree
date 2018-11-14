@@ -2,18 +2,16 @@
     cursor: pointer;
 }
 
-::ng-deep .node circle {
-    fill: #fff;
-    stroke: #D4D8DA;
-    stroke-width: 1.5px;
-}
+// ::ng-deep .node circle {
+//     // stroke: #D4D8DA;
+//     // stroke-width: 2;
+// }
 
 ::ng-deep .node text {
     font: 10px sans-serif;
 }
 
-::ng-deep .link {
-    fill: none;
-    stroke: #D4D8DA;
-    stroke-width: 2;
-}
+// ::ng-deep .link {
+//     // stroke: #D4D8DA;
+//     // stroke-width: 2;
+// }
