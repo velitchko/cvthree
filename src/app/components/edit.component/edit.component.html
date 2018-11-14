@@ -296,7 +296,7 @@
               <mat-icon aria-label="Add more skills" (click)="addSkill(skill, proficiency)">add_circle</mat-icon>
             </button>
           </div> -->
-          <app-tree [edit]="true" (updatedSkills)="saveSkills($event)"></app-tree>
+          <app-tree [edit]="true" [skills]="resume.skills" (updatedSkills)="saveSkills($event)"></app-tree>
           <mat-action-row>
             <button mat-button color="warn" (click)="prevStep()">Previous</button>
             <button mat-button color="primary" (click)="nextStep()">Next</button>
