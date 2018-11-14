@@ -24,9 +24,9 @@
       <div *ngFor="let resume of resumes; let idx = index" class="list-entry-wrapper">
         <mat-card [ngClass]="{'selected': resume.selected}" class="list-entry">
           <mat-card-header>
-            <div class="list-entry-avatar" mat-card-avatar [style.backgroundImage]="getSanitizedPicture(resume.profilePicture)" (click)="view(idx)">
+            <div class="list-entry-avatar" mat-card-avatar [style.backgroundImage]="getSanitizedPicture(resume.profilePicture)">
               <div class="list-entry-avatar-overlay">
-                <a class="view" href="javascript:void(0)">VIEW</a>
+                <a class="view" [link]="'/view/' + resume.id" href="javascript:void(0)">VIEW</a>
               </div>
             </div>
             <mat-card-title><h2><span style="color: #00d1b2">{{ resume.firstName }}</span> <span style="color: #707070">{{ resume.lastName }} |</span> {{ getAge(resume.birthDay) }}</h2></mat-card-title>

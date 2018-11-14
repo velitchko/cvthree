@@ -27,7 +27,8 @@ import { CompareService } from './services/compare.service';
 import { DatabaseServices } from './services/db.service';
 import { UtilServices } from './services/util.service';
 // PIPES
-
+// DIRECTIVES
+import { LinkDirective } from './directives/link.directive';
 // forms
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -136,7 +137,8 @@ export const APP_ID = 'cvthree';
     TreeChartComponent,
     RadarChartComponent,
     TimelineComponent,
-    MapComponent
+    MapComponent,
+    LinkDirective
   ],
   providers: [
     CompareService,

@@ -33,7 +33,7 @@
                         [style.backgroundImage]="getSanitizedPicture(r.profilePicture)" 
                         (click)="view(idx)">
                         <div class="list-entry-avatar-overlay">
-                            <a class="view" href="javascript:void(0)">VIEW</a>
+                            <a class="view" [link]="'/view/' + r.id" href="javascript:void(0)">VIEW</a>
                         </div>
                     </div>
                     <mat-card-title>
