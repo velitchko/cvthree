@@ -387,17 +387,20 @@ export class CompareComponent {
   highlightResume($event): void {
     // de-highlight all
     this.resumes.forEach((r: Resume) => { r.highlighted = false; });
-    if ($event === 'none') return;
+    this.cs.setResumeID($event);
+    if ($event === 'none')  return;
     // highlight selection
     let resume = this.resumes.find((r: Resume) => { return r.id === $event; });
     resume.highlighted = true;
     this.cd.detectChanges();
-    this.cs.setResumeID($event);
   }
 
   remove(idx: number): void {
     this.cs.removeResume(this.resumes[idx].id);
     this.getSkillData();
+    this.getTreeChartData();
+    this.getTimelineData();
+    this.getMapData();
   }
 
   onEventSelected($event: any): void {
