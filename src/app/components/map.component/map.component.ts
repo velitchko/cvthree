@@ -231,6 +231,7 @@ export class MapComponent implements AfterViewInit {
             html: this.getSVGIcon(this.cs.getColorForResume(resume.id))
         });
         resume.work.forEach((w: Work) => {
+            if(!w.location.lat && !w.location.lng) return;
             let marker = L.marker([w.location.lat, w.location.lng], { icon: icon });
             marker.work = w;
             marker.resumeID = resume.id;
