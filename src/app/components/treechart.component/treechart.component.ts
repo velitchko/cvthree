@@ -32,13 +32,13 @@ export class TreeChartComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes) {
-      console.log(changes);
+      // TODO: redraw on input changes
       if (this.data) this.drawTree('#tree-chart', this.data);
     }
   }
 
   getSkillOpacity(level: string): number {
-    switch(level) {
+    switch (level) {
       case 'BASIC': return 0.2;
       case 'NOVICE': return 0.4;
       case 'INTERMEDIATE': return 0.6;
@@ -46,11 +46,6 @@ export class TreeChartComponent implements OnChanges {
       case 'EXPERT': return 1;
       default: return 1;
     }
-    // 20% - #33
-    // 40% - #66
-    // 60% - #99
-    // 80% - #CC
-    // 100% - #FF
   }
 
 
@@ -60,15 +55,17 @@ export class TreeChartComponent implements OnChanges {
         d3.select(n[i])
           .transition()
           .attr('stroke-width', 2)
+          .attr('stroke-opacity', 1)
           .attr('stroke', '#D4D8DA');
       });
 
-      d3.selectAll('path.link')
+    d3.selectAll('path.link')
       .each((d: any, i: any, n: any) => {
         d3.select(n[i])
-        .transition()
-        .attr('stroke-width', 2)
-        .attr('stroke', '#D4D8DA');
+          .transition()
+          .attr('stroke-width', 2)
+          .attr('stroke-opacity', 1)
+          .attr('stroke', '#D4D8DA');
       });
   }
 
@@ -93,7 +90,7 @@ export class TreeChartComponent implements OnChanges {
     let links = root.links();
     links.forEach((l: any) => {
       d3.selectAll('path.link').each((dl: any, il: any, nl: any) => {
-        if(!dl.data.people.includes(resumeID)) return;
+        if (!dl.data.people.includes(resumeID)) return;
         if (l.source.data.name === dl.parent.data.name && l.target.data.name === dl.data.name) {
           d3.select(nl[il])
             .transition()
@@ -190,6 +187,26 @@ export class TreeChartComponent implements OnChanges {
           return d._children ? 'lightsteelblue' : '#fff';
         });
 
+      nodeEnter.each((d: any, i: any, n: any) => {
+        if (d.data.people.length === 0) return;
+        let smallRadius = 5;
+        let radius = circleSize - smallRadius;
+        let angle = (360 / d.data.people.length) * (Math.PI / 180);
+        let nodeContainer = d3.select(n[i]);
+        // console.log(radius, angle, d.data.name, d.data.people.length)
+        d.data.people.forEach((pers: any, idx: number) => {
+          // console.log(radius, angle, idx, Math.cos(angle*idx), d.x0, d.y0)
+          nodeContainer.append('circle')
+            .attr('r', smallRadius)
+            .attr('fill', _self.cs.getColorForResume(pers))
+            .attr('cx', () => {
+              return radius * Math.cos(angle * idx);
+            })
+            .attr('cy', () => {
+              return radius * Math.sin(angle * idx);
+            })
+        });
+      });
       // Add text
 
       nodeEnter.append('text')
@@ -222,18 +239,14 @@ export class TreeChartComponent implements OnChanges {
           return d._children ? 'lightsteelblue' : '#fff';
         })
         .attr('cursor', 'pointer')
-            .on('mouseover', (d: any) => {
-          if(d.data.people[0]) _self.selectedResume.emit(d.data.people[0]);
+        .on('mouseover', (d: any) => {
+          if (d.data.people[0]) _self.selectedResume.emit(d.data.people[0]);
         })
         .on('mouseout', (d: any) => {
-          console.log('mouseout');          _self.selectedResume.emit('none');
-        })
-        .each((d: any) => {
-          // TODO: create a circle packed representation where people = dots of color
-          // console.log(d.data.name)
-          // console.log(d.data.people);
-          // console.log('----------');
+          console.log('mouseout');
+          _self.selectedResume.emit('none');
         });
+
 
       // Let's work on exiting nodes
 
