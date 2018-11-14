@@ -30,8 +30,7 @@
                 <mat-card-header>
                     <div class="list-entry-avatar" mat-card-avatar 
                         [style.border-color]="getColor(r.id)"
-                        [style.backgroundImage]="getSanitizedPicture(r.profilePicture)" 
-                        (click)="view(idx)">
+                        [style.backgroundImage]="getSanitizedPicture(r.profilePicture)">
                         <div class="list-entry-avatar-overlay">
                             <a class="view" [link]="'/view/' + r.id" href="javascript:void(0)">VIEW</a>
                         </div>
