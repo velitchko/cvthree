@@ -20,7 +20,16 @@ export class TimelineComponent implements AfterViewInit {
 
     constructor(private cs: CompareService) {
         this.selectedEvent = new EventEmitter<any>();
+        this.cs.currentlySelectedResume.subscribe((selection: any) => {
+            if(selection) {
+                let selectedIDs = new Array<number>();
+                this.events.forEach((e: any) => {
+                    if(e.resumeID === selection) selectedIDs.push(e.id);
+                });
 
+                this.timeline.setSelection(selectedIDs);
+            }
+        })
         this.cs.currentlySelectedEvents.subscribe((selection: any) => {
             if(!selection) return;
             if(selection.from === 'map') {

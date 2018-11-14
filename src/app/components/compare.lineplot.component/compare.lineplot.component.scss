@@ -13,6 +13,10 @@
     stroke-opacity: 0.7;
     shape-rendering: crispEdges;
 }
+
+::ng-deep .picture {
+    cursor: pointer;
+}
   
 ::ng-deep .axis-bottom path {
     stroke: lightgrey;

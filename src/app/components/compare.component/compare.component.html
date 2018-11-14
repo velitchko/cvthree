@@ -19,13 +19,13 @@
     <div class="compare-wrapper">
         <div class="cards-compare" #cards>
             <mat-card *ngFor="let r of resumes; let idx = index" 
-                [style.background-color]="!r.hidden ? 'white' : getColor(r.id) + '1a'"
+                [style.background-color]="!r.highlighted ? 'white' : getColor(r.id) + '1a'"
                 [style.border-color]="getColor(r.id)">
                 <button mat-icon-button (click)="remove(idx)" class="button-top-right" [style.color]="getColor(r.id)">
                     <mat-icon>clear</mat-icon>
                 </button>
                 <button mat-icon-button (click)="toggleVisibility(idx)" class="button-top-left" [style.color]="getColor(r.id)">
-                    <mat-icon>{{ r.hidden ? 'visibility' : 'visibility_off' }}</mat-icon>
+                    <mat-icon>{{ r.highlighted ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
                 <mat-card-header>
                     <div class="list-entry-avatar" mat-card-avatar 
@@ -81,7 +81,7 @@
             <app-timeline [events]="timelineData" [groups]="timelineGroups" (selectedEvent)="onEventSelected($event)"></app-timeline>
         </div>
         <div class="map-compare" #map>
-            <app-map [resumes]="mapData" (selectedResume)="onResumeSelected($event)" (selectedEvent)="onEventSelected($event)"></app-map>
+            <app-map [resumes]="mapData" (selectedResume)="highlightResume($event)" (selectedEvent)="onEventSelected($event)"></app-map>
         </div>
     </div>
 </div>

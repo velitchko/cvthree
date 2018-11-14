@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { Resume } from '../../models/resume';
 import { Skill } from '../../models/skill';
 import { Work } from '../../models/work';
@@ -24,6 +24,7 @@ export class CompareComponent  {
 
   constructor(
     private cs: CompareService,
+    private cd: ChangeDetectorRef,
     private util: UtilServices
     ) {
     this.resumes = this.cs.getResumes() || new Array<Resume>();
@@ -85,8 +86,12 @@ export class CompareComponent  {
   }
 
   toggleVisibility(idx: number): void {
-    this.resumes[idx].hidden = !this.resumes[idx].hidden;
-    this.cs.setResumeID(this.resumes[idx].id);
+    this.resumes[idx].highlighted = !this.resumes[idx].highlighted;
+    if(this.resumes[idx].highlighted) {
+      this.cs.setResumeID(this.resumes[idx].id);
+    } else {
+      this.cs.setResumeID('none');
+    }
   }
 
   getAge(bday: Date): number {
@@ -229,33 +234,32 @@ export class CompareComponent  {
 
   getTreeChartData(): void {
     this.resumes.forEach((r: Resume) => {
-      r.skills.forEach((s: Skill, idx: number) => {
-        
-        let found = this.getExistingNode(this.treeChartData, s.name);
-        
-        if(found) {
-          if(!found.people) found.people = new Array<string>();
-          found.people.push(r.id);
-          console.log('appending to existing');
-        } else {
-          // TODO: if node does not exist
-          // see if we can find a matching parent to append to
-          let parent = this.getParentOfChild(this.treeChartData, s.name);
-          if(parent) {
-            console.log('appending to parent')
-            let node = parent.children.find((c: Skill) => { return c.name === s.name });
-            if(!node.people) node.people = new Array<string>();
-            node.people.push(r.id);
-          } else {
-            console.log('creating child');
-            // need to add people that know the skill additionally
-            if(!s.people) s.people = new Array<string>();
-            s.people.push(r.id);
-            this.treeChartData.children.push(s);
-          }
-        }
+      r.skills.forEach((s: Skill) => {
+        console.log(s.name);
+        this.generateTreeData(this.treeChartData, r.id, s);
       });
     });
+  }
+
+  generateTreeData(currentNode: Skill, resumeID: string, currentSkill: Skill): void {
+    let found = this.getExistingNode(currentNode, currentSkill.name);
+    console.log(found);
+    if(found) {
+      if(!found.people) found.people = new Array<string>();
+      found.people.push(resumeID);
+      console.log('appending to existing');
+    } else {
+        console.log('creating child');
+        // need to add people that know the skill additionally
+        if(!currentSkill.people) currentSkill.people = new Array<string>();
+        currentSkill.people.push(resumeID);
+        this.treeChartData.children.push(currentSkill);
+    }
+
+    for(let i = 0; i < currentSkill.children.length; i++) {
+      let currentChild = currentSkill.children[i];
+      this.generateTreeData(currentNode, resumeID, currentChild);
+    }
   }
 
   getParentOfChild(currentNode, target): Skill  {
@@ -360,16 +364,19 @@ export class CompareComponent  {
   }
 
   highlightResume($event): void {
-    console.log($event);
+    // de-highlight all
+    this.resumes.forEach((r: Resume) => { r.highlighted = false; });
+    if($event === 'none') return;
+    // highlight selection
+    let resume = this.resumes.find((r: Resume) => { return r.id === $event; });
+    resume.highlighted = true;
+    this.cd.detectChanges();
+    this.cs.setResumeID($event);
   }
 
   remove(idx: number): void {
     this.cs.removeResume(this.resumes[idx].id);
     this.getSkillData();
-  }
-
-  onResumeSelected($event: any): void {
-    console.log('resume selected ' + $event)
   }
 
   onEventSelected($event: any): void {

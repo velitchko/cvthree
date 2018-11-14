@@ -1,4 +1,4 @@
-import { Component, Input, Output, Inject, ViewChild, ElementRef, AfterViewInit, EventEmitter } from '@angular/core';
+import { Component, Input, Output, Inject, ViewChild, ChangeDetectorRef, AfterViewInit, EventEmitter } from '@angular/core';
 import { DatabaseServices } from '../../services/db.service';
 import { Resume } from '../../models/resume';
 import { Work } from '../../models/work';
@@ -27,7 +27,10 @@ export class MapComponent implements AfterViewInit {
     markers: Array<any>;
     markerClusterGroup: any;
 
-    constructor(@Inject(PLATFORM_ID) private _platformId: Object, private cs: CompareService) {
+    constructor(@Inject(PLATFORM_ID) private _platformId: Object, 
+                private cs: CompareService,
+                private cd: ChangeDetectorRef
+                ) {
         this.markers = new Array<any>();
         this.selectedResume = new EventEmitter<string>();
         this.selectedEvent = new EventEmitter<any>();
@@ -69,7 +72,6 @@ export class MapComponent implements AfterViewInit {
             id: 'mapbox.light', // mapbox://styles/velitchko/cjefo9eu118qd2rodaoq3cpj1
             accessToken: environment.MAPBOX_API_KEY,
         }).addTo(this.map);
-
 
         this.markerClusterGroup = L.markerClusterGroup({ //https://github.com/Leaflet/Leaflet.markercluster#options
             showCoverageOnHover: false,
@@ -131,8 +133,9 @@ export class MapComponent implements AfterViewInit {
     }
 
     selectResume(resume: Resume): void {
-        console.log(resume);
+        resume.highlighted = true;
         this.selectedResume.emit(resume.id);
+        this.cd.detectChanges();
     }
 
     getColor(id: string): string {

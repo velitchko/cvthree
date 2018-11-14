@@ -38,7 +38,7 @@ export class Resume {
   projects: Array<Project>;
   // used for frontend highlighting & compare view selection
   selected?: boolean = false;
-  hidden?: boolean = false
+  highlighted?: boolean = false
 
   constructor() {
     this.profilePicture = `${environment.API_PATH}uploads/default.jpg`;

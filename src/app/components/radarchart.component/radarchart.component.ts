@@ -65,8 +65,8 @@ export class RadarChartComponent implements OnChanges {
     let initialData = d;
     let cfg = {
       radius: 0,
-      w: 600,
-      h: 600,
+      w: 650,
+      h: 550,
       factor: 1,
       factorLegend: .85,
       levels: 20,
@@ -74,10 +74,10 @@ export class RadarChartComponent implements OnChanges {
       radians: 2 * Math.PI,
       opacityArea: 0.5,
       ToRight: 5,
-      TranslateX: 150,
+      TranslateX: 10,
       TranslateY: 50,
-      ExtraWidthX: 100,
-      ExtraWidthY: 100,
+      ExtraWidthX: 0,
+      ExtraWidthY: 0,
     };
 
     if ('undefined' !== typeof options) {
@@ -97,8 +97,8 @@ export class RadarChartComponent implements OnChanges {
 
     let g = d3.select(id)
       .append('svg')
-      .attr('width', cfg.w + cfg.ExtraWidthX)
-      .attr('height', cfg.h + cfg.ExtraWidthY)
+      .attr('width', cfg.w)
+      .attr('height', cfg.h)
       .append('g')
       .attr('transform', 'translate(' + cfg.TranslateX + ',' + cfg.TranslateY + ')');
 
@@ -108,7 +108,28 @@ export class RadarChartComponent implements OnChanges {
       .data(allAxis)
       .enter()
       .append('g')
-      .attr('class', 'axis');
+      .attr('class', 'axis')
+      .on('mouseover', (d: any) => {
+        let html = '<div>';
+        for (let i = 0; i < initialData.length; i++) {
+          let propertyData = initialData[i];
+          for (let j = 0; j < propertyData.length; j++) {
+            let grade = propertyData[j];
+            if(grade.area === d) html += '<div style="color:' +this.cs.getColorForResume(grade.resumeID) + ';">' + grade.name + ': ' + this.getSkillAsText(grade.value) + '</div>';
+          }
+        }
+        html += '</div>';
+        tooltip
+          .style('left', d3.event.pageX + 'px')
+          .style('top', d3.event.pageY + 'px')
+          .style('display', 'inline-block')
+          .html(html);
+      })
+      .on('mouseout', () => {
+        tooltip.style('display', 'none');
+      });
+
+    let tooltip = d3.select('body').append('div').attr('class', 'toolTip');
 
     axis.append('line')
       .attr('x1', cfg.w / 2)
@@ -117,7 +138,7 @@ export class RadarChartComponent implements OnChanges {
       .attr('y2', (d, i) => { return cfg.h / 2 * (1 - cfg.factor * Math.cos(i * cfg.radians / total)); })
       .attr('class', 'line')
       .style('stroke', 'black')
-      .style('stroke-width', '2px');
+      .style('stroke-width', '2');
 
 
     axis.append('text')
@@ -150,11 +171,11 @@ export class RadarChartComponent implements OnChanges {
         .append('polygon')
         .attr('id', y[0].resumeID)
         .attr('class', 'radar-chart-serie' + series)
-        .style('stroke-width', '2px')
         .style('stroke', () => {
           return this.cs.getColorForResume(y[0].resumeID);
           //  return this.cs.getColorForResume(); 
         })
+        .style('stroke-width', '2')
         .attr('points', (d) => {
           let str = '';
           for (let pti = 0; pti < d.length; pti++) {
@@ -175,6 +196,7 @@ export class RadarChartComponent implements OnChanges {
             .style('fill-opacity', .7);
         })
         .on('mouseout', () => {
+          this.selectedResume.emit('none');
           g.selectAll('polygon')
             .transition()
             .style('fill-opacity', cfg.opacityArea);
@@ -183,40 +205,40 @@ export class RadarChartComponent implements OnChanges {
     });
     series = 0;
 
-    let axis2 = g.selectAll('.axis2')
-      .data(allAxis)
-      .enter()
-      .append('g')
-      .attr('class', 'axis2');
+    // let axis2 = g.selectAll('.axis2')
+    //   .data(allAxis)
+    //   .enter()
+    //   .append('g')
+    //   .attr('class', 'axis2');
 
-    let tooltip = d3.select('body').append('div').attr('class', 'toolTip');
-    axis2.append('line')
-      .attr('x1', cfg.w / 2)
-      .attr('y1', cfg.h / 2)
-      .attr('x2', (d, i) => { return cfg.w / 2 * (1 - cfg.factor * Math.sin(i * cfg.radians / total)); })
-      .attr('y2', (d, i) => { return cfg.h / 2 * (1 - cfg.factor * Math.cos(i * cfg.radians / total)); })
-      .attr('class', 'line')
-      .style('stroke', 'transparent')
-      .style('stroke-width', '10px')
-      .on('mouseover', (d) => {
-        let html = '<div>';
-        for (let i = 0; i < initialData.length; i++) {
-          let propertyData = initialData[i];
-          for (let j = 0; j < propertyData.length; j++) {
-            let grade = propertyData[j];
-            if (grade.area == d) {
-              html += '<div>' + grade.name + ': ' + this.getSkillAsText(grade.value) + '</div>';
-            }
-          }
-        }
-        html += '</div>';
-        tooltip
-          .style('left', d3.event.pageX - 80 + 'px')
-          .style('top', d3.event.pageY - 80 + 'px')
-          .style('display', 'inline-block')
-          .html(html);
-      })
-      .on('mouseout', (d) => { tooltip.style('display', 'none'); });
-
+    
+    // axis2.append('line')
+    //   .attr('x1', cfg.w / 2)
+    //   .attr('y1', cfg.h / 2)
+    //   .attr('x2', (d, i) => { return cfg.w / 2 * (1 - cfg.factor * Math.sin(i * cfg.radians / total)); })
+    //   .attr('y2', (d, i) => { return cfg.h / 2 * (1 - cfg.factor * Math.cos(i * cfg.radians / total)); })
+    //   .attr('class', 'line')
+    //   .style('stroke', 'transparent')
+    //   .style('stroke-width', '10px')
+  
+  //   .on('mouseover', (d) => {
+    //     let html = '<div>';
+    //     for (let i = 0; i < initialData.length; i++) {
+    //       let propertyData = initialData[i];
+    //       for (let j = 0; j < propertyData.length; j++) {
+    //         let grade = propertyData[j];
+    //         if (grade.area == d) {
+    //           html += '<div>' + grade.name + ': ' + this.getSkillAsText(grade.value) + '</div>';
+    //         }
+    //       }
+    //     }
+    //     html += '</div>';
+    //     tooltip
+    //       .style('left', d3.event.pageX - 80 + 'px')
+    //       .style('top', d3.event.pageY - 80 + 'px')
+    //       .style('display', 'inline-block')
+    //       .html(html);
+    //   })
+    //   .on('mouseout', (d) => { tooltip.style('display', 'none'); });
   }
 }

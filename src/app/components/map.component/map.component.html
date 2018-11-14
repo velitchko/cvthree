@@ -2,7 +2,7 @@
     <div class="map-legend">
         <div *ngFor="let r of resumes" class="map-legend-resume">
             <div class="map-profile-pic" (click)="selectResume(r)">
-                <img [src]="r.profilePicture" [style.border-color]="getColor(r.id)">
+                <img [src]="r.profilePicture" [style.border-color]="getColor(r.id)" [style.opacity]="r.highlighted ? '1' : '0.2'">
             </div>
         </div>
     </div>

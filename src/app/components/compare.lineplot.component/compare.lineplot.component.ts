@@ -18,6 +18,14 @@ export class CompareLinePlotComponent implements OnChanges {
     @Output() selectedResume: EventEmitter<string>;
     constructor(private cs: CompareService) {
         this.selectedResume = new EventEmitter<string>();
+
+        this.cs.currentlySelectedResume.subscribe((selection: any) => {
+            if(selection) {
+                console.log('lineplot')
+                console.log(selection)
+                this.highlightNode(selection);
+            }
+        })
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -28,6 +36,16 @@ export class CompareLinePlotComponent implements OnChanges {
                 this.drawScatterPlot('#line-plot', this.data);
             }
         }
+    }
+
+    highlightNode(selection: string): void {
+        if(selection === 'none') return;
+
+        d3.selectAll('.picture').transition().attr('opacity', 0.2);
+
+        d3.select(`#picture-${selection}`)
+            .transition()
+            .attr('opacity', 1);
     }
 
     normalizeSkillLevel(level: number): number {
@@ -113,6 +131,7 @@ export class CompareLinePlotComponent implements OnChanges {
 
             pictures.append('g')
                     .attr('class', 'picture')
+                    .attr('id', `picture-${skill.resumeID}`)
                     .append('circle')
                     .attr('r', 25)
                     .attr('cx', () => { 
@@ -137,8 +156,16 @@ export class CompareLinePlotComponent implements OnChanges {
                         return this.cs.getColorForResume(skill.resumeID);
                     })
                     .style('stroke-width', '5')
-                    .on('mouseover', () => {
+                    .on('mouseover', (d: any, i: any, n: any) => {
+                        let pictures = d3.selectAll('.picture');
+                        pictures.transition().attr('opacity', 0.2);
+                        let selection = d3.select(n[i])
+                        selection.transition().attr('opacity', 1);
                         this.selectedResume.emit(skill.resumeID);
+                    })
+                    .on('mouseout', () => {
+                        d3.selectAll('.picture').transition().attr('opacity', 1);
+                        this.selectedResume.emit('none');
                     });
                     // .attr('transform', 'translate(' + xScale(skill.value) + ', ' + (cfg.h - cfg.ExtraWidthX - 100) + ')')
         });
