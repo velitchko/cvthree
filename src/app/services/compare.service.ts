@@ -4,6 +4,7 @@ import { map, startWith } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Resume } from '../models/resume';
+import { Skill } from '../models/skill';
 
 @Injectable()
 
@@ -29,6 +30,7 @@ export class CompareService {
         this.selectedEvents.next(objectIdArr);
     }
 
+    // TODO: Extend for set of IDs (array?)
     setResumeID(id: string): void {
         this.selectedResume.next(id);
     }
@@ -54,6 +56,10 @@ export class CompareService {
         return this.resumes[idx];
     }
 
+    getResumeByID(id: string): Resume {
+        return this.resumes.find((r: Resume) => { return r.id === id; });
+    }
+
     getResumes(): Array<Resume> {
         return this.resumes;
     }
@@ -66,6 +72,28 @@ export class CompareService {
 
     clearResumes(): void {
         this.resumes = new Array<Resume>();
+    }
+
+    searchForSkill(resumeID: string, skillName: string): Skill {
+        return this.recursiveSkillSearch(this.getResumeByID(resumeID).skills, skillName);
+    }
+
+    private recursiveSkillSearch(skills: Array<Skill>, skillName: string): Skill {
+        let found;
+        skills.forEach((s: Skill) => {
+            found = this.getExistingNode(s, skillName);
+        });
+        return found;
+    }
+
+    private getExistingNode(currentNode: Skill, target: string): Skill {
+        if(currentNode.name.toLowerCase() === target.toLowerCase()) return currentNode;
+
+        for(let i = 0; i < currentNode.children.length; i++) {
+            let currentChild = currentNode.children[i];
+            let exists = this.getExistingNode(currentChild, target);
+            if(exists) return exists;
+        }
     }
 
 }
