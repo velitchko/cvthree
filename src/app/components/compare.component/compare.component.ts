@@ -286,7 +286,7 @@ export class CompareComponent {
   }
 
   getParentOfChild(currentNode: Skill, target: string): Skill {
-    if (currentNode.children.filter((s) => { return s.name === target; }).length > 0) return currentNode;
+    if (currentNode.children.filter((s) => { return s.name.toLowerCase() === target.toLowerCase(); }).length > 0) return currentNode;
     for (let i = 0; i < currentNode.children.length; i++) {
       let currentChild = currentNode.children[i];
       let result = this.getParentOfChild(currentChild, target);
@@ -296,7 +296,7 @@ export class CompareComponent {
   }
 
   getExistingNode(currentNode: any, target: any): Skill {
-    if (currentNode.name === target) return currentNode;
+    if (currentNode.name.toLowerCase() === target.toLowerCase()) return currentNode;
 
     for (let i = 0; i < currentNode.children.length; i++) {
       let currentChild = currentNode.children[i];
