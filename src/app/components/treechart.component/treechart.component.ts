@@ -119,7 +119,7 @@ export class TreeChartComponent implements OnChanges {
       .attr('height', height + margin.top + margin.bottom)
 
     let g = svg.append('g')
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+      .attr('transform', 'translate(' + width/2 + ',' + height/2 + ')');
 
     // Setup SVG Element - End
 
@@ -131,7 +131,8 @@ export class TreeChartComponent implements OnChanges {
 
     let treemap = d3.tree()
       .size([width, height])
-      .separation((a: any, b: any) => { return (a.parent === b.parent ? 1 : 2)/a.depth; });
+      .nodeSize([circleSize*2 + 5, circleSize*2])
+      .separation((a: any, b: any) => { return (a.parent === b.parent ? 1 : 2); });
 
     // Get the root
 
@@ -222,16 +223,18 @@ export class TreeChartComponent implements OnChanges {
 
       // Add text
       nodeEnter.append('text')
-        .attr('dy', '.35em')
-        .attr('x', function (d: any) {
-          let bbox = (<any>d3.select(this).node()).getBBox();
-          return bbox.width / 2;
-          // return d.children || d._children ? -1 * circleSize : circleSize;
+        .text(function (d: any) { return d.data.name; })
+        .attr('y', (d: any, i: any, n: any) => {
+          let bbox = d3.select(n[i]).node().getBBox();
+          return circleSize + bbox.height + 5; // 10 is the stroke we have on highlighting 
         })
-        .attr('text-anchor', function (d: any) {
-          return d.children || d._children ? 'end' : 'start';
+        .attr('x', function (d: any, i: any, n: any) {
+          let bbox = d3.select(n[i]).node().getBBox();
+          return -1 * bbox.width/2;
         })
-        .text(function (d: any) { return d.data.name; });
+        // .attr('text-anchor', function (d: any) {
+        //   return d.children || d._children ? 'end' : 'start';
+        // });
 
       // https://github.com/d3/d3-selection/issues/86 to check what merge does
       let nodeUpdate = nodeEnter.merge(node);
