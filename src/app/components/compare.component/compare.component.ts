@@ -110,6 +110,8 @@ export class CompareComponent {
 
   getTimelineData(): void {
     let identifier = 0;
+    this.timelineGroups = new Array<any>();
+    this.timelineData = new Array<any>();
     this.resumes.forEach((r: Resume, idx: number) => {
       // WORK
       let initials = this.util.getInitials(r.firstName, r.lastName);
@@ -227,6 +229,8 @@ export class CompareComponent {
   }
 
   getTreeChartData(): void {
+    this.treeChartData = new Skill();
+    this.treeChartData.name = 'Skills'; //root
     this.resumes.forEach((r: Resume) => {
       r.skills.forEach((s: Skill) => {
         this.generateTreeData(this.treeChartData, r.id, s, r.skills);
