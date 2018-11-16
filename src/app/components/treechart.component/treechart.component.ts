@@ -24,7 +24,6 @@ export class TreeChartComponent implements OnChanges {
 
     this.cs.currentlySelectedResume.subscribe((selection: any) => {
       if (selection) {
-        console.log(selection);
         selection === 'none' ? this.unhighlightNodes() : this.highlightNodes(selection);
       }
     });
@@ -32,7 +31,6 @@ export class TreeChartComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes) {
-      // TODO: redraw on input changes
       if (this.data) this.drawTree('#tree-chart', this.data);
     }
   }
@@ -50,7 +48,7 @@ export class TreeChartComponent implements OnChanges {
 
 
   unhighlightNodes(): void {
-    d3.selectAll('circle.node')
+    d3.selectAll('.node circle')
       .each((d: any, i: any, n: any) => {
         d3.select(n[i])
           .transition()
@@ -71,7 +69,7 @@ export class TreeChartComponent implements OnChanges {
 
   highlightNodes(resumeID: string): void {
     // highlight nodes
-    d3.selectAll('circle.node')
+    d3.selectAll('.node circle')
       .each((d: any, i: any, n: any) => {
         if (d.data.people.includes(resumeID) || d.data.name === 'Skills') {
           d3.select(n[i])
@@ -79,7 +77,7 @@ export class TreeChartComponent implements OnChanges {
             .attr('stroke-opacity', () => {
               return this.getSkillOpacity(d.data.level);
             })
-            .attr('stroke-width', 4)
+            .attr('stroke-width', 10)
             .attr('stroke', () => {
               return this.cs.getColorForResume(resumeID);
             });
@@ -108,7 +106,7 @@ export class TreeChartComponent implements OnChanges {
     // Tree already in proper format
 
     // Setup SVG Element - Start
-
+    d3.select(id).select('svg').remove();  // from previous
     let margin = { top: 30, right: 20, bottom: 30, left: 20 },
       width = 960 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
@@ -132,7 +130,8 @@ export class TreeChartComponent implements OnChanges {
     // Setup tree
 
     let treemap = d3.tree()
-      .size([width, height]);
+      .size([width, height])
+      .separation((a: any, b: any) => { return (a.parent === b.parent ? 1 : 2)/a.depth; });
 
     // Get the root
 
@@ -170,21 +169,23 @@ export class TreeChartComponent implements OnChanges {
         .enter()
         .append('g')
         .attr('class', 'node')
-        .attr('transform', function (d) {
+        .attr('transform', function () {
           return 'translate(' + source.x0 + ',' + source.y0 + ')';
         })
         .on('click', (d: any) => {
-          if (d.children) {
-            d._children = d.children;
-            d.children = null;
-          } else {
-            d.children = d._children;
-            d._children = null;
-          }
-          let children = d._children ? d._children : d.children;
-          children.forEach((function (child) {
-            collapse(child);
-          }));
+          // FIXME: bug with collapsing nodes - first one doesnt get rerendered
+          // and links get jumbled up
+          // if (d.children) {
+          //   d._children = d.children;
+          //   d.children = null;
+          // } else {
+          //   d.children = d._children;
+          //   d._children = null;
+          // }
+          // let children = d._children ? d._children : d.children;
+          // children.forEach((function (child) {
+          //   collapse(child);
+          // }));
           // // If d has a parent, collapse other children of that parent
           // if (d.parent) {
           //   d.parent.children.forEach(function (element) {
@@ -223,7 +224,9 @@ export class TreeChartComponent implements OnChanges {
       nodeEnter.append('text')
         .attr('dy', '.35em')
         .attr('x', function (d: any) {
-          return d.children || d._children ? -1 * circleSize : circleSize;
+          let bbox = (<any>d3.select(this).node()).getBBox();
+          return bbox.width / 2;
+          // return d.children || d._children ? -1 * circleSize : circleSize;
         })
         .attr('text-anchor', function (d: any) {
           return d.children || d._children ? 'end' : 'start';
@@ -270,14 +273,13 @@ export class TreeChartComponent implements OnChanges {
       nodeExit.select('text')
         .attr('fill-opacity', 0);
 
-
       // Let's draw links
       let link = g.selectAll('path.link')
-        .data(links, function (d: any) { return d.id; });
+        .data(links, (d: any) => { return d.id; });
 
       // Work on enter links, draw straight lines
-
-      let linkEnter = link.enter().insert('path', 'g')
+      let linkEnter = link.enter()
+        .insert('path', 'g')
         .attr('class', 'link')
         .attr('stroke-width', 2)
         .attr('source', (d: any) => {
@@ -287,7 +289,7 @@ export class TreeChartComponent implements OnChanges {
           return d.data.name;
         })
         .attr('stroke', '#D4D8DA')
-        .attr('d', function (d) {
+        .attr('d', function() {
           let o = { x: source.x0, y: source.y0 }
           return diagonal(o, o)
         });
@@ -298,12 +300,12 @@ export class TreeChartComponent implements OnChanges {
       // Transition back to the parent element position, now draw a link from node to it's parent
       linkUpdate.transition()
         .duration(duration)
-        .attr('d', function (d) { return diagonal(d, d.parent) });
+        .attr('d', (d: any) => { return diagonal(d, d.parent) });
 
       // Remove any exiting links
       let linkExit = link.exit().transition()
         .duration(duration)
-        .attr('d', function (d) {
+        .attr('d', function() {
           let o = { x: source.x, y: source.y }
           return diagonal(o, o)
         })
@@ -329,7 +331,7 @@ export class TreeChartComponent implements OnChanges {
       //           ${(s.x + d.x) / 2} ${d.y},
       //           ${d.x} ${d.y}`
 
-      return path
+      return path;
     }
 
     function collapse(d) {
@@ -351,11 +353,10 @@ export class TreeChartComponent implements OnChanges {
     nodeData.forEach((n: any) => {
       let nodeArr = new Array<any>();
       n.data.people.forEach((p: any) => {
-        nodeArr.push([p, 1]);
+        nodeArr.push({ name: n.data.name, skills: [p, 1]});
       });
       donutData.push(nodeArr);
     });
-    // console.log(donutData);
     // return;
     node.append("circle") //background circle fill
       .attr("cx", 0)
@@ -378,7 +379,7 @@ export class TreeChartComponent implements OnChanges {
     let arc = d3.arc()
       .innerRadius(circleSize - thickness)
       .outerRadius(circleSize);
-    let pie = d3.pie().value((d: any) => { return d[1]; });
+    let pie = d3.pie().value((d: any) => { return d.skills[1]; });
 
     // let values = donutData.map(m => { return m[1]; });
     node.selectAll('path')
@@ -389,26 +390,35 @@ export class TreeChartComponent implements OnChanges {
       .append('g')
       .append('path')
       .attr('d', <any>arc)
-      .attr('fill', (d: any) => { return this.cs.getColorForResume(d.data[0]); })
-      .on('mouseover', (d: any) => {
-        console.log('mouseover');
-        console.log(d);
-        if (d.data[0]) this.selectedResume.emit(d.data[0]);
+      .attr('fill', (d: any) => { return this.cs.getColorForResume(d.data.skills[0]); })
+      // .attr('fill-opacity', (d: any) => { 
+      //   this wasn't such a good idea
+      //   let skill = this.cs.searchForSkill(d.data.skills[0], d.data.name);
+      //   return this.getSkillOpacity(skill ? skill.level : '');
+      // //  return this.getSkillOpacity(); 
+      // })
+      .on('mouseover', (d: any, i: any, n: any) => {
+        if (d.data.skills[0]) this.selectedResume.emit(d.data.skills[0]);
+        // d3.select(n[i])
+        //   .attr('stroke-width', 4)
+        //   .attr('stroke', this.cs.getColorForResume(d.data[0]));
       })
-      .on('mouseout', (d: any) => {
-        console.log('mouseout');
+      .on('mouseout', (d: any, i: any, n: any) => {
         this.selectedResume.emit('none');
-      })
-      .transition()
-      .delay((d, i) => { return i * 25; })
-      .duration(150)
-      .attrTween('d', (d: any) => {
-        var i = d3.interpolate(d.startAngle + 0.1, d.endAngle);
-        return function (t: any) {
-          d.endAngle = i(t);
-          return arc(d);
-        }
+        // d3.select(n[i])
+        // .attr('stroke-width', 4)
+        // .attr('stroke', 'transparent');
       });
+      // .transition()
+      // .delay((d, i) => { return i * 25; })
+      // .duration(150)
+      // .attrTween('d', (d: any) => {
+      //   var i = d3.interpolate(d.startAngle + 0.1, d.endAngle);
+      //   return function (t: any) {
+      //     d.endAngle = i(t);
+      //     return arc(d);
+      //   }
+      // });
   }
 
 }
