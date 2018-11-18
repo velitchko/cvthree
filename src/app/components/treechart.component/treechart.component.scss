@@ -11,7 +11,8 @@
     font: 10px sans-serif;
 }
 
-// ::ng-deep .link {
-//     // stroke: #D4D8DA;
-//     // stroke-width: 2;
-// }
+::ng-deep path.link {
+    fill: none;
+    // stroke: #D4D8DA;
+    // stroke-width: 2;
+}
