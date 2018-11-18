@@ -44,7 +44,7 @@ export class TimelineComponent implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         if(changes) {
-            this.createTimeline();
+           if(!this.timeline) this.createTimeline();
         }
     }
 
