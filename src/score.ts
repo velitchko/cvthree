@@ -47,7 +47,7 @@ function findNode(currentNode, level, searchSkill) {
 }
 
 function getParentOfChild(currentNode, currentLevel, childName, targetLevel)  {
-    if((currentLevel + 1) === targetLevel && currentNode.children.filter((s) => {return s.name === childName;}).length > 0) return currentNode;
+    if((currentLevel + 1) === targetLevel && currentNode.children.filter((s) => {return s.name.toLowerCase() === childName.toLowerCase();}).length > 0) return currentNode;
 
     for(let i = 0; i < currentNode.children.length; i++) {
         let currentChild = currentNode.children[i];
