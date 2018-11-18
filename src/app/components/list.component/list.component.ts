@@ -58,7 +58,6 @@ export class ListComponent  {
 
   delete(id: string): void {
     let idx = this.resumes.map((r: Resume) => { return r.id; }).indexOf(id);
-    console.log(idx);
     this.resumes[idx].selected = false;
     this.cs.removeResume(id);
   }
@@ -88,6 +87,11 @@ export class ListComponent  {
   update($event: any): void {
     this.showScatterPlot = true;
     this.scatterPlotPoints = $event;
-    this.resumes = $event.map((r: any) => { return r.resume });
+    this.resumes = $event.map((r: any) => { 
+      // set score in resume
+      r.resume.bonus = r.bonus;
+      r.resume.base = r.base;
+      return r.resume 
+    });
   }
 }

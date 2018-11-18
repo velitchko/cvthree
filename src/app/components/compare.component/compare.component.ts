@@ -22,11 +22,24 @@ export class CompareComponent {
   resumes: Array<Resume>;
   matchedSkills: number;
 
+  resumeOrdering: Array<any>;
+
   constructor(
     private cs: CompareService,
     private cd: ChangeDetectorRef,
     private util: UtilServices
   ) {
+    this.resumeOrdering = new Array<any>(
+      { value: 'age', display: 'Age'},
+      { value: 'yoe', display: 'Years of Experience'},
+      { value: 'avgjd', display: 'Average Job Duration'},
+      { value: 'locs', display: 'Number of Locations'},
+      { value: 'numskill', display: 'Number of Skills'},
+      { value: 'langs', display: 'Number of Languages'},
+      { value: 'base', display: 'Base Score'},
+      { value: 'bonus', display: 'Bonus Score'},
+      { value: 'basebonus', display: 'Base+Bonus Score'},
+    );
     this.resumes = this.cs.getResumes() || new Array<Resume>();
     this.skillData = new Array<any>();
     this.treeChartData = new Skill();
@@ -60,6 +73,73 @@ export class CompareComponent {
     return locations.size;
   }
 
+  getNumberOfSkills(resume: Resume): number {
+    let skills = 0;
+    resume.skills.forEach((s: Skill) => {
+      skills++; // amount of root nodes
+    });
+
+    return skills;
+  }
+
+  reorderResumes($event): void {
+    switch($event.value) {
+      case 'age': 
+        this.resumes.sort((a: Resume, b: Resume) => {
+          return this.getAge(b.birthDay) - this.getAge(a.birthDay);
+        });
+        break;
+      case 'yoe': 
+        this.resumes.sort((a: Resume, b: Resume) => {
+          return this.getYearsOfExperience(b) - this.getYearsOfExperience(a);
+        })
+        break;
+      case 'avgjd': 
+        this.resumes.sort((a: Resume, b: Resume) => {
+          return this.calculateAvgJobDuration(b) - this.calculateAvgJobDuration(a);
+        });
+        break;
+      case 'locs': 
+        this.resumes.sort((a: Resume, b: Resume) => {
+          return this.getNumberOfLocations(b) - this.getNumberOfLocations(a);
+        });  
+        break;
+      case 'numskill': 
+        this.resumes.sort((a: Resume, b: Resume) => {
+          return this.getNumberOfSkills(b) - this.getNumberOfSkills(a);
+        });    
+        break;
+      case 'langs': 
+        this.resumes.sort((a: Resume, b: Resume) => {
+          return this.getNumberOfLanguages(b) - this.getNumberOfLanguages(a);
+        });  
+        break;
+      case 'base': 
+        this.resumes.sort((a: Resume, b: Resume) => {
+          return b.base - a.base;
+        });  
+        break;
+      case 'bonus': 
+        this.resumes.sort((a: Resume, b: Resume) => {
+          return b.bonus - a.bonus;
+        });  
+        break;
+      case 'basebonus': 
+        this.resumes.sort((a: Resume, b: Resume) => {
+          return (b.base + b.bonus) - (a.base + a.bonus);
+        });  
+        break;
+    }
+  }
+
+  getYearsOfExperience(resume: Resume): number {
+    let yoe = 0;
+    resume.work.forEach((w: Work) => {
+      yoe += this.util.getDateDifference(w.startDate, w.endDate);
+    });
+    return yoe;
+  }
+
   getNumberOfLanguages(resume: Resume): number {
     return resume.languages.length;
   }
@@ -80,7 +160,19 @@ export class CompareComponent {
     return this.cs.getColorForResume(id);
   }
 
+  toggleHide(idx: number): void {
+    this.resumes[idx].hidden = !this.resumes[idx].hidden;
+    this.getSkillData();
+    this.getTreeChartData();
+    this.getTimelineData();
+    this.getMapData();
+  }
+
   toggleVisibility(idx: number): void {
+    this.resumes.forEach((r: Resume, id: number) => { 
+      if(idx === id) return;
+      r.highlighted = false; 
+    });
     this.resumes[idx].highlighted = !this.resumes[idx].highlighted;
     if (this.resumes[idx].highlighted) {
       this.cs.setResumeID(this.resumes[idx].id);
@@ -113,6 +205,7 @@ export class CompareComponent {
     this.timelineGroups = new Array<any>();
     this.timelineData = new Array<any>();
     this.resumes.forEach((r: Resume, idx: number) => {
+      if(r.hidden) return;
       // WORK
       let initials = this.util.getInitials(r.firstName, r.lastName);
       let group = {
@@ -225,13 +318,14 @@ export class CompareComponent {
     });
   }
   getMapData(): void {
-    this.mapData = this.resumes;
+    this.mapData = this.resumes.filter((r: Resume) => { return !r.hidden; });
   }
 
   getTreeChartData(): void {
     this.treeChartData = new Skill();
     this.treeChartData.name = 'Skills'; //root
     this.resumes.forEach((r: Resume) => {
+      if(r.hidden) return;
       r.skills.forEach((s: Skill) => {
         this.generateTreeData(this.treeChartData, r.id, s, r.skills);
       });
@@ -314,6 +408,7 @@ export class CompareComponent {
     this.skillMap = new Map<string, Array<any>>();
 
     this.resumes.forEach((r: Resume) => {
+      if(r.hidden) return;
       r.skills.forEach((s: Skill) => {
         this.peopleWithSkill(s, r);
       });

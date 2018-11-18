@@ -46,6 +46,11 @@
     top: 0em;
     right: 0em;
 }
+.button-top-middle {
+    position: absolute;
+    top: 0em;
+    left: calc(50% - 20px);
+}
 .button-top-left {
     position: absolute;
     top: 0em;
@@ -57,10 +62,10 @@ padding: 1em;
 }
 
 .list-entry {
-padding-top: 1em;
-margin-bottom: 1em;
-width: 20em;
-height: 18em;
+    padding-top: 1em;
+    margin-bottom: 1em;
+    width: 20em;
+    height: 18em;
 }
 
 .mat-card {
@@ -74,11 +79,18 @@ height: 18em;
 }
 
 .mat-card-header {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 1em;
+}
+
+.ordering {
+    position: absolute;
+    top: 2em;
+    left: 2em;
 }
 
 .compare-navigation {

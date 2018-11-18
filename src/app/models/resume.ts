@@ -38,8 +38,10 @@ export class Resume {
   projects: Array<Project>;
   // used for frontend highlighting & compare view selection
   selected?: boolean = false;
-  highlighted?: boolean = false
-
+  highlighted?: boolean = false;
+  hidden?: boolean = false;
+  base?: number = 0;
+  bonus?: number = 0;
   constructor() {
     this.profilePicture = `${environment.API_PATH}uploads/default.jpg`;
     this.profiles = new Array<Profile>();

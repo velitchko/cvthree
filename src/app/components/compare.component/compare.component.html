@@ -2,6 +2,13 @@
     <p>No resumes selected...</p>
 </div>
 <div *ngIf="resumes.length > 0">
+    <div class="ordering">
+        <mat-form-field>
+            <mat-select placeholder="Order by:" (selectionChange)="reorderResumes($event)">
+            <mat-option *ngFor="let ordering of resumeOrdering" [value]="ordering.value">{{ ordering.display }}</mat-option> 
+            </mat-select>
+        </mat-form-field>   
+    </div>
     <div class="compare-navigation">
         <button mat-icon-button (click)="scrollTo(cards)">
             <mat-icon>people</mat-icon>
@@ -20,12 +27,16 @@
         <div class="cards-compare" #cards>
             <mat-card *ngFor="let r of resumes; let idx = index" 
                 [style.background-color]="!r.highlighted ? 'white' : getColor(r.id) + '1a'"
+                [style.opacity]="!r.hidden ? 1 : 0.5"
                 [style.border-color]="getColor(r.id)">
                 <button mat-icon-button (click)="remove(idx)" class="button-top-right" [style.color]="getColor(r.id)">
                     <mat-icon>clear</mat-icon>
                 </button>
+                <button mat-icon-button (click)="toggleHide(idx)" class="button-top-middle" [style.color]="getColor(r.id)">
+                    <mat-icon>{{ r.hidden ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
                 <button mat-icon-button (click)="toggleVisibility(idx)" class="button-top-left" [style.color]="getColor(r.id)">
-                    <mat-icon>{{ r.highlighted ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    <mat-icon>{{ r.highlighted ? 'center_focus_weak' : 'center_focus_strong' }}</mat-icon>
                 </button>
                 <mat-card-header>
                     <div class="list-entry-avatar" mat-card-avatar 
@@ -41,13 +52,16 @@
                     </mat-card-title>
                     <mat-card-subtitle>{{ r.label }} @ {{ r.location.city }}, {{ r.location.country }}</mat-card-subtitle>
                     <div>
-                        {{ calculateAvgJobDuration(r) }}
+                        <span>avg. job duration</span><span class="big-number">{{ calculateAvgJobDuration(r) }}</span>
                     </div>
                     <div>
-                        {{ getNumberOfLanguages(r) }}
+                        <span>languages</span><span class="big-number">{{ getNumberOfLanguages(r) }}</span>
                     </div>
                     <div>
-                        {{ getNumberOfLocations(r) }}
+                        <span>locations</span><span class="big-number">{{ getNumberOfLocations(r) }}</span>
+                    </div>
+                    <div>
+                        <span>years of experience</span><span class="big-number">{{ getYearsOfExperience(r) }}</span>
                     </div>
                 </mat-card-header>
                 <mat-card-content>
