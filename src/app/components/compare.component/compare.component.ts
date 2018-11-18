@@ -62,6 +62,7 @@ export class CompareComponent {
     resume.work.forEach((w: Work) => {
       avg += this.util.getDateDifference(w.startDate, w.endDate);
     });
+    if(avg === 0 && resume.work.length === 0) return 0; // otherwise it returns a NaN
     return Math.ceil((avg / resume.work.length) * 100) / 100;
   }
 
@@ -413,7 +414,7 @@ export class CompareComponent {
         this.peopleWithSkill(s, r);
       });
     });
-
+    
     let uniqueSkills = new Map<string, any>();
 
     this.skillMap.forEach((v, k) => {
@@ -429,7 +430,7 @@ export class CompareComponent {
     this.skillMap.forEach((v, k) => {
       let arr = new Array<any>();
       v.forEach((e: any) => {
-        if (uniqueSkills.get(e.skill).value === this.resumes.length) {
+        if (uniqueSkills.get(e.skill).value === this.resumes.filter((r: Resume) => { return !r.hidden; }).length) {
           // match
           let person = this.cs.getResume(this.resumes.map((r: Resume) => { return r.id; }).indexOf(k));
           arr.push({
@@ -445,8 +446,9 @@ export class CompareComponent {
 
       if (arr.length > 0) this.skillData.push(arr);
     });
-
+    console.log(this.skillData);
     this.matchedSkills = this.skillData[0] ? this.skillData[0].length : 0;
+    console.log(this.matchedSkills);
   }
 
   peopleWithSkill(currentNode, resume): void {
