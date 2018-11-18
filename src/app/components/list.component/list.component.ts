@@ -44,6 +44,8 @@ export class ListComponent  {
   }
 
   selectResumes($event: any): void {
+    if(this.resumes.length === 10) return; //max achieved
+    // TODO: open popup
     this.resumes.forEach((r: Resume) => { r.selected = false; });
     this.cs.clearResumes();
     $event.forEach((id: string) => {
