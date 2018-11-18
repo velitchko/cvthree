@@ -114,6 +114,7 @@ export class TreeChartComponent implements OnChanges {
     let duration = 250;
 
     // declares a tree layout and assigns the size
+    // TODO: the size of the tree needs to be dynamic (based on skills/nodes per level) - otherwise occlusion
     let treemap = d3.tree()
       .size([360, 250]) //angle = 2*PI, radius = 250
       .nodeSize([nodeRadius*4, nodeRadius*4])
