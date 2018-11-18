@@ -240,5 +240,12 @@ export class MapComponent implements AfterViewInit {
             this.markers.push(marker);
             this.markerClusterGroup.addLayer(marker);
         });
+
+        this.createLines(resume);
+    }
+
+    createLines(resume: Resume): void {
+        //TODO: https://gist.github.com/ryancatalani/6091e50bf756088bf9bf5de2017b32e6 
+        // curve lines using bezier curve (need to calculate control point and impl)
     }
 }
