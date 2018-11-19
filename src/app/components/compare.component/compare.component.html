@@ -71,13 +71,13 @@
         </div>
         <div class="skill-compare" #skills>
             <div *ngIf="matchedSkills === 0">
-                <p>Not enough data dimensions.</p>
+                <p>No skills in common.</p>
             </div>
             <div *ngIf="matchedSkills === 1">
                 <app-compare-lineplot [data]="skillData" (selectedResume)="highlightResume($event)"></app-compare-lineplot>
             </div>
             <div *ngIf="matchedSkills === 2">
-                <app-compare-scatterplot ></app-compare-scatterplot>
+                <app-compare-scatterplot [data]="skillData" (selectedResume)="highlightResume($event)"></app-compare-scatterplot>
             </div>
             <div *ngIf="matchedSkills >= 3">
                 <app-radarchart [data]="skillData" (selectedResume)="highlightResume($event)"></app-radarchart>

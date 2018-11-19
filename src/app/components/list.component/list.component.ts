@@ -95,5 +95,8 @@ export class ListComponent  {
       r.resume.base = r.base;
       return r.resume 
     });
+    // repopulate compare service
+    this.cs.clearResumes();
+    this.resumes.forEach((r: Resume) => { this.cs.addResume(r); });
   }
 }
