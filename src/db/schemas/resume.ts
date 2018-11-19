@@ -137,7 +137,9 @@ function preSave(_self: any, next: any): void {
     addrArr.push(`${w.location.address} ${w.location.postalCode} ${w.location.city} ${w.location.country}`);
   });
   geocoder.batchGeocode(addrArr).then((success) => {
+    
     success.forEach((s: any, idx: number) => {
+      console.log(s.value);
       _self.work[idx].location.lat = s.value[0].latitude;
       _self.work[idx].location.lng = s.value[0].longitude;
     });
@@ -162,6 +164,7 @@ ResumeSchema.pre('findOneAndUpdate', function (next) {
     if(err) return;  
     preSave(doc, function() {
       console.log('preupdate - next');
+      doc.save();
       next();
     })
   });
