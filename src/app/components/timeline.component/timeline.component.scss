@@ -38,9 +38,20 @@
     background-color: hsl(341, 81%, 80%);
     border-color: hsl(341, 81%, 41%);
   }
-  
 
-  
+::ng-deep .vis-timeline {
+  overflow: none;
+}
+
+::ng-deep .vis-tooltip {
+  white-space: normal !important;
+  background-color: white;
+  border: none;
+}
+::ng-deep .timeline-content {
+  width: 400px;
+  margin: 0.5em;
+}
 
 ::ng-deep .timeline-profile-pic {
   width: 3em;

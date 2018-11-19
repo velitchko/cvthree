@@ -18,4 +18,7 @@
             </button>
     </mat-form-field>
 </div>
+<div *ngIf="events.length === 0">
+    No events found in selected resumes.
+</div>
 <div id="timeline" #timeline></div>

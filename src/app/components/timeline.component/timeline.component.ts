@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, SimpleChanges, OnChanges, Output, EventEmitter  } from '@angular/core';
+import { Component, Input, ViewChild, SimpleChanges, OnChanges, Output, EventEmitter, AfterViewInit  } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UtilServices } from '../../services/util.service';
 import { CompareService } from '../../services/compare.service';
@@ -21,7 +21,7 @@ export class TimelineComponent implements OnChanges {
     constructor(private cs: CompareService) {
         this.selectedEvent = new EventEmitter<any>();
         this.cs.currentlySelectedResume.subscribe((selection: any) => {
-            if(selection && this.events) {
+            if(selection && this.events && this.timeline) {
                 let selectedIDs = new Array<number>();
                 this.events.forEach((e: any) => {
                     if(e.resumeID === selection) selectedIDs.push(e.id);
@@ -32,7 +32,7 @@ export class TimelineComponent implements OnChanges {
         })
         this.cs.currentlySelectedEvents.subscribe((selection: any) => {
             if(!selection) return;
-            if(selection.from === 'map') {
+            if(selection.from === 'map' && this.timeline) {
                 if(selection.event === undefined) {
                     this.timeline.setSelection();
                 } else {
@@ -43,8 +43,8 @@ export class TimelineComponent implements OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if(changes) {
-           if(!this.timeline) this.createTimeline();
+        if(changes.events.currentValue.length !== 0) {
+            if(!this.timeline) this.createTimeline();
         }
     }
 
@@ -74,11 +74,11 @@ export class TimelineComponent implements OnChanges {
 			showMajorLabels : true,
 			zoomMin			: 86400000*365, // 1 year in ms
 			zoomMax			: 86400000*365*20, // 10 years in ms
-			minHeight		: '250px',
+			minHeight		: '350px',
 			showCurrentTime : false,
 			tooltip: {
 				followMouse: true,
-				overflowMethod: 'cap'
+				overflowMethod: 'flip'
 			}
         }
         this.timeline = new Timeline(this.timelineContainer.nativeElement, this.events, this.groups);
