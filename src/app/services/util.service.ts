@@ -33,4 +33,11 @@ export class UtilServices {
     return end.diff(start, 'years');
   }
 
+  getPrettyDate(startDate: Date, endDate: Date): string {
+    let str = '';
+    str += moment(startDate).format('DD-MM-YYYY') + ' - ';
+    str+= endDate ? moment(endDate).format('DD-MM-YYYY') : 'ongoing';
+    return str;
+  }
+
 }
