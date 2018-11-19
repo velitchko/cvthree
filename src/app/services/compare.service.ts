@@ -30,7 +30,6 @@ export class CompareService {
         this.selectedEvents.next(objectIdArr);
     }
 
-    // TODO: Extend for set of IDs (array?)
     setResumeID(id: string): void {
         this.selectedResume.next(id);
     }
