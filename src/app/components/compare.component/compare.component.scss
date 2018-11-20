@@ -1,3 +1,26 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-areas: "cards cards cards cards" "skill-plot skill-plot skill-tree skill-tree" "timeline timeline timeline timeline" "map map map map";
+    margin-left: 6em;
+    margin-right: 6em;
+}
+
+.cards { grid-area: cards; }
+
+.skill-plot { 
+    grid-area: skill-plot; 
+    // could be empty give it min width
+    min-width: 500px;
+}
+
+.skill-tree { grid-area: skill-tree; }
+
+.timeline { grid-area: timeline; }
+
+.map { grid-area: map; }
+
 .cards-compare {
     display: flex;
     flex: 0 1 auto;
@@ -58,7 +81,7 @@
 }
 
 .list-entry-wrapper {
-padding: 1em;
+    padding: 1em;
 }
 
 .list-entry {
@@ -72,6 +95,44 @@ padding: 1em;
     margin: 0.5em;
     border-top: 6px solid;
     border-radius: 2% 2% 0 0;
+    width:250px;
+    height: 475px;
+}
+
+.big-number {
+    font-size: 1.5em;
+    width: 1.5em;
+    font-weight: bold;
+    &sup {
+        color: inherit;
+    }
+}
+// years of experience
+.yoe {
+    vertical-align: top;
+}
+.float-bottom {
+    position:relative;
+    bottom: 0.25em;
+}
+
+.metrics-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex: 0 1 auto;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.25em;
+}
+
+.metrics-detail {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 6em;
+    color: rgba(0,0,0,.54);
 }
 
 .mat-card-avatar {
@@ -109,15 +170,15 @@ padding: 1em;
     display: flex;
     flex-direction: row;
     flex: 0 1 auto;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 
-.skill-compare,
-.tree-compare,
-.language-compare,
-.timeline-compare,
-.map-compare, {
-    margin-left: 6em;
-    margin-right: 6em;
-}
+// .skill-compare,
+// .tree-compare,
+// .language-compare,
+// .timeline-compare,
+// .map-compare, {
+//     margin-left: 6em;
+//     margin-right: 6em;
+// }

@@ -64,13 +64,13 @@ export class CompareComponent implements AfterViewInit {
      this.getMapData();
   }
 
-  calculateAvgJobDuration(resume: Resume): number {
+  calculateAvgJobDuration(resume: Resume): string {
     let avg = 0;
     resume.work.forEach((w: Work) => {
       avg += this.util.getDateDifference(w.startDate, w.endDate);
     });
-    if(avg === 0 && resume.work.length === 0) return 0; // otherwise it returns a NaN
-    return Math.ceil((avg / resume.work.length) * 100) / 100;
+    if(avg === 0 && resume.work.length === 0) return '0'; // otherwise it returns a NaN
+    return (Math.ceil((avg / resume.work.length) * 100) / 100).toFixed(1);
   }
 
   getNumberOfLocations(resume: Resume): number {
@@ -104,7 +104,7 @@ export class CompareComponent implements AfterViewInit {
         break;
       case 'avgjd': 
         this.resumes.sort((a: Resume, b: Resume) => {
-          return this.calculateAvgJobDuration(b) - this.calculateAvgJobDuration(a);
+          return parseFloat(this.calculateAvgJobDuration(b)) - parseFloat(this.calculateAvgJobDuration(a));
         });
         break;
       case 'locs': 

@@ -5,9 +5,9 @@
     <div class="ordering">
         <mat-form-field>
             <mat-select placeholder="Order by:" (selectionChange)="reorderResumes($event)">
-            <mat-option *ngFor="let ordering of resumeOrdering" [value]="ordering.value">{{ ordering.display }}</mat-option> 
+                <mat-option *ngFor="let ordering of resumeOrdering" [value]="ordering.value">{{ ordering.display }}</mat-option>
             </mat-select>
-        </mat-form-field>   
+        </mat-form-field>
     </div>
     <div class="compare-navigation">
         <button mat-icon-button (click)="scrollTo(cards)">
@@ -23,78 +23,113 @@
             <mat-icon>place</mat-icon>
         </button>
     </div>
-    <div class="compare-wrapper">
-        <div class="cards-compare" #cards>
-            <mat-card *ngFor="let r of resumes; let idx = index" 
-                [style.background-color]="!r.highlighted ? 'white' : getColor(r.id) + '1a'"
-                [style.opacity]="!r.hidden ? 1 : 0.5"
-                [style.border-color]="getColor(r.id)">
-                <button mat-icon-button (click)="remove(idx)" class="button-top-right" [style.color]="getColor(r.id)">
-                    <mat-icon>clear</mat-icon>
-                </button>
-                <button mat-icon-button (click)="toggleHide(idx)" class="button-top-middle" [style.color]="getColor(r.id)">
-                    <mat-icon>{{ r.hidden ? 'visibility_off' : 'visibility' }}</mat-icon>
-                </button>
-                <button mat-icon-button (click)="toggleVisibility(idx)" class="button-top-left" [style.color]="getColor(r.id)">
-                    <mat-icon>{{ r.highlighted ? 'center_focus_weak' : 'center_focus_strong' }}</mat-icon>
-                </button>
-                <mat-card-header>
-                    <div class="list-entry-avatar" mat-card-avatar 
-                        [style.border-color]="getColor(r.id)"
-                        [style.backgroundImage]="getSanitizedPicture(r.profilePicture)">
-                        <div class="list-entry-avatar-overlay">
-                            <a class="view" [link]="'/view/' + r.id" href="javascript:void(0)">VIEW</a>
-                        </div>
-                    </div>
-                    <mat-card-title>
-                        <h2><span [style.color]="getColor(r.id)">{{ r.firstName }}</span> <span style="color: #707070">{{
-                                r.lastName }} |</span> {{ getAge(r.birthDay) }}</h2>
-                    </mat-card-title>
-                    <mat-card-subtitle>{{ r.label }} @ {{ r.location.city }}, {{ r.location.country }}</mat-card-subtitle>
-                    <div>
-                        <span>avg. job duration</span><span class="big-number">{{ calculateAvgJobDuration(r) }}</span>
-                    </div>
-                    <div>
-                        <span>languages</span><span class="big-number">{{ getNumberOfLanguages(r) }}</span>
-                    </div>
-                    <div>
-                        <span>locations</span><span class="big-number">{{ getNumberOfLocations(r) }}</span>
-                    </div>
-                    <div>
-                        <span>years of experience</span><span class="big-number">{{ getYearsOfExperience(r) }}</span>
-                    </div>
-                </mat-card-header>
-                <mat-card-content>
-                    <!-- honors, certificates, awards-->
-                </mat-card-content>
-            </mat-card>
-        </div>
-        <div class="skill-compare" #skills>
-            <div *ngIf="matchedSkills === 0">
-                <p>No skills in common.</p>
-            </div>
-            <div *ngIf="matchedSkills === 1">
-                <app-compare-lineplot [data]="skillData" (selectedResume)="highlightResume($event)"></app-compare-lineplot>
-            </div>
-            <div *ngIf="matchedSkills === 2">
-                <app-compare-scatterplot [data]="skillData" (selectedResume)="highlightResume($event)"></app-compare-scatterplot>
-            </div>
-            <div *ngIf="matchedSkills >= 3">
-                <app-radarchart [data]="skillData" (selectedResume)="highlightResume($event)"></app-radarchart>
-            </div>
-            <div class="tree-compare">
-                <app-treechart [data]="treeChartData" (selectedResume)="highlightResume($event)"></app-treechart>
-            </div>
-        </div>
 
-        <div class="language-compare">
-
-        </div>
-        <div class="timeline-compare" #timeline>
-            <app-timeline [events]="timelineData" [groups]="timelineGroups" (selectedEvent)="onEventSelected($event)"></app-timeline>
-        </div>
-        <div class="map-compare" #map>
-            <app-map [resumes]="mapData" (selectedResume)="highlightResume($event)" (selectedEvent)="onEventSelected($event)"></app-map>
+    <div class="grid-container">
+        <div class="compare-wrapper">
+            <div class="cards">
+                <div class="cards-compare" #cards>
+                    <mat-card *ngFor="let r of resumes; let idx = index" [style.background-color]="!r.highlighted ? 'white' : getColor(r.id) + '1a'"
+                        [style.opacity]="!r.hidden ? 1 : 0.5" [style.border-color]="getColor(r.id)">
+                        <button mat-icon-button (click)="remove(idx)" class="button-top-right" [style.color]="getColor(r.id)">
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="toggleHide(idx)" class="button-top-middle" [style.color]="getColor(r.id)">
+                            <mat-icon>{{ r.hidden ? 'visibility_off' : 'visibility' }}</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="toggleVisibility(idx)" class="button-top-left" [style.color]="getColor(r.id)">
+                            <mat-icon>{{ r.highlighted ? 'center_focus_weak' : 'center_focus_strong' }}</mat-icon>
+                        </button>
+                        <mat-card-header>
+                            <div class="list-entry-avatar" mat-card-avatar [style.border-color]="getColor(r.id)"
+                                [style.backgroundImage]="getSanitizedPicture(r.profilePicture)">
+                                <div class="list-entry-avatar-overlay">
+                                    <a class="view" [link]="'/view/' + r.id" href="javascript:void(0)">VIEW</a>
+                                </div>
+                            </div>
+                            <mat-card-title>
+                                <h2 style="margin: 0;">
+                                    <span [style.color]="getColor(r.id)">{{ r.firstName }}</span>
+                                    <span style="color: #707070">{{ r.lastName }}</span>
+                                </h2>
+                                <span style="font-size: 1.5em; font-weight: bold; color: #707070">{{ getAge(r.birthDay)
+                                    }}</span>
+                            </mat-card-title>
+                            <mat-card-subtitle>{{ r.label }} @ {{ r.location.city }}, {{ r.location.country }}</mat-card-subtitle>
+                            <div class="float-bottom">
+                                <div class="metrics-wrapper">
+                                    <span class="big-number" [style.color]="getColor(r.id)">{{ getYearsOfExperience(r)
+                                        }}<sup>+</sup></span>
+                                    <div class="metrics-detail">
+                                        <span class="yoe">YEARS OF</span>
+                                        <span class="yoe">EXPERIENCE</span>
+                                    </div>
+                                </div>
+                                <div class="metrics-wrapper">
+                                    <span class="big-number" [style.color]="getColor(r.id)">{{
+                                        calculateAvgJobDuration(r)
+                                        }}</span>
+                                    <div class="metrics-detail">
+                                        <span class="yoe">YEARS PER</span>
+                                        <span>JOB</span>
+                                    </div>
+                                </div>
+                                <div class="metrics-wrapper">
+                                    <span class="big-number" [style.color]="getColor(r.id)">{{ getNumberOfLanguages(r)
+                                        }}</span>
+                                    <div class="metrics-detail">
+                                        <span>LANGUAGES</span>
+                                        <span>KNOWN</span>
+                                    </div>
+                                </div>
+                                <div class="metrics-wrapper">
+                                    <span class="big-number" [style.color]="getColor(r.id)">{{ getNumberOfLocations(r)
+                                        }}</span>
+                                    <div class="metrics-detail">
+                                        <span>LOCATIONS</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card-header>
+                        <mat-card-content>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+            <div class="skill-compare" #skills>
+                <div class="skill-plot">
+                    <h2>Skills</h2>
+                    <div *ngIf="matchedSkills === 0">
+                        <p>No skills in common.</p>
+                    </div>
+                    <div *ngIf="matchedSkills === 1">
+                        <app-compare-lineplot [data]="skillData" (selectedResume)="highlightResume($event)"></app-compare-lineplot>
+                    </div>
+                    <div *ngIf="matchedSkills === 2">
+                        <app-compare-scatterplot [data]="skillData" (selectedResume)="highlightResume($event)"></app-compare-scatterplot>
+                    </div>
+                    <div *ngIf="matchedSkills >= 3">
+                        <app-radarchart [data]="skillData" (selectedResume)="highlightResume($event)"></app-radarchart>
+                    </div>
+                </div>
+                <div class="skill-tree">
+                    <div class="tree-compare">
+                        <app-treechart [data]="treeChartData" (selectedResume)="highlightResume($event)"></app-treechart>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="language-compare"></div> -->
+            <div class="timeline">
+                <div class="timeline-compare" #timeline>
+                    <h2>Timeline</h2>
+                    <app-timeline [events]="timelineData" [groups]="timelineGroups" (selectedEvent)="onEventSelected($event)"></app-timeline>
+                </div>
+            </div>
+            <div class="map">
+                <div class="map-compare" #map>
+                    <h2>Map</h2>
+                    <app-map [resumes]="mapData" (selectedResume)="highlightResume($event)" (selectedEvent)="onEventSelected($event)"></app-map>
+                </div>
+            </div>
         </div>
     </div>
 </div>
