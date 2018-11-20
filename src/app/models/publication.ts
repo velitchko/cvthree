@@ -4,5 +4,5 @@ export class Publication {
   date: Date;
   summary: string;
   url: string; // DOI 
-  identifier?: string;
+  identifier?: number;
 }

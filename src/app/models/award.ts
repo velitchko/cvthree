@@ -3,5 +3,5 @@ export class Award { // Also certificates / honors
   date: Date;
   awarder: string;
   summary: string;
-  identifier?: string;
+  identifier?: number;
 }
