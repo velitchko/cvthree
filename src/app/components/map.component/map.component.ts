@@ -320,8 +320,7 @@ export class MapComponent implements OnChanges {
     }
 
     createLines(resume: Resume): void {
-        console.log('drawing lines for resume ' + resume.id);
-        let pathCoords = new Array<any>();
+        // let pathCoords = new Array<any>();
         let resumeMarkers = this.markers.filter((m: any) => { return m.resumeID === resume.id; });
 
         let coords = [];
