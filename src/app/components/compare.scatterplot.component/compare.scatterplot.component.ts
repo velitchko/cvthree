@@ -144,8 +144,8 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
             .attr('r', 20)
             .attr('class', 'scatter-point')
             .attr('id', (d: any) => { 
-                console.log(d);
-                return d[0].resumeID; })
+                return d[0].resumeID; 
+            })
             .attr('cx', (d: any) => {
                 let xVal;
                 d.forEach((_d: any) => {
@@ -153,9 +153,8 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
                         xVal = _d.value;
                     }
                 });
-                console.log(xAxisLabel, xVal);
                 return x(+xVal) - 20; 
-                }) // add half of height 
+            }) // add half of height 
             .attr('cy', (d: any) => { 
                 let yVal;
                 d.forEach((_d: any) => {

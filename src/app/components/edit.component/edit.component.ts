@@ -257,8 +257,6 @@ export class EditComponent implements OnInit {
   }
 
   saveSkills($event: any): void {
-    console.log('skills saved');
-    console.log($event);
     this.resume.skills = $event;
   }
 
@@ -430,7 +428,6 @@ export class EditComponent implements OnInit {
 
   skillsUpdated($event: any): void {
     this.resume.skills = $event;
-    console.log(this.resume.skills);
   }
 
   saveResume(): void {
@@ -442,7 +439,9 @@ export class EditComponent implements OnInit {
         this.unsaved = false;
         this.cd.detectChanges();
       }
-      else console.log(success);
+      else {
+
+      }
     })
   }
 
