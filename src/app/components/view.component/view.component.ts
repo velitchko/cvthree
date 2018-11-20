@@ -295,7 +295,7 @@ export class ViewComponent implements AfterViewInit {
   }
 
   getProfilePicture(resume: Resume): string {
-    return resume.profilePicture.replace('http://localhost:8000/api/v1/', 'https://cvthree.cvast.tuwien.ac.at/api/v1/');
+    return resume.profilePicture;
   }
 
   drawTree(id: string, data: any): void {

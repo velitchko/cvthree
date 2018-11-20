@@ -75,7 +75,7 @@ export class TreeChartComponent implements OnChanges {
           d3.select(n[i])
             .transition()
             .attr('stroke-opacity', () => {
-              return this.getSkillOpacity(d.data.level);
+              return this.getSkillOpacity(d.data.level.trim());
             })
             .attr('stroke-width', 8)
             .attr('stroke', () => {
@@ -116,7 +116,7 @@ export class TreeChartComponent implements OnChanges {
     // declares a tree layout and assigns the size
     // TODO: the size of the tree needs to be dynamic (based on skills/nodes per level) - otherwise occlusion
     let treemap = d3.tree()
-      .size([360, 250]) //angle = 2*PI, radius = 250
+      .size([360, 350]) //angle = 2*PI, radius = 250
       .nodeSize([nodeRadius*4, nodeRadius*4])
       .separation(function (a, b) { return (a.parent == b.parent ? 1 : 2); });
 

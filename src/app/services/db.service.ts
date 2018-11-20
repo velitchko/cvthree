@@ -46,7 +46,6 @@ export class DatabaseServices {
 
   parseResume(json: any): Resume {
     let resume = new Resume();
-
     resume.id = json._id;
     resume.firstName = json.firstName;
     resume.lastName = json.lastName;
@@ -72,6 +71,7 @@ export class DatabaseServices {
     resume.courses = json.courses;
     resume.location = json.location;
 
+    resume.profilePicture = resume.profilePicture.replace('http://localhost:8000/api/v1/', 'https://cvthree.cvast.tuwien.ac.at/api/v1/');
     return resume;
   }
 
@@ -83,10 +83,11 @@ export class DatabaseServices {
     });
     return promise;
   }
+
   getLocalResumes(): Array<Resume> {
     return this.resumes;
   }
-  
+
   getAllResumes(): Promise<any> {
     let promise = new Promise<any>((resolve, reject) => {
       this.http.get(`${environment.API_PATH}resumes`).subscribe((response: any) => {
@@ -138,7 +139,6 @@ export class DatabaseServices {
   query(searchTerm: string): Promise<any> {
     let promise = new Promise<any>((resolve, reject) => {
       this.http.post(`${environment.API_PATH}query`, { query: searchTerm }).subscribe((response: any) => {
-        resolve(response);
       });
     });
     return promise;
@@ -155,7 +155,7 @@ export class DatabaseServices {
               bonus: r.bonus,
               resume: this.parseResume(r.resume)
             });
-          })
+          });
           resolve(success);
         }
         if(!response.results) reject(response);
