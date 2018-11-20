@@ -2,6 +2,10 @@ import { Component, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { Resume } from '../../models/resume';
 import { Skill } from '../../models/skill';
 import { Work } from '../../models/work';
+import { Project } from '../../models/project';
+import { Publication } from '../../models/publication';
+import { Award } from '../../models/award';
+import { Education } from '../../models/education';
 import { SkillLevel } from '../../lists/skill.level';
 import { CompareService } from '../../services/compare.service';
 import { UtilServices } from 'src/app/services/util.service';
@@ -227,7 +231,7 @@ export class CompareComponent implements AfterViewInit {
       };
       let type = 'range';
       this.timelineGroups.push(group);
-      r.work.forEach((w: any, jdx: number) => {
+      r.work.forEach((w: Work, jdx: number) => {
         w.identifier = identifier;
         type = w.endDate ? 'range' : 'point';
         let event = {
@@ -249,7 +253,7 @@ export class CompareComponent implements AfterViewInit {
       });
 
       // EDUCATION
-      r.education.forEach((e: any, jdx: number) => {
+      r.education.forEach((e: Education, jdx: number) => {
         e.identifier = identifier;
         type = e.endDate ? 'range' : 'point';
         let education = {
@@ -262,7 +266,7 @@ export class CompareComponent implements AfterViewInit {
           group: idx,
           category: 'EDUCATION',
           resumeID: r.id,
-          location: e.location,
+          location: e.institution,
           start: e.startDate,
           end: e.endDate,
           type: type,
@@ -276,7 +280,7 @@ export class CompareComponent implements AfterViewInit {
       });
 
       // PROJECTS
-      r.projects.forEach((e: any, jdx: number) => {
+      r.projects.forEach((e: Project, jdx: number) => {
         e.identifier = identifier;
         type = e.endDate ? 'range' : 'point';
         let project = {
@@ -303,7 +307,7 @@ export class CompareComponent implements AfterViewInit {
       });
 
       // PUBLICATIONS
-      r.publications.forEach((e: any, jdx: number) => {
+      r.publications.forEach((e: Publication, jdx: number) => {
         e.identifier = identifier;
         let publication = {
           position: e.title,
@@ -317,19 +321,17 @@ export class CompareComponent implements AfterViewInit {
           resumeID: r.id,
           location: null,
           startDate: e.date,
-          endDate: null,
           type: 'point',
           title: this.getTimelineTitle(publication, idx),
           content: this.getTimelineContent(publication, 'note_add'),
           className: `timeline-color-${idx}`
         };
-        if(e.endDate) event['end'] = e.endDate;
         this.timelineData.push(event);
         identifier++;
       });
 
       // AWARDS/CERTIFICATES
-      r.awards.forEach((e: any, jdx: number) => {
+      r.awards.forEach((e: Award, jdx: number) => {
         e.identifier = identifier;
         let award = {
           position: e.title,
@@ -343,13 +345,11 @@ export class CompareComponent implements AfterViewInit {
           resumeID: r.id,
           location: null,
           startDate: e.date,
-          endDate: null,
           type: 'point',
           title: this.getTimelineTitle(award, idx),
           content: this.getTimelineContent(award , 'star'),
           className: `timeline-color-${idx}`
         };
-        if(e.endDate) event['end'] = e.endDate;
         this.timelineData.push(event);
         identifier++;
       });
