@@ -3,6 +3,10 @@
  font-family: 'Roboto', sans-serif;
 }
 
+::ng-deep h2, text, p, span {
+  color: #5d5d5d;
+}
+
 ::ng-deep body {
     display: flex;
     /*min-height: 100vh;*/
@@ -62,4 +66,13 @@
   margin: 0 auto;
   top: calc(50% - 150px);
   left: calc(50% - 150px);
+}
+
+footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
 }
