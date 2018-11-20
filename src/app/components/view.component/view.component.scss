@@ -1,24 +1,33 @@
-.general {
-  display: flex;
+.name {
+  font-size: 3em;
+  color: #00d1b2;
+  text-transform: uppercase;
+  font-weight: bold;
+}
 
-  .name {
-    font-size: 3em;
-    color: #00d1b2;
-    text-transform: uppercase;
-  }
-  .age {
-    font-size: 3em;
-    color: #454647;
-  }
+.age {
+  font-size: 3em;
+  color: #454647;
+  font-weight: bold;
+}
 
-  .avatar {
-    width: 15em;
-    height: 15em;
-    border-radius: 50%;
-    flex-shrink: 0;
-    object-fit: cover;
-    border: 10px solid #00d1b2;
-  }
+.occupation {
+  text-transform: uppercase;
+  font-size: 1.75em;
+  line-height: 1.5em;
+  /* display: flex; */
+  /* flex-direction: row; */
+  /* justify-content: flex-start; */
+  align-items: baseline;
+}
+
+.avatar {
+  width: 15em;
+  height: 15em;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+  border: 10px solid #00d1b2;
 }
 
 .skill {
@@ -29,6 +38,12 @@
   align-items: center;
 }
 // SKILL STUFF
+
+::ng-deep path.link {
+  fill: none;
+  // stroke: #D4D8DA;
+  // stroke-width: 2;
+}
 ::ng-deep .slice {
    cursor: pointer;
 }
@@ -44,18 +59,122 @@
 
 ::ng-deep .slice text {
    pointer-events: none;
-   dominant-baseline: middle;
    text-anchor: middle;
 }
 ::ng-deep .label {
  font-family: 'Roboto', sans-serif;
 }
 
-.timeline {}
-.language-wrapper {
+::ng-deep .vis-timeline {
+  overflow: visible;
+}
+
+::ng-deep .vis-tooltip {
+  white-space: normal !important;
+  background-color: white !important;
+  border: none !important;
+}
+
+::ng-deep .vis-item {
+  border-color: #00d1b2;
+  border-width: 2px;
+  background-color: #00d1b254;
+}
+
+::ng-deep .vis-timeline,
+::ng-deep .vis-labelset .vis-label,
+::ng-deep .vis-panel.vis-center, 
+::ng-deep .vis-panel.vis-left, 
+::ng-deep .vis-panel.vis-right, 
+::ng-deep .vis-panel.vis-top, 
+::ng-deep .vis-panel.vis-bottom,
+::ng-deep .vis-foreground .vis-group {
+  border: transparent !important;
+}
+
+::ng-deep .timeline-content {
+  width: 400px;
+  margin: 0.5em;
+}
+
+::ng-deep .tree-tooltip {
+  position: absolute;
+  z-index: 99;
+  width: auto;
+  height: 40px;
+  pointer-events: none;
+  background-color: rgba(255,255,255,0.85);
+}
+// .timeline-wrapper {
+//   margin-left: 6em;
+//   margin-right: 6em;
+// }
+
+// .timeline-event {
+
+// }
+
+// .language-wrapper {
+//   display: flex;
+//   flex-direction: row;
+//   flex: 0 1 auto;
+//   justify-content: flex-start;
+//   align-items: center;
+// }
+
+
+.grid-container {
+  display: grid;
+  margin-left: 10em;
+  margin-right: 10em;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 0.5fr 0.25fr 1fr;
+  grid-template-areas: "picture picture general general general general" "languages languages languages skills skills skills" "timeline timeline timeline timeline timeline timeline";
+  row-gap: 2.5em;
+  column-gap: 2em;
+}
+
+.picture { 
+  grid-area: picture; 
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  flex: 0 1 auto;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.general { 
+  grid-area: general; 
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.languages { 
+  grid-area: languages; 
+  display: flex;
+  flex-direction: column;
   flex: 0 1 auto;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
+}
+
+.skills { 
+  grid-area: skills; 
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.timeline { 
+  grid-area: timeline; 
+  // display: flex;
+  // flex-direction: column;
+  // flex: 0 1 auto;
+  // justify-content: flex-start;
+  // align-items: flex-start;
 }
