@@ -83,7 +83,10 @@ export class DatabaseServices {
     });
     return promise;
   }
-
+  getLocalResumes(): Array<Resume> {
+    return this.resumes;
+  }
+  
   getAllResumes(): Promise<any> {
     let promise = new Promise<any>((resolve, reject) => {
       this.http.get(`${environment.API_PATH}resumes`).subscribe((response: any) => {

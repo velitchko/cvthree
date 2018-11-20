@@ -24,10 +24,16 @@ export class ListComponent  {
     private router: Router) {
     this.resumes = new Array<Resume>();
     this.scatterPlotPoints = new Array<any>();
-    this.db.getAllResumes().then((success: any) => {
-      this.resumes = success;
+    if(this.db.getLocalResumes().length === 0 ) {
+      this.db.getAllResumes().then((success: any) => {
+        this.resumes = success;
+        this.loading = false;
+      });
+    } else {
+      this.resumes = db.getLocalResumes();
+      // we have resumes in the service
       this.loading = false;
-    });
+    }
   }
 
   getComparedResumes(): Array<Resume> {
