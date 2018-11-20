@@ -219,8 +219,6 @@ export class AddComponent  {
   }
 
   saveSkills($event: any): void {
-    console.log('skills saved');
-    console.log($event);
     this.resume.skills = $event;
   }
 
@@ -400,7 +398,9 @@ export class AddComponent  {
         this.saved = true;
         this.ref.detectChanges();
       }
-      else console.log(success);
+      else {
+        
+      }
     });
   }
 
