@@ -23,7 +23,8 @@ export class UtilServices {
   }
 
   getSanitizedPicture(picture: string): SafeStyle {
-    return this.sanitization.bypassSecurityTrustStyle(`url(${picture})`);
+    let httpsPic = picture.replace('http://localhost:8000/api/v1/', 'https://cvthree.cvast.tuwien.ac.at/api/v1/');
+    return this.sanitization.bypassSecurityTrustStyle(`url(${httpsPic})`);
   }
 
   getDateDifference(a: Date, b: Date): number {
