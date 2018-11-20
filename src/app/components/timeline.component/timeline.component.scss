@@ -45,8 +45,8 @@
 
 ::ng-deep .vis-tooltip {
   white-space: normal !important;
-  background-color: white;
-  border: none;
+  background-color: white !important;
+  border: none !important;
 }
 ::ng-deep .timeline-content {
   width: 400px;
