@@ -286,12 +286,16 @@ export class ViewComponent implements AfterViewInit {
     //
     // tooltip
     this.tooltip = d3.select('body').append('div')
-                                    .attr('class', 'tree-tooltip')
-                                    .style('opacity', 0);
+      .attr('class', 'tree-tooltip')
+      .style('opacity', 0);
     this.skillData = new Skill();
     this.skillData.name = 'Skills';
     this.skillData.children = skills;
     this.drawTree('#skill-tree', this.skillData);
+  }
+
+  getProfilePicture(resume: Resume): string {
+    return resume.profilePicture.replace('http://localhost:8000/api/v1/', 'https://cvthree.cvast.tuwien.ac.at/api/v1/');
   }
 
   drawTree(id: string, data: any): void {
@@ -361,6 +365,8 @@ export class ViewComponent implements AfterViewInit {
     //arrange each node on svg
     let nodeEnter = node.enter().append('g').attr('class', 'node');
 
+    // adds the circle to the node  
+    this.getNode(nodeEnter, nodeRadius - 2, nodeThickness - 2, nodeData);
     // adds the text to the node
     nodeEnter.append('text')
       .attr('class', 'all')
@@ -379,8 +385,6 @@ export class ViewComponent implements AfterViewInit {
     //   return 'rotate(' + (d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 180 / Math.PI + ')'; 
     // });
 
-    // adds the circle to the node  
-    this.getNode(nodeEnter, nodeRadius - 2, nodeThickness - 2, nodeData);
 
 
 
@@ -400,7 +404,7 @@ export class ViewComponent implements AfterViewInit {
       .attr("fill", "#f2f2f2")
       .attr('stroke', '#00d1b2')
       .attr('stroke-opacity', (d: any) => {
-        return this.getSkillOpacity(d.data.level);
+        return this.getSkillOpacity(d.data.level.trim());
       })
       .attr('stroke-width', 4)
       .on('mouseover', (d: any, i: any, n: any) => {

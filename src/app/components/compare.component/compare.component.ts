@@ -227,7 +227,7 @@ export class CompareComponent implements AfterViewInit {
       let initials = this.util.getInitials(r.firstName, r.lastName);
       let group = {
         id: idx,
-        content: '<img src="' + r.profilePicture + '" class="timeline-profile-pic timeline-profile-pic-color-' + idx + '"><div class="timeline-profile-initials timeline-pic-color-' + idx + '"><p class="upper-case">' + initials + '</p></div>'
+        content: '<img src="' + r.profilePicture.replace('http://localhost:8000/api/v1/', 'https://cvthree.cvast.tuwien.ac.at/api/v1/') + '" class="timeline-profile-pic timeline-profile-pic-color-' + idx + '"><div class="timeline-profile-initials timeline-pic-color-' + idx + '"><p class="upper-case">' + initials + '</p></div>'
       };
       let type = 'range';
       this.timelineGroups.push(group);

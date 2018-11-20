@@ -319,6 +319,10 @@ export class MapComponent implements OnChanges {
         return midpointLatLng; // [lat,lng]
     }
 
+    getProfilePicture(resume: Resume): string {
+        return resume.profilePicture.replace('http://localhost:8000/api/v1/', 'https://cvthree.cvast.tuwien.ac.at/api/v1/');
+    }
+
     createLines(resume: Resume): void {
         // let pathCoords = new Array<any>();
         let resumeMarkers = this.markers.filter((m: any) => { return m.resumeID === resume.id; });
