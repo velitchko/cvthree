@@ -1,7 +1,7 @@
 .grid-container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
+    // grid-template-rows: 1fr 1fr 1fr 1fr;
     grid-template-areas: "cards cards cards cards" "skill-plot skill-plot skill-tree skill-tree" "timeline timeline timeline timeline" "map map map map";
     margin-left: 6em;
     margin-right: 6em;
