@@ -1,28 +1,74 @@
-<div *ngFor="let q of queries; let idx = index">
+<div>
+    <mat-form-field>
+        <input matInput placeholder="Occupation" [(ngModel)]="query.searchOccupation" #occupation>
+        <button mat-button *ngIf="occupation.value" matSuffix mat-icon-button aria-label="Clear" (click)="occupation.value=''">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Location" [(ngModel)]="query.searchLocation" #location>
+        <button mat-button *ngIf="location.value" matSuffix mat-icon-button aria-label="Clear" (click)="location.value=''">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+</div>
+<div *ngFor="let q of query.skills; let idx = index">
     <mat-form-field>
         <input matInput placeholder="Skill" [(ngModel)]="q.searchSkill">
     </mat-form-field>
-
     <mat-form-field>
         <mat-select placeholder="Level" [(ngModel)]="q.searchLevel">
-            <mat-option *ngFor="let l of levels()"[value]='l'>{{ l }}</mat-option>
+            <mat-option *ngFor="let l of skillLevels()" [value]='l'>{{ l }}</mat-option>
         </mat-select>
     </mat-form-field>
-
-    <button mat-mini-fab color="warn" (click)="removeQuery(idx)"><mat-icon>clear</mat-icon></button>
+    <button mat-mini-fab color="warn" (click)="removeSkillQuery(idx)">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<div *ngFor="let q of query.languages; let idx = index">
+    <mat-form-field>
+        <input matInput placeholder="Language" [(ngModel)]="q.searchLanguage">
+    </mat-form-field>
+    <!-- <mat-form-field>
+        <mat-select placeholder="Level" [(ngModel)]="q.searchLevel">
+            <mat-option *ngFor="let l of languageLevels()" [value]='l'>{{ l }}</mat-option>
+        </mat-select>
+    </mat-form-field> -->
+    <button mat-mini-fab color="warn" (click)="removeLanguageQuery(idx)">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<div>
+    <mat-form-field>
+        <input matInput placeholder="Language" #searchLanguage>
+    </mat-form-field>
+    <!-- <mat-form-field>
+        <mat-select placeholder="Level" #searchLLevel>
+            <mat-option *ngFor="let l of languageLevels()" [value]='l'>{{ l }}</mat-option>
+        </mat-select>
+    </mat-form-field> -->
 </div>
 
-<mat-form-field>
-    <input matInput placeholder="Skill" #searchSkill>
-</mat-form-field>
-
-<mat-form-field>
-    <mat-select placeholder="Level" #searchLevel>
-        <mat-option *ngFor="let l of levels()" [value]='l'>{{ l }}</mat-option>
-    </mat-select>
-</mat-form-field>
+<div>
+    <mat-form-field>
+        <input matInput placeholder="Skill" #searchSkill>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-select placeholder="Level" #searchSLevel>
+            <mat-option *ngFor="let l of skillLevels()" [value]='l'>{{ l }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
 
 <div class="action-buttons">
-    <button mat-raised-button color="primary" (click)="addQuery(searchSkill, searchLevel)"><mat-icon>add</mat-icon> Add skill</button>
-    <button mat-raised-button color="primary" (click)="submit()"><mat-icon>search</mat-icon> Search</button>
+    <button mat-raised-button color="primary" (click)="addSkillQuery(searchSkill, searchSLevel)">
+        <mat-icon>add</mat-icon> Add skill
+    </button>
+    <button mat-raised-button color="primary" (click)="addLanguageQuery(searchLanguage)">
+        <!-- searchLLevel -->
+        <mat-icon>add</mat-icon> Add language
+    </button>
+    <button mat-raised-button color="primary" (click)="submit()">
+        <mat-icon>search</mat-icon> Search
+    </button>
 </div>

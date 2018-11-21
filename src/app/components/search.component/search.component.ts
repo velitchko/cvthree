@@ -1,15 +1,21 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { SkillLevel } from '../../lists/skill.level';
+import { LanguageLevel } from '../../lists/language.level';
 import { DatabaseServices } from '../../services/db.service';
 
 // @Injectable()
 export class Query {
-    searchSkill: string;
-    searchLevel: string;
+    skills: Array<{ searchSkill: string, searchLevel: string}>;
+    languages: Array<{ searchLanguage: string, searchLevel :string}>;
 
-    constructor(skill: string, level: string) {
-        this.searchSkill = skill || '';
-        this.searchLevel = level || 'BASIC'; 
+    searchOccupation: string;
+    searchLocation: string;
+
+    constructor() {
+     this.skills = new Array<{ searchSkill: string, searchLevel: string}>();
+     this.languages = Array<{ searchLanguage: string, searchLevel :string}>();
+     this.searchLocation = '';
+     this.searchOccupation = '';
     }
 }
 
@@ -21,34 +27,56 @@ export class Query {
 export class SearchComponent {
     // Converts ENUM list for language levels to iterable array
     // *ngFor = let ll of levels()
-    queries: Array<Query>;
-    searchSkill: string;
-    searchLevel: string;
+    query: Query;
     @Output() results: any;
 
-    levels(): Array<String> {
+    skillLevels(): Array<String> {
         const levels = Object.keys(SkillLevel);
         return levels.slice(levels.length/2);
     };
 
+    languageLevels(): Array<String> {
+        const levels = Object.keys(LanguageLevel);
+        return levels.slice(levels.length/2);
+    };
+
     constructor(private db: DatabaseServices) {
-        this.queries = new Array<Query>();
+        this.query = new Query();
         this.results = new EventEmitter<any>();
     }
 
-    addQuery(skill: any, level: any): void {
-        this.queries.push(new Query(skill.value, level.value));
+    addSkillQuery(skill: any, level: any): void {
+        let skillQ = {
+            searchSkill: skill.value,
+            searchLevel: level.value
+        };
+        this.query.skills.push(skillQ);
         skill.value = '';
         level.value = '';
     }
 
-    removeQuery(idx: number): void {
-        this.queries.splice(idx, 1);
+    addLanguageQuery(language: any, level: any = ''): void {
+        let langQ = {
+            searchLanguage: language.value,
+            searchLevel: level.value
+        };
+        this.query.languages.push(langQ);
+        language.value = '';
+        //level.value = '';
     }
+
+    removeSkillQuery(idx: number): void {
+        this.query.skills.splice(idx, 1);
+    }
+    
+    removeLanguageQuery(idx: number): void {
+        this.query.languages.splice(idx, 1);
+    }
+
 
     submit(): void {
         // submit query to server
-        this.db.skillQuery(this.queries).then((success) => {
+        this.db.skillQuery(this.query).then((success) => {
             this.results.emit(success);
         });   
     }

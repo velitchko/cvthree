@@ -359,13 +359,46 @@ export function createApi(distPath: string, ngSetupOptions: NgSetupOptions) {
    * Search
    */
   api.post('/api/v1/skillquery', (req: express.Request, res: express.Response) => {
-    let queries = JSON.parse(req.body.query);
+    let query = JSON.parse(req.body.query);
     let results = [];
-    Resume.find({}, (err, resumes) => {
+    let subQs = [];
+  
+    // build query on-demand otherwise it will return all resumes
+    if(query.searchLocation !== "") {
+      // options i = case insensitive
+      subQs.push({ 'location.city' : { $regex: query.searchLocation, $options: 'i' }});
+      subQs.push({ 'location.country' : { $regex: query.searchLocation, $options: 'i' }});
+      subQs.push({ 'location.address' : { $regex: query.searchLocation, $options: 'i' }});
+    }
+
+    if(query.searchOccupation !== "") {
+      subQs.push({ 'label' : { $regex: query.searchOccupation, $options: 'i' }});
+    }
+
+    if(query.languages.length !== 0) {
+      let languages = [];
+      query.languages.forEach((q: any) => {
+        languages.push(q.searchLanguage);
+      });
+      let regex = languages.map(function(l) { return new RegExp(l, "i"); });
+      subQs.push({ 'languages.name' : { $in: regex }}); 
+      // because in can only work with strings
+      // we need to wrap the whole query around RegExp
+    }
+
+    let mongooseQ = {}; 
+    subQs.length !== 0 ? mongooseQ['$or'] = subQs : '';
+    Resume.find(mongooseQ, (err, resumes) => {
+      if(err) {
+        console.log(err); 
+        res.status(500).json({ message: 'ERR', results: err});
+      }
       resumes.forEach((r) => {
-        let base = score.baseScore(r.skills, queries);
-        let bonus = score.bonusScore(r.skills, queries);
-        if(base === 0) return;
+        let base = score.baseScore(r.skills, query.skills);
+        let bonus = score.bonusScore(r.skills, query.skills);
+        // if base is 0 and skills were requested return
+        // else append to results
+        if(base === 0 && query.skills.length !== 0) return;
         results.push({
           resume: r,
           base: base,

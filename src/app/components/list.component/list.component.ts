@@ -175,16 +175,16 @@ export class ListComponent  {
   }
 
   update($event: any): void {
-    this.showScatterPlot = true;
-    this.scatterPlotPoints = $event;
     this.resumes = $event.map((r: any) => { 
       // set score in resume
       r.resume.bonus = r.bonus;
       r.resume.base = r.base;
       return r.resume 
     });
+    this.showScatterPlot = this.resumes.filter((r: Resume) => { return r.base !== 0 }).length === 0 ? false : true;
+    this.scatterPlotPoints = $event;
     // repopulate compare service
     this.cs.clearResumes();
-    this.resumes.forEach((r: Resume) => { this.cs.addResume(r); });
+    // this.resumes.forEach((r: Resume) => { this.cs.addResume(r); });
   }
 }

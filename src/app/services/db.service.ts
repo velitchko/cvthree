@@ -144,9 +144,9 @@ export class DatabaseServices {
     return promise;
   }
 
-  skillQuery(queries: Array<Query>): Promise<any> {
+  skillQuery(query: Query): Promise<any> {
     let promise = new Promise<any>((resolve, reject) => {
-      this.http.post(`${environment.API_PATH}skillquery`, { query: JSON.stringify(queries)}).subscribe((response: any) => {
+      this.http.post(`${environment.API_PATH}skillquery`, { query: JSON.stringify(query)}).subscribe((response: any) => {
         if(response.message === "OK") {
           let success = [];
           response.results.forEach((r: any) => {
