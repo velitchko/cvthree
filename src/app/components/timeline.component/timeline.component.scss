@@ -40,7 +40,7 @@
   }
 
 ::ng-deep .vis-timeline {
-  overflow: none;
+  overflow: inherit;
 }
 
 ::ng-deep .vis-tooltip {
