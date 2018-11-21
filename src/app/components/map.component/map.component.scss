@@ -30,6 +30,17 @@
         opacity: 1 !important;
       } 
     }
-
   }
+}
+
+::ng-deep .leaflet-popup-content-wrapper {
+  white-space: normal !important;
+  background-color: white !important;
+  border: none !important;
+  border-radius: 0;
+
+}
+
+::ng-deep div.leaflet-popup-content-wrapper > div > div {
+  width: auto;
 }
