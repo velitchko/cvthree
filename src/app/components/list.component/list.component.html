@@ -20,6 +20,13 @@
       </div>
     </div>
     <div *ngIf="!loading" class="list-wrapper" #listWrapper>
+      <div class="ordering">
+          <mat-form-field>
+              <mat-select placeholder="Order by:" (selectionChange)="reorderResumes($event)">
+                  <mat-option *ngFor="let ordering of resumeOrdering" [value]="ordering.value">{{ ordering.display }}</mat-option>
+              </mat-select>
+          </mat-form-field>
+      </div>
       <!-- <button mat-icon-button (click)="scrollDown()" color="primary"><mat-icon>expand_more</mat-icon></button> -->
       <div *ngFor="let resume of resumes; let idx = index" class="list-entry-wrapper">
         <mat-card [ngClass]="{'selected': resume.selected}" class="list-entry">
@@ -31,6 +38,40 @@
             </div>
             <mat-card-title><h2><span style="color: #00d1b2">{{ resume.firstName }}</span> <span style="color: #707070">{{ resume.lastName }} |</span> {{ getAge(resume.birthDay) }}</h2></mat-card-title>
             <mat-card-subtitle>{{ resume.label }} @ {{ resume.location.city }}, {{ resume.location.country }}</mat-card-subtitle>
+            <div class="float-bottom">
+                <div class="metrics-wrapper">
+                    <span class="big-number">{{ getYearsOfExperience(resume)
+                        }}<sup>+</sup></span>
+                    <div class="metrics-detail">
+                        <span class="yoe">YEARS OF</span>
+                        <span class="yoe">EXPERIENCE</span>
+                    </div>
+                </div>
+                <div class="metrics-wrapper">
+                    <span class="big-number">{{
+                        calculateAvgJobDuration(resume)
+                        }}</span>
+                    <div class="metrics-detail">
+                        <span class="yoe">YEARS PER</span>
+                        <span>JOB</span>
+                    </div>
+                </div>
+                <div class="metrics-wrapper">
+                    <span class="big-number">{{ getNumberOfLanguages(resume)
+                        }}</span>
+                    <div class="metrics-detail">
+                        <span>LANGUAGES</span>
+                        <span>KNOWN</span>
+                    </div>
+                </div>
+                <div class="metrics-wrapper">
+                    <span class="big-number">{{ getNumberOfLocations(resume)
+                        }}</span>
+                    <div class="metrics-detail">
+                        <span>LOCATIONS</span>
+                    </div>
+                </div>
+            </div>
           </mat-card-header>
           <mat-card-content>
             <!-- honors, certificates, awards-->

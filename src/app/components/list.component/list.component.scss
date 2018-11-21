@@ -92,8 +92,8 @@
 .list-entry {
   padding-top: 1em;
   margin-bottom: 1em;
-  width: 20em;
-  height: 18em;
+  width: 250px;
+  height: 400px;
 }
 
 .mat-card {
@@ -137,6 +137,45 @@
         margin: auto;
       }
     }
+}
+
+
+.big-number {
+  font-size: 1.5em;
+  width: 1.5em;
+  font-weight: bold;
+  color: #00d1b2;
+  &sup {
+      color: inherit;
+  }
+}
+// years of experience
+.yoe {
+  vertical-align: top;
+}
+
+.float-bottom {
+  position:relative;
+  bottom: 0.25em;
+}
+
+.metrics-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex: 0 1 auto;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.25em;
+}
+
+.metrics-detail {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 6em;
+  color: rgba(0,0,0,.54);
 }
 
 // .default-avatar {

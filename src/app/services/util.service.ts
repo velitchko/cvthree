@@ -4,6 +4,8 @@ import { map, startWith } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Resume } from '../models/resume';
+import { Skill } from '../models/skill';
+import { Work } from '../models/work';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import * as moment from 'moment';
 @Injectable()
@@ -39,6 +41,45 @@ export class UtilServices {
     str += moment(startDate).format('DD-MM-YYYY') + ' - ';
     str+= endDate ? moment(endDate).format('DD-MM-YYYY') : 'ongoing';
     return str;
+  }
+  
+  getYearsOfExperience(resume: Resume): number {
+    let yoe = 0;
+    resume.work.forEach((w: Work) => {
+      yoe += this.getDateDifference(w.startDate, w.endDate);
+    });
+    return yoe;
+  }
+
+  getNumberOfLanguages(resume: Resume): number {
+    return resume.languages.length;
+  }
+
+  
+  calculateAvgJobDuration(resume: Resume): string {
+    let avg = 0;
+    resume.work.forEach((w: Work) => {
+      avg += this.getDateDifference(w.startDate, w.endDate);
+    });
+    if(avg === 0 && resume.work.length === 0) return '0'; // otherwise it returns a NaN
+    return (Math.ceil((avg / resume.work.length) * 100) / 100).toFixed(1);
+  }
+
+  getNumberOfLocations(resume: Resume): number {
+    let locations = new Set();
+    resume.work.forEach((w: Work) => {
+      locations.add(w.location.city);
+    });
+    return locations.size;
+  }
+
+  getNumberOfSkills(resume: Resume): number {
+    let skills = 0;
+    resume.skills.forEach((s: Skill) => {
+      skills++; // amount of root nodes
+    });
+    // TODO: complete for children
+    return skills;
   }
 
 }
