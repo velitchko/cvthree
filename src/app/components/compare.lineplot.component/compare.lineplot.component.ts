@@ -164,13 +164,13 @@ export class CompareLinePlotComponent implements OnChanges {
                     .style('stroke-width', '5')
                     .on('mouseover', (d: any, i: any, n: any) => {
                         let pictures = d3.selectAll('.picture');
-                        pictures.transition().attr('opacity', 0.2);
+                        pictures.transition().duration(250).attr('opacity', 0.2);
                         let selection = d3.select(n[i])
-                        selection.transition().attr('opacity', 1);
+                        selection.transition().duration(250).attr('opacity', 1);
                         this.selectedResume.emit(skill.resumeID);
                     })
                     .on('mouseout', () => {
-                        d3.selectAll('.picture').transition().attr('opacity', 1);
+                        d3.selectAll('.picture').transition().duration(250).attr('opacity', 1);
                         this.selectedResume.emit('none');
                     });
                     // .attr('transform', 'translate(' + xScale(skill.value) + ', ' + (cfg.h - cfg.ExtraWidthX - 100) + ')')

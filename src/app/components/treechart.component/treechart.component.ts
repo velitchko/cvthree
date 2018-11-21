@@ -1,6 +1,7 @@
 import { Component, Input, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { DatabaseServices } from '../../services/db.service';
 import { Resume } from '../../models/resume';
+import { Skill } from '../../models/skill';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UtilServices } from '../../services/util.service';
@@ -18,6 +19,7 @@ import * as d3 from 'd3';
 export class TreeChartComponent implements OnChanges {
   @Input() data: any;
   @Output() selectedResume: EventEmitter<string>;
+  tooltip: any;
 
   constructor(private cs: CompareService) {
     this.selectedResume = new EventEmitter<string>();
@@ -31,6 +33,12 @@ export class TreeChartComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes) {
+
+      if(!this.tooltip) {
+        this.tooltip = d3.select('body').append('div')
+                          .attr('class', 'tree-tooltip')
+                          .style('opacity', 0);
+      }
       if (this.data) this.drawTree('#tree-chart', this.data);
     }
   }
@@ -43,6 +51,17 @@ export class TreeChartComponent implements OnChanges {
       case 'ADVANCED': return 0.8;
       case 'EXPERT': return 1;
       default: return 1;
+    }
+  }
+
+  getNumericSkill(level: string): number {
+    switch (level) {
+      case 'BASIC': return 1;
+      case 'NOVICE': return 2;
+      case 'INTERMEDIATE': return 2;
+      case 'ADVANCED': return 4;
+      case 'EXPERT': return 5;
+      default: return 0;
     }
   }
 
@@ -106,25 +125,17 @@ export class TreeChartComponent implements OnChanges {
     // Tree already in proper format
     d3.select(id).select('svg').remove(); 
     // set the dimensions and margins of the diagram
-    let margin = { top: 20, right: 30, bottom: 30, left: 30 },
-      width = 700, // - margin.left - margin.right,
-      height = 600; // - margin.top - margin.bottom;
+    let margin = { top: 40, right: 40, bottom: 40, left: 40 },
+      width = 700 - margin.left - margin.right, // - margin.left - margin.right,
+      height = 600 - margin.top - margin.bottom;
     let nodeRadius = 25;
     let nodeThickness = 10;
     let duration = 250;
 
-    // declares a tree layout and assigns the size
-    // TODO: the size of the tree needs to be dynamic (based on skills/nodes per level) - otherwise occlusion
-    let treemap = d3.tree()
-      .size([360, 350]) //angle = 2*PI, radius = 250
-      .nodeSize([nodeRadius*4, nodeRadius*4])
-      .separation(function (a, b) { return (a.parent == b.parent ? 1 : 2); });
-
-
-    function radialPoint(x, y) {
-      return [y * Math.cos(x -= Math.PI / 2), y * Math.sin(x)];
-    }
-
+      let treemap = d3.cluster()
+      .size([2*Math.PI,  Math.max(width, height)/2 - nodeRadius*4])
+      .separation(function() { return .5; });
+      
     let root;
 
     let nodes = d3.hierarchy(data, function (d: any) {
@@ -135,8 +146,8 @@ export class TreeChartComponent implements OnChanges {
     let nodeData = root.descendants();
     let linkData = root.descendants().slice(1);
     let svg = d3.select(id).append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
+      .attr('width', width)
+      .attr('height', height)
       .attr('class', 'chart'),
       g = svg.append('g')
         .attr('transform',
@@ -183,12 +194,22 @@ export class TreeChartComponent implements OnChanges {
       .attr('transform', function (d: any) { 
         if(d.data.name === 'Skills') return;
         return 'rotate(' + (d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 180 / Math.PI + ')'; 
-      })
+      });
 
     let nodeUpdate = node.merge(nodeEnter)
       .transition()
       .duration(duration)
-      .attr('transform', function (d: any) { return 'translate(' + radialPoint(d.x, d.y) + ')'; });
+      .attr('transform', function (d: any) { return 'translate(' + d3.pointRadial(d.x, d.y) + ')'; });
+  }
+
+  getExistingNode(currentNode: any, target: any): Skill {
+    if (currentNode.name.toLowerCase() === target.toLowerCase()) return currentNode;
+
+    for (let i = 0; i < currentNode.children.length; i++) {
+      let currentChild = currentNode.children[i];
+      let exists = this.getExistingNode(currentChild, target);
+      if (exists) return exists;
+    }
   }
 
   getNode(node: any, circleSize: number, thickness: number, nodeData: any): void {
@@ -211,6 +232,35 @@ export class TreeChartComponent implements OnChanges {
       })
       .attr('stroke-width', (d: any) => {
         return d.data.name === 'Skills' ? 6 : 0;
+      })
+      .on('mouseover', (d: any) => {
+        let peoplesKnowledge = `${d.data.name}`;
+        let map = new Map<string, string>();
+        d.data.people.forEach((p: any) => {
+          let person = this.cs.getResumeByID(p);
+          let skill;
+          person.skills.forEach((s: Skill) => {
+            skill = this.getExistingNode(s, d.data.name);
+            
+            if(skill) {
+              map.set(`${person.id}`, skill.level);
+            }
+          });
+        });
+        
+        let sortedMap = new Map([...map.entries()].sort((a, b) => { return this.getNumericSkill(b[1]) - this.getNumericSkill(a[1]); }))
+        sortedMap.forEach((v: any, k: any) => {
+          peoplesKnowledge += `<div style="color: ${this.cs.getColorForResume(k)};">${this.cs.getResumeByID(k).firstName} - ${v === "" ? 'No knowledge provided' : v}</div>`;
+        })
+        this.tooltip.html(peoplesKnowledge)
+        .style('left', `${d3.event.pageX + 20}px`)
+        .style('top', `${d3.event.pageY - 20}px`)
+        .transition()
+        .duration(200) // ms
+        .style('opacity', 1) // started as 0!
+      })
+      .on('mouseout', (d: any) => {
+        this.tooltip.transition().duration(200).style('opacity', 0);
       });
 
     let arc = d3.arc()

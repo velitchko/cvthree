@@ -60,12 +60,12 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
     createScatterPlot(): void {
         let margin = {
             top: 20,
-            right: 0,
-            bottom: 50,
-            left: 100
+            right: 20,
+            bottom: 20,
+            left: 120 // because of labels
         };
 
-        let width = 500;
+        let width = 700;
         let height = 500;
 
         this.svg = d3.select(this.scatterHTML)
@@ -76,8 +76,6 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
         let x = d3.scaleLinear().range([margin.left, width - margin.right - margin.left]);
         let y = d3.scaleLinear().range([height - margin.top - margin.bottom, margin.top]);
 
-        let xArr = [];
-        this.data.forEach((p: any) => { xArr.push(p.bonus); });
         let extentX = d3.extent([1, 5]);
         let extentY = d3.extent([1, 5]);
         let xAxisLabel = this.data[0][0].area;
@@ -177,22 +175,21 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
                 let selection = d3.select(n[i]);
                 selection.transition().attr('opacity', 1);
                 this.selectedResume.emit(d[0].resumeID);
-                this.tooltip.html(`
-                    ${d[0].area} - ${this.getSkillAsText(d[0].value)}
-                    `)
-                    .style('color', () => {
-                        return this.cs.getColorForResume(d[0].resumeID);
-                    })
+                let personKnowledge = `<div>${d[0].name}</div>`;
+                d.forEach((_d: any) => {
+                    personKnowledge += `<div style="color: ${this.cs.getColorForResume(d[0].resumeID)};">${_d.area} - ${this.getSkillAsText(_d.value)}</div>`;
+                })
+                this.tooltip.html(personKnowledge)
                     .style('left', `${d3.event.pageX + 20}px`)
                     .style('top', `${d3.event.pageY - 20}px`)
                     .transition()
                     .duration(200) // ms
                     .style('opacity', 1) // started as 0!
             })
-            .on('mousemove', (d: any) => {
-                this.tooltip.style('left', `${d3.event.pageX + 20}px`)
-                    .style('top', `${d3.event.pageY - 20}px`)
-            })
+            // .on('mousemove', (d: any) => {
+            //     this.tooltip.style('left', `${d3.event.pageX + 20}px`)
+            //         .style('top', `${d3.event.pageY - 20}px`)
+            // })
             .on('mouseout', () => {
                 let people = d3.selectAll('.scatter-point');
                 people.transition().attr('opacity', 1);
