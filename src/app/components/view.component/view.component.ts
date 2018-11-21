@@ -26,6 +26,7 @@ export class ViewComponent implements AfterViewInit {
   age: number;
   loading: boolean = true;
   tooltip: any;
+  isBrowser: boolean;
   private resumeDiff: KeyValueDiffer<string, any>;
 
   @ViewChild('languages') languages: ElementRef;
@@ -47,10 +48,11 @@ export class ViewComponent implements AfterViewInit {
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(PLATFORM_ID) private _platformId: Object,
     private util: UtilServices,
     private differs: KeyValueDiffers
   ) {
+    this.isBrowser = isPlatformBrowser(this._platformId);
     this.resume = new Resume();
     this.resumeDiff = this.differs.find(this.resume).create();
     this.route.params.subscribe((param: Params) => {
@@ -205,12 +207,12 @@ export class ViewComponent implements AfterViewInit {
       this.timelineData.push(event);
       identifier++;
     });
-    this.createTimeline();
+    if(this.isBrowser) this.createTimeline();
   }
 
   ngDoCheck(): void {
     const changes = this.resumeDiff.diff(this.resume);
-    if (changes && isPlatformBrowser(this.platformId)) {
+    if (changes && this.isBrowser) {
       this.clearSVGs();
       this.createLanguages(this.resume.languages);
       this.createSkills(this.resume.skills);
@@ -218,7 +220,7 @@ export class ViewComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.isBrowser) {
       this.languageHTML = this.languages.nativeElement;
       this.createLanguages(this.resume.languages);
 
@@ -233,7 +235,7 @@ export class ViewComponent implements AfterViewInit {
   }
 
   clearSVGs(): void {
-    if (isPlatformBrowser(this.platformId)) d3.selectAll('svg').remove();
+    if (isPlatformBrowser(this._platformId)) d3.selectAll('svg').remove();
   }
 
   clearFilter(): void {
