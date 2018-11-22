@@ -1,7 +1,5 @@
 import { SkillLevel } from './app/lists/skill.level';
 
-//FIXME: bug when selecting 'BASIC' -> probs 0 score or something check it
-
 function getNumberForSkill(level: any): number {
     // maps skilllevel[1,5]
     return (parseInt(SkillLevel[level]));
