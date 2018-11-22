@@ -8,8 +8,8 @@ import { Award } from '../../models/award';
 import { Education } from '../../models/education';
 import { SkillLevel } from '../../lists/skill.level';
 import { CompareService } from '../../services/compare.service';
-import { UtilServices } from 'src/app/services/util.service';
-import * as moment from 'moment';
+import { UtilServices } from '../../services/util.service';
+import { DatabaseServices } from '../../services/db.service';
 
 @Component({
   selector: 'app-compare',
@@ -32,6 +32,7 @@ export class CompareComponent implements AfterViewInit {
   constructor(
     private cs: CompareService,
     private cd: ChangeDetectorRef,
+    private db: DatabaseServices,
     private util: UtilServices
   ) {
     this.resumeOrdering = new Array<any>(
@@ -210,12 +211,13 @@ export class CompareComponent implements AfterViewInit {
       let initials = this.util.getInitials(r.firstName, r.lastName);
       let group = {
         id: idx,
-        content: '<img src="' + r.profilePicture + '" class="timeline-profile-pic timeline-profile-pic-color-' + idx + '"><div class="timeline-profile-initials timeline-pic-color-' + idx + '"><p class="upper-case">' + initials + '</p></div>'
+        content: `<img src="${r.profilePicture}" class="timeline-profile-pic" style="background-color: ${this.cs.getColorForResume(r.id)}; border-color: ${this.cs.getColorForResume(r.id)};"><div class="timeline-profile-initials"  style="background-color: ${this.cs.getColorForResume(r.id)};"><p class="upper-case">${initials}</p></div>`
       };
       let type = 'range';
       this.timelineGroups.push(group);
       r.work.forEach((w: Work, jdx: number) => {
         w.identifier = identifier;
+        w.oldIdx = !w.oldIdx ? idx : w.oldIdx;
         type = w.endDate ? 'range' : 'point';
         let event = {
           id: identifier,
@@ -228,8 +230,8 @@ export class CompareComponent implements AfterViewInit {
           type: type,
           title: this.getTimelineTitle(w, idx),
           content: this.getTimelineContent(w, 'work'),
-          className: `timeline-color-${idx}`
         }
+        event['className'] = `timeline-color-${w.oldIdx}`;
         if(w.endDate) event['end'] = w.endDate;
         this.timelineData.push(event);
         identifier++;
@@ -238,6 +240,7 @@ export class CompareComponent implements AfterViewInit {
       // EDUCATION
       r.education.forEach((e: Education, jdx: number) => {
         e.identifier = identifier;
+        e.oldIdx = !e.oldIdx ? idx : e.oldIdx;
         type = e.endDate ? 'range' : 'point';
         let education = {
           position: e.studies,
@@ -255,8 +258,8 @@ export class CompareComponent implements AfterViewInit {
           type: type,
           title: this.getTimelineTitle(education, idx),
           content: this.getTimelineContent(education, 'school'),
-          className: `timeline-color-${idx}`
         };
+        event['className'] = `timeline-color-${e.oldIdx}`;
         if(e.endDate) event['end'] = e.endDate;
         this.timelineData.push(event);
         identifier++;
@@ -266,6 +269,7 @@ export class CompareComponent implements AfterViewInit {
       r.projects.forEach((e: Project, jdx: number) => {
         e.identifier = identifier;
         type = e.endDate ? 'range' : 'point';
+        e.oldIdx = !e.oldIdx ? idx : e.oldIdx;
         let project = {
           position: e.title,
           company: e.url
@@ -282,8 +286,8 @@ export class CompareComponent implements AfterViewInit {
           type: type,
           title: this.getTimelineTitle(project, idx),
           content: this.getTimelineContent(project, 'assignment'),
-          className: `timeline-color-${idx}`
         };
+        event['className'] = `timeline-color-${e.oldIdx}`;
         if(e.endDate) event['end'] = e.endDate;
         this.timelineData.push(event);
         identifier++;
@@ -292,6 +296,7 @@ export class CompareComponent implements AfterViewInit {
       // PUBLICATIONS
       r.publications.forEach((e: Publication, jdx: number) => {
         e.identifier = identifier;
+        e.oldIdx = !e.oldIdx ? idx : e.oldIdx;
         let publication = {
           position: e.title,
           company: e.publisher
@@ -307,8 +312,8 @@ export class CompareComponent implements AfterViewInit {
           type: 'point',
           title: this.getTimelineTitle(publication, idx),
           content: this.getTimelineContent(publication, 'note_add'),
-          className: `timeline-color-${idx}`
         };
+        event['className'] = `timeline-color-${e.oldIdx}`;
         this.timelineData.push(event);
         identifier++;
       });
@@ -316,6 +321,7 @@ export class CompareComponent implements AfterViewInit {
       // AWARDS/CERTIFICATES
       r.awards.forEach((e: Award, jdx: number) => {
         e.identifier = identifier;
+        e.oldIdx = !e.oldIdx ? idx : e.oldIdx;
         let award = {
           position: e.title,
           company: e.awarder
@@ -331,8 +337,8 @@ export class CompareComponent implements AfterViewInit {
           type: 'point',
           title: this.getTimelineTitle(award, idx),
           content: this.getTimelineContent(award , 'star'),
-          className: `timeline-color-${idx}`
         };
+        event['className'] = `timeline-color-${e.oldIdx}`;
         this.timelineData.push(event);
         identifier++;
       });
@@ -520,7 +526,9 @@ export class CompareComponent implements AfterViewInit {
   }
 
   remove(idx: number): void {
+    this.db.getResumeByID(this.resumes[idx].id).selected = false;
     this.cs.removeResume(this.resumes[idx].id);
+    this.resumes = this.cs.getResumes();
     this.getSkillData();
     this.getTreeChartData();
     this.getTimelineData();
