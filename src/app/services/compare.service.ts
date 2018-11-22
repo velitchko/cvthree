@@ -5,6 +5,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Resume } from '../models/resume';
 import { Skill } from '../models/skill';
+import { Work } from '../models/work';
+import { Project } from '../models/project';
+import { Publication } from '../models/publication';
+import { Award } from '../models/award';
+import { Education } from '../models/education';
 
 @Injectable()
 
@@ -36,6 +41,14 @@ export class CompareService {
 
     setupColors(): void {
         if(this.resumes.length === 0) return; // cant map colors to no resumes
+            // reset color mapping for timeline
+        this.resumes.forEach((r: Resume) => { 
+            r.work.forEach((w: Work) => w.oldIdx = null );
+            r.education.forEach((e: Education) => e.oldIdx = null );
+            r.projects.forEach((p: Project) => p.oldIdx = null );
+            r.awards.forEach((a: Award) => a.oldIdx = null );
+            r.publications.forEach((p: Publication) => p.oldIdx = null );
+        });
         this.resumes.forEach((r: Resume, idx: number) => {
             this.assignedColors.set(r.id, this.colors[idx]);
         });
