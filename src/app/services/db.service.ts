@@ -75,6 +75,10 @@ export class DatabaseServices {
     return resume;
   }
 
+  getResumeByID(id: string): Resume {
+    return this.resumes.find((r: Resume) => { return r.id === id; });
+  }
+
   createResume(resume: any): Promise<any> {
     let promise = new Promise<any>((resolve, reject) => {
       this.http.post(`${environment.API_PATH}resume`, this.transformResume(resume)).subscribe((response: any) => {
