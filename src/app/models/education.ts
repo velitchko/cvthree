@@ -5,4 +5,5 @@ export class Education {
   startDate: Date;
   endDate: Date;
   identifier?: number;
+  oldIdx?: number;
 }

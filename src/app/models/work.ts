@@ -11,6 +11,7 @@ export class Work {
   highlights: Array<string>;
   location: Location;
   identifier?: number;
+  oldIdx?: number;
   
   constructor() {
     this.highlights = new Array<string>()

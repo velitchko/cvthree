@@ -6,4 +6,5 @@ export class Project {
   summary: string;
   // TODO: add location?
   identifier?: number;
+  oldIdx?: number;
 }

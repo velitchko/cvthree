@@ -4,4 +4,5 @@ export class Award { // Also certificates / honors
   awarder: string;
   summary: string;
   identifier?: number;
+  oldIdx?: number;
 }

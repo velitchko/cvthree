@@ -5,4 +5,5 @@ export class Publication {
   summary: string;
   url: string; // DOI 
   identifier?: number;
+  oldIdx?: number;
 }
