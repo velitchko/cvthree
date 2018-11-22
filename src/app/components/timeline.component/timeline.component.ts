@@ -44,7 +44,12 @@ export class TimelineComponent implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         if(changes.events.currentValue.length !== 0) {
-            if(!this.timeline) this.createTimeline();
+            if(!this.timeline) {
+                this.createTimeline();
+            } else {
+                this.timeline.setGroups(this.groups);
+                this.timeline.setItems(this.events);
+            }
         }
     }
 

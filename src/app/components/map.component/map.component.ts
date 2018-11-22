@@ -56,20 +56,31 @@ export class MapComponent implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         if(changes.resumes.currentValue.length !== 0) {  
+
             if (this.isBrowser) {
                 L = require('leaflet');
                 require('leaflet-curve'); // curved lines
                 require('leaflet.markercluster');   // clustering markers
                 // leaflet plugins automatically inject themselves and extend "L"
-                if(!this.map) this.createMap();
+                if(!this.map) {
+                    this.createMap();
+                } else {
+                    this.clearLayers();
+                    this.createItems();
+                }
             }
         }
     }
 
+    clearLayers(): void {
+        this.map.removeLayer(this.markerClusterGroup);
+        this.map.removeLayer(this.pathGroup);
+    }
+
     createMap(): void {
         let options = {
-            maxZoom: 18,
-            minZoom: 0,
+            maxZoom: 15,
+            minZoom: 1,
             zoom: 12,
             zoomControl: false,
             animate: true,
@@ -83,15 +94,20 @@ export class MapComponent implements OnChanges {
             id: 'mapbox.light', // mapbox://styles/velitchko/cjefo9eu118qd2rodaoq3cpj1
             accessToken: environment.MAPBOX_API_KEY,
         }).addTo(this.map);
+       this.createItems();
+    }
+
+    createItems(): void {
         this.pathGroup = L.layerGroup();
         this.markerClusterGroup = L.markerClusterGroup({ //https://github.com/Leaflet/Leaflet.markercluster#options
-            showCoverageOnHover: false,
+            showCoverageOnHover: true,
             spiderfyOnMaxZoom: true,
-            zoomToBoundsOnClick: false,
+            zoomToBoundsOnClick: true,
             animate: true,
             animateAddingMarkers: true,
-            //spiderfyDistanceMultiplier: 1.5,
+            spiderfyDistanceMultiplier: 1.5,
             removeOutsideVisibleBounds: true,
+            disableClusteringAtZoom: 9,
             iconCreateFunction: (cluster: any) => {
                 let events = this.calculateDistributionPerCluster(cluster);
                 return L.divIcon({
@@ -101,7 +117,6 @@ export class MapComponent implements OnChanges {
                     html: this.getSVGClusterIcon(events, cluster.getAllChildMarkers().length)
                 });
             }
-            //disableClusteringAtZoom: 17,
         });
 
         this.resumes.forEach((r: Resume) => {
@@ -111,6 +126,7 @@ export class MapComponent implements OnChanges {
         this.markerClusterGroup.addTo(this.map);
         this.pathGroup.addTo(this.map);
         this.markerClusterGroup.on('click', (event: any) => {
+            console.log(event);
             this.selectedEvent.emit({
                 event: event.sourceTarget.work.identifier,
                 from: 'map'
