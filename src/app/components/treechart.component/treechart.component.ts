@@ -71,6 +71,7 @@ export class TreeChartComponent implements OnChanges {
       .each((d: any, i: any, n: any) => {
         d3.select(n[i])
           .transition()
+          .duration(250)
           .attr('stroke-width', 2)
           .attr('stroke-opacity', 1)
           .attr('stroke', '#D4D8DA');
@@ -80,6 +81,7 @@ export class TreeChartComponent implements OnChanges {
       .each((d: any, i: any, n: any) => {
         d3.select(n[i])
           .transition()
+          .duration(250)
           .attr('stroke-width', 2)
           .attr('stroke-opacity', 1)
           .attr('stroke', '#D4D8DA');
@@ -93,6 +95,7 @@ export class TreeChartComponent implements OnChanges {
         if (d.data.people.includes(resumeID) || d.data.name === 'Skills') {
           d3.select(n[i])
             .transition()
+            .duration(250)
             .attr('stroke-opacity', () => {
               return this.getSkillOpacity(d.data.level.trim());
             })
@@ -111,6 +114,7 @@ export class TreeChartComponent implements OnChanges {
        // if (l.source.data.name === dl.target.parent.data.name && dl.source.data.name === l.target.parent.data.name) {
           d3.select(nl[il])
             .transition()
+            .duration(250)
             .attr('stroke-width', 4)
             .attr('stroke', () => {
               return this.cs.getColorForResume(resumeID);
@@ -190,7 +194,10 @@ export class TreeChartComponent implements OnChanges {
         if(d.data.name === 'Skills') return -12;
         return d.x < Math.PI ? 35 : -35; 
       })
-      .style('text-anchor', function (d: any) { return d.x < Math.PI ? 'start' : 'end'; })
+      .style('text-anchor', function (d: any) { 
+        if(d.data.name === 'Skills') return '';
+        return d.x < Math.PI ? 'start' : 'end'; 
+      })
       .attr('transform', function (d: any) { 
         if(d.data.name === 'Skills') return;
         return 'rotate(' + (d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 180 / Math.PI + ')'; 
