@@ -128,9 +128,9 @@
   margin-left: 10em;
   margin-right: 10em;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 0.5fr 0.25fr 1fr;
+  // grid-template-rows: 0.5fr 0.25fr 1fr;
   grid-template-areas: "picture picture general general general general" "languages languages languages skills skills skills" "timeline timeline timeline timeline timeline timeline";
-  row-gap: 2.5em;
+  row-gap: 1em;
   column-gap: 2em;
 }
 
