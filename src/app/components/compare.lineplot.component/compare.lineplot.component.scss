@@ -16,6 +16,13 @@
 
 ::ng-deep .picture {
     cursor: pointer;
+    transition: all 0.25s ease-in-out;
+    circle {
+        opacity: 0.2;
+        &:hover {
+            opacity: 1;
+        }
+    }
 }
   
 ::ng-deep .axis-bottom path {

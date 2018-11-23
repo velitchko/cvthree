@@ -35,13 +35,17 @@ export class CompareLinePlotComponent implements OnChanges {
     }
 
     highlightNode(selection: string): void {
-        if(selection === 'none') return;
+        if(selection === 'none') {
+            // reset
+            d3.selectAll('.picture circle').transition().style('opacity', 1);
+            return;
+        }
+        
+        d3.selectAll('.picture circle').transition().style('opacity', 0.2);
 
-        d3.selectAll('.picture').transition().attr('opacity', 0.2);
-
-        d3.select(`#picture-${selection}`)
+        d3.select(`#picture-${selection} circle`)
             .transition()
-            .attr('opacity', 1);
+            .style('opacity', 1);
     }
 
     normalizeSkillLevel(level: number): number {
@@ -155,22 +159,23 @@ export class CompareLinePlotComponent implements OnChanges {
                             return y -30;
                         }
                     })
-                     .attr('fill', (d: any) => {
+                    .attr('fill', (d: any) => {
                         return `url(#${skill.resumeID})`;
                     })
+                    .style('opacity', 1)
                     .style('stroke', () => {
                         return this.cs.getColorForResume(skill.resumeID);
                     })
                     .style('stroke-width', '5')
                     .on('mouseover', (d: any, i: any, n: any) => {
-                        let pictures = d3.selectAll('.picture');
-                        pictures.transition().duration(250).attr('opacity', 0.2);
-                        let selection = d3.select(n[i])
-                        selection.transition().duration(250).attr('opacity', 1);
+                        // let pictures = d3.selectAll('.picture');
+                        // pictures.transition().duration(250).attr('opacity', 0.2);
+                        // let selection = d3.select(n[i])
+                        // selection.transition().duration(250).attr('opacity', 1);
                         this.selectedResume.emit(skill.resumeID);
                     })
                     .on('mouseout', () => {
-                        d3.selectAll('.picture').transition().duration(250).attr('opacity', 1);
+                        // d3.selectAll('.picture').transition().duration(250).attr('opacity', 1);
                         this.selectedResume.emit('none');
                     });
                     // .attr('transform', 'translate(' + xScale(skill.value) + ', ' + (cfg.h - cfg.ExtraWidthX - 100) + ')')
