@@ -81,7 +81,7 @@ export class ViewComponent implements AfterViewInit {
           <i class="material-icons">place</i>${item.location.address ? item.location.address : ''} ${item.location.city ? item.location.city : ''} ${item.location.country ? item.location.country : ''}
         </p>` : ''}
         <p>
-         ${item.description}
+        ${item.description ? item.description : 'No description for event.'}
         </p>
       </div>
     `;
