@@ -125,12 +125,12 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
 
         d3.select('#axis_x')
             .append('text')
-            .attr('transform', 'translate(360, -10)')
+            .attr('transform', `translate(${width - margin.left - margin.right}, -10)`)
             .text(xAxisLabel);
 
         d3.select('#axis_y')
             .append('text')
-            .attr('transform', 'rotate(-90) translate(-20, 15)')
+            .attr('transform', `translate(${2*margin.right}, 15)`)
             .text(yAxisLabel);
 
         this.items = this.svg.append('g')
