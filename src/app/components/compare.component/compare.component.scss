@@ -27,6 +27,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .compare-wrapper > div {
@@ -96,7 +97,7 @@
     border-top: 6px solid;
     border-radius: 2% 2% 0 0;
     width:250px;
-    height: 475px;
+    height: 420px;
 }
 
 .big-number {
