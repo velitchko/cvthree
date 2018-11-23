@@ -467,7 +467,7 @@ export class CompareComponent implements AfterViewInit {
             name: `${person.firstName} ${person.lastName}`,
             resumeID: person.id,
             value: e.level,
-            minValue: 0,
+            minValue: 1,
             maxValue: 5
           });
         }
