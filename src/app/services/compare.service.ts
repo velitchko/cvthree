@@ -26,7 +26,16 @@ export class CompareService {
     
     constructor() {
         this.resumes = new Array<Resume>();
-        this.colors = new Array<string>('#3065ff', '#00ccff', '#01ff89', '#87fc70', '#ffdb4c', '#ff9500', '#ff5e3a', '#c644fc', '#ef2ecf', '#f02e6b'); // hex
+        // #5c92cc
+        // #7ebdc4
+        // #aae6ab
+        // #fff194
+        // #db9f5a
+        // #db5a5a
+        // #b35adb
+        this.colors = new Array<string>('#788189','#5c92cc', '#5adbcd', '#84db5a', '#ffc852', '#db975a', '#945adb', '#cc5cc9', '#db5a67', '#f56800');
+        // old colors
+        // this.colors = new Array<string>('#3065ff', '#00ccff', '#01ff89', '#87fc70', '#ffdb4c', '#ff9500', '#ff5e3a', '#c644fc', '#ef2ecf', '#f02e6b'); // hex
         this.assignedColors = new Map<string, string>();
         this.setupColors();
     }
