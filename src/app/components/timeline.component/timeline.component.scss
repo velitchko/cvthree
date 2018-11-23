@@ -1,42 +1,50 @@
+/*
+'#788189','#5c92cc', 
+'#5adbcd', '#84db5a', 
+'#ffc852', '#db975a', 
+'#945adb', '#cc5cc9', 
+'#db5a67', '#f56800'
+*/
+
 ::ng-deep .timeline-color-0 {
-    background-color: hsl(225,81%, 80%);
-    border-color: hsl(225, 81%, 41%);
+    background-color: #78818999;
+    border-color: #788189;
   }
 ::ng-deep .timeline-color-1 {
-    background-color: hsl(192, 100%, 80%);
-    border-color: hsl(192, 100%, 41%);
+    background-color: #5c92cc99;
+    border-color: #5c92cc;
   }
 ::ng-deep .timeline-color-2 {
-    background-color: hsl(152, 100%, 80%);
-    border-color: hsl(152, 100%, 41%);
+    background-color: #5adbcd99;
+    border-color: #5adbcd;
   }
 ::ng-deep .timeline-color-3 {
-    background-color: hsl(110, 96%, 80%);
-    border-color: hsl(110, 96%, 41%);
+    background-color: #84db5a99;
+    border-color: #84db5a;
   }
 ::ng-deep .timeline-color-4 {
-    background-color: hsl(48, 100%, 80%);
-    border-color: hsl(48, 100%, 41%);
+    background-color: #ffc85299;
+    border-color: #ffc852;
   }
 ::ng-deep .timeline-color-5 {
-    background-color:   hsl(35, 100%, 80%);
-    border-color:   hsl(35, 100%, 41%);
+    background-color:   #db975a99;
+    border-color:   #db975a;
   }
 ::ng-deep .timeline-color-6 {
-    background-color: hsl(11, 100%, 80%);
-    border-color: hsl(11, 100%, 41%);
+    background-color: #945adb99;
+    border-color: #945adb;
   }
 ::ng-deep .timeline-color-7 {
-    background-color:   hsl(282, 97%, 80%);
-    border-color:   hsl(282, 97%, 41%);
+    background-color:   #cc5cc999;
+    border-color:   #cc5cc9;
   }
 ::ng-deep .timeline-color-8 {
-    background-color: hsl(310, 81%, 80%);
-    border-color: hsl(310, 81%, 41%);
+    background-color: #db5a6799;
+    border-color: #db5a67;
   }
 ::ng-deep .timeline-color-9 {
-    background-color: hsl(341, 81%, 80%);
-    border-color: hsl(341, 81%, 41%);
+    background-color: #f5680099;
+    border-color: #f56800;
   }
 
 ::ng-deep .vis-timeline {
@@ -72,69 +80,71 @@
 }
 
 
-::ng-deep .timeline-pic-color-0 {
-  background-color: #3065ff;
-}
-::ng-deep .timeline-pic-color-1 {
-  background-color: #00ccff;
-}
-::ng-deep .timeline-pic-color-2 {
-  background-color: #01FF89;
-}
-::ng-deep .timeline-pic-color-3 {
-  background-color: #87FC70;
-}
-::ng-deep .timeline-pic-color-4 {
-  background-color: #FFDB4C;
-}
-::ng-deep .timeline-pic-color-5 {
-  background-color: #FF9500;
-}
-::ng-deep .timeline-pic-color-6 {
-  background-color: #FF5E3A;
-}
-::ng-deep .timeline-pic-color-7 {
-  background-color: #C644FC;
-}
-::ng-deep .timeline-pic-color-8 {
-  background-color: #ef2ecf;
-}
-::ng-deep .timeline-pic-color-9 {
-  background-color: #f02e6b;
-}
+// ::ng-deep .timeline-pic-color-0 {
+//   background-color: #3065ff;
+// }
+// ::ng-deep .timeline-pic-color-1 {
+//   background-color: #00ccff;
+// }
+// ::ng-deep .timeline-pic-color-2 {
+//   background-color: #01FF89;
+// }
+// ::ng-deep .timeline-pic-color-3 {
+//   background-color: #87FC70;
+// }
+// ::ng-deep .timeline-pic-color-4 {
+//   background-color: #FFDB4C;
+// }
+// ::ng-deep .timeline-pic-color-5 {
+//   background-color: #FF9500;
+// }
+// ::ng-deep .timeline-pic-color-6 {
+//   background-color: #FF5E3A;
+// }
+// ::ng-deep .timeline-pic-color-7 {
+//   background-color: #C644FC;
+// }
+// ::ng-deep .timeline-pic-color-8 {
+//   background-color: #ef2ecf;
+// }
+// ::ng-deep .timeline-pic-color-9 {
+//   background-color: #f02e6b;
+// }
 
 
-::ng-deep .timeline-profile-pic-color-0 {
-  border-color: #3065ff;
+// ::ng-deep .timeline-profile-pic-color-0 {
+//   border-color: #3065ff;
+// }
+// ::ng-deep .timeline-profile-pic-color-1 {
+//   border-color: #00ccff;
+// }
+// ::ng-deep .timeline-profile-pic-color-2 {
+//   border-color: #01FF89;
+// }
+// ::ng-deep .timeline-profile-pic-color-3 {
+//   border-color: #87FC70;
+// }
+// ::ng-deep .timeline-profile-pic-color-4 {
+//   border-color: #FFDB4C;
+// }
+// ::ng-deep .timeline-profile-pic-color-5 {
+//   border-color: #FF9500;
+// }
+// ::ng-deep .timeline-profile-pic-color-6 {
+//   border-color: #FF5E3A;
+// }
+// ::ng-deep .timeline-profile-pic-color-7 {
+//   border-color: #C644FC;
+// }
+// ::ng-deep .timeline-profile-pic-color-8 {
+//   border-color: #ef2ecf;
+// }
+// ::ng-deep .timeline-profile-pic-color-9 {
+//   border-color: #f02e6b;
+// }
+::ng-deep .vis-item {
+  border-width: 2px !important;
 }
-::ng-deep .timeline-profile-pic-color-1 {
-  border-color: #00ccff;
-}
-::ng-deep .timeline-profile-pic-color-2 {
-  border-color: #01FF89;
-}
-::ng-deep .timeline-profile-pic-color-3 {
-  border-color: #87FC70;
-}
-::ng-deep .timeline-profile-pic-color-4 {
-  border-color: #FFDB4C;
-}
-::ng-deep .timeline-profile-pic-color-5 {
-  border-color: #FF9500;
-}
-::ng-deep .timeline-profile-pic-color-6 {
-  border-color: #FF5E3A;
-}
-::ng-deep .timeline-profile-pic-color-7 {
-  border-color: #C644FC;
-}
-::ng-deep .timeline-profile-pic-color-8 {
-  border-color: #ef2ecf;
-}
-::ng-deep .timeline-profile-pic-color-9 {
-  border-color: #f02e6b;
-}
-
 ::ng-deep .vis-timeline,
 ::ng-deep .vis-labelset .vis-label,
 ::ng-deep .vis-panel.vis-center, 
