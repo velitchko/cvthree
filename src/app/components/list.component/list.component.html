@@ -1,3 +1,8 @@
+<div class="progress" *ngIf="loading">
+  <div class="indeterminate">
+    
+  </div>
+</div>
 <mat-drawer-container autosize>
   <mat-drawer #drawer mode="side" class="resume-drawer">
     <p *ngIf="getComparedResumes().length === 0">Nothing added ;(</p>
@@ -8,9 +13,6 @@
   </mat-drawer>
   <div>
     <button class="fixed-button" type="button" mat-icon-button (click)="drawer.toggle()"><mat-icon>{{ drawer.opened ? 'clear' : 'menu' }}</mat-icon></button>
-    <div class="progress" *ngIf="loading">
-      <div class="indeterminate"></div>
-    </div>
     <div *ngIf="!loading" class="search">
       <div>
         <app-search (results)="update($event)"></app-search>
@@ -19,14 +21,18 @@
         <app-scatterplot [points]="scatterPlotPoints" (selection)="selectResumes($event)"></app-scatterplot>
       </div>
     </div>
+    <div class="ordering">
+        <div *ngIf="!loading">
+            <p style="color: lightgray; margin: 0; line-height: 3.5em; margin-right: 2em;"><i>{{ resumes.length }} resumes found.</i></p>
+          </div>
+        <mat-form-field>
+            <mat-select placeholder="Order by:" (selectionChange)="reorderResumes($event)">
+                <mat-option *ngFor="let ordering of resumeOrdering" [value]="ordering.value">{{ ordering.display }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+       
+    </div>
     <div *ngIf="!loading" class="list-wrapper" #listWrapper>
-      <div class="ordering">
-          <mat-form-field>
-              <mat-select placeholder="Order by:" (selectionChange)="reorderResumes($event)">
-                  <mat-option *ngFor="let ordering of resumeOrdering" [value]="ordering.value">{{ ordering.display }}</mat-option>
-              </mat-select>
-          </mat-form-field>
-      </div>
       <!-- <button mat-icon-button (click)="scrollDown()" color="primary"><mat-icon>expand_more</mat-icon></button> -->
       <div *ngFor="let resume of resumes; let idx = index" class="list-entry-wrapper">
         <mat-card [ngClass]="{'selected': resume.selected}" class="list-entry">

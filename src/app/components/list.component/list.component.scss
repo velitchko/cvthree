@@ -103,6 +103,15 @@
   // overflow: hidden;
 }
 
+.ordering {
+  position: relative;
+  margin-left: 4em;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
 .mat-card-avatar {
   border: 6px solid #00d1b2;
 }
@@ -139,7 +148,6 @@
       }
     }
 }
-
 
 .big-number {
   font-size: 1.5em;

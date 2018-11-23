@@ -12,44 +12,33 @@
         </button>
     </mat-form-field>
 </div>
-<div *ngFor="let q of query.skills; let idx = index">
-    <mat-form-field>
-        <input matInput placeholder="Skill" [(ngModel)]="q.searchSkill">
-    </mat-form-field>
-    <mat-form-field>
-        <mat-select placeholder="Level" [(ngModel)]="q.searchLevel">
-            <mat-option *ngFor="let l of skillLevels()" [value]='l'>{{ l }}</mat-option>
-        </mat-select>
-    </mat-form-field>
-    <button mat-mini-fab color="warn" (click)="removeSkillQuery(idx)">
-        <mat-icon>clear</mat-icon>
-    </button>
-</div>
-<div *ngFor="let q of query.languages; let idx = index">
-    <mat-form-field>
-        <input matInput placeholder="Language" [(ngModel)]="q.searchLanguage">
-    </mat-form-field>
-    <!-- <mat-form-field>
-        <mat-select placeholder="Level" [(ngModel)]="q.searchLevel">
-            <mat-option *ngFor="let l of languageLevels()" [value]='l'>{{ l }}</mat-option>
-        </mat-select>
-    </mat-form-field> -->
-    <button mat-mini-fab color="warn" (click)="removeLanguageQuery(idx)">
-        <mat-icon>clear</mat-icon>
-    </button>
-</div>
 <div>
+    <mat-chip-list>
+        <mat-chip *ngFor="let q of query.languages; let idx = index" selected="true" (removed)="removeLanguageQuery(idx)">
+            {{ q.searchLanguage }}
+            <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+    </mat-chip-list>
     <mat-form-field>
         <input matInput placeholder="Language" #searchLanguage>
     </mat-form-field>
+    <button mat-icon-button color="primary" (click)="addLanguageQuery(searchLanguage)">
+        <!-- searchLLevel -->
+        <mat-icon>add</mat-icon>
+    </button>
     <!-- <mat-form-field>
         <mat-select placeholder="Level" #searchLLevel>
             <mat-option *ngFor="let l of languageLevels()" [value]='l'>{{ l }}</mat-option>
         </mat-select>
     </mat-form-field> -->
 </div>
-
 <div>
+    <mat-chip-list>
+        <mat-chip *ngFor="let q of query.skills; let idx = index" selected="true" (removed)="removeSkillQuery(idx)">
+            {{ q.searchSkill }} | {{ q.searchLevel }}
+            <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+    </mat-chip-list>
     <mat-form-field>
         <input matInput placeholder="Skill" #searchSkill>
     </mat-form-field>
@@ -58,17 +47,13 @@
             <mat-option *ngFor="let l of skillLevels()" [value]='l'>{{ l }}</mat-option>
         </mat-select>
     </mat-form-field>
+    <button mat-icon-button color="primary" (click)="addSkillQuery(searchSkill, searchSLevel)">
+        <mat-icon>add</mat-icon>
+    </button>
 </div>
 
 <div class="action-buttons">
-    <button mat-raised-button color="primary" (click)="addSkillQuery(searchSkill, searchSLevel)">
-        <mat-icon>add</mat-icon> Add skill
-    </button>
-    <button mat-raised-button color="primary" (click)="addLanguageQuery(searchLanguage)">
-        <!-- searchLLevel -->
-        <mat-icon>add</mat-icon> Add language
-    </button>
-    <button mat-raised-button color="primary" (click)="submit()">
-        <mat-icon>search</mat-icon> Search
+    <button mat-icon-button color="primary" (click)="submit()">
+        <mat-icon>search</mat-icon>
     </button>
 </div>
