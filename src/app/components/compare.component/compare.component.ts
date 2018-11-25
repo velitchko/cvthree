@@ -36,15 +36,15 @@ export class CompareComponent implements AfterViewInit {
     private util: UtilServices
   ) {
     this.resumeOrdering = new Array<any>(
-      { value: 'age', display: 'Age'},
-      { value: 'yoe', display: 'Years of Experience'},
-      { value: 'avgjd', display: 'Average Job Duration'},
-      { value: 'locs', display: 'Number of Locations'},
-      { value: 'numskill', display: 'Number of Skills'},
-      { value: 'langs', display: 'Number of Languages'},
-      { value: 'base', display: 'Base Score'},
-      { value: 'bonus', display: 'Bonus Score'},
-      { value: 'basebonus', display: 'Base+Bonus Score'},
+      { value: 'age', display: 'Age' },
+      { value: 'yoe', display: 'Years of Experience' },
+      { value: 'avgjd', display: 'Average Job Duration' },
+      { value: 'locs', display: 'Number of Locations' },
+      { value: 'numskill', display: 'Number of Skills' },
+      { value: 'langs', display: 'Number of Languages' },
+      { value: 'base', display: 'Base Score' },
+      { value: 'bonus', display: 'Bonus Score' },
+      { value: 'basebonus', display: 'Base+Bonus Score' },
     );
     this.resumes = this.cs.getResumes() || new Array<Resume>();
     this.skillData = new Array<any>();
@@ -58,11 +58,11 @@ export class CompareComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-     // go through resumes and find matching skills 
-     this.getTimelineData();
-     this.getSkillData();
-     this.getTreeChartData();
-     this.getMapData();
+    // go through resumes and find matching skills 
+    this.getTimelineData();
+    this.getSkillData();
+    this.getTreeChartData();
+    this.getMapData();
   }
 
   getYearsOfExperience(resume: Resume): number {
@@ -86,51 +86,51 @@ export class CompareComponent implements AfterViewInit {
   }
 
   reorderResumes($event): void {
-    switch($event.value) {
-      case 'age': 
+    switch ($event.value) {
+      case 'age':
         this.resumes.sort((a: Resume, b: Resume) => {
           return this.getAge(b.birthDay) - this.getAge(a.birthDay);
         });
         break;
-      case 'yoe': 
+      case 'yoe':
         this.resumes.sort((a: Resume, b: Resume) => {
           return this.util.getYearsOfExperience(b) - this.util.getYearsOfExperience(a);
         })
         break;
-      case 'avgjd': 
+      case 'avgjd':
         this.resumes.sort((a: Resume, b: Resume) => {
           return parseFloat(this.util.calculateAvgJobDuration(b)) - parseFloat(this.util.calculateAvgJobDuration(a));
         });
         break;
-      case 'locs': 
+      case 'locs':
         this.resumes.sort((a: Resume, b: Resume) => {
           return this.util.getNumberOfLocations(b) - this.util.getNumberOfLocations(a);
-        });  
+        });
         break;
-      case 'numskill': 
+      case 'numskill':
         this.resumes.sort((a: Resume, b: Resume) => {
           return this.util.getNumberOfSkills(b) - this.util.getNumberOfSkills(a);
-        });    
+        });
         break;
-      case 'langs': 
+      case 'langs':
         this.resumes.sort((a: Resume, b: Resume) => {
           return this.util.getNumberOfLanguages(b) - this.util.getNumberOfLanguages(a);
-        });  
+        });
         break;
-      case 'base': 
+      case 'base':
         this.resumes.sort((a: Resume, b: Resume) => {
           return b.base - a.base;
-        });  
+        });
         break;
-      case 'bonus': 
+      case 'bonus':
         this.resumes.sort((a: Resume, b: Resume) => {
           return b.bonus - a.bonus;
-        });  
+        });
         break;
-      case 'basebonus': 
+      case 'basebonus':
         this.resumes.sort((a: Resume, b: Resume) => {
           return (b.base + b.bonus) - (a.base + a.bonus);
-        });  
+        });
         break;
     }
   }
@@ -161,9 +161,9 @@ export class CompareComponent implements AfterViewInit {
   }
 
   toggleVisibility(idx: number): void {
-    this.resumes.forEach((r: Resume, id: number) => { 
-      if(idx === id) return;
-      r.highlighted = false; 
+    this.resumes.forEach((r: Resume, id: number) => {
+      if (idx === id) return;
+      r.highlighted = false;
     });
     this.resumes[idx].highlighted = !this.resumes[idx].highlighted;
     if (this.resumes[idx].highlighted) {
@@ -184,7 +184,7 @@ export class CompareComponent implements AfterViewInit {
           ${item.position} @ ${item.company}
         </h3>
         <p>${this.util.getPrettyDate(item.startDate, item.endDate)}</p>
-        ${item.location ? 
+        ${item.location ?
         `<p>
           <i class="material-icons">place</i>${item.location.address ? item.location.address : ''} ${item.location.city ? item.location.city : ''} ${item.location.country ? item.location.country : ''}
         </p>` : ''}
@@ -206,7 +206,7 @@ export class CompareComponent implements AfterViewInit {
     this.timelineGroups = new Array<any>();
     this.timelineData = new Array<any>();
     this.resumes.forEach((r: Resume, idx: number) => {
-      if(r.hidden) return;
+      if (r.hidden) return;
       // WORK
       let initials = this.util.getInitials(r.firstName, r.lastName);
       let group = {
@@ -232,7 +232,7 @@ export class CompareComponent implements AfterViewInit {
           content: this.getTimelineContent(w, 'work'),
         }
         event['className'] = `timeline-color-${w.oldIdx}`;
-        if(w.endDate) event['end'] = w.endDate;
+        if (w.endDate) event['end'] = w.endDate;
         this.timelineData.push(event);
         identifier++;
       });
@@ -260,7 +260,7 @@ export class CompareComponent implements AfterViewInit {
           content: this.getTimelineContent(education, 'school'),
         };
         event['className'] = `timeline-color-${e.oldIdx}`;
-        if(e.endDate) event['end'] = e.endDate;
+        if (e.endDate) event['end'] = e.endDate;
         this.timelineData.push(event);
         identifier++;
       });
@@ -288,7 +288,7 @@ export class CompareComponent implements AfterViewInit {
           content: this.getTimelineContent(project, 'assignment'),
         };
         event['className'] = `timeline-color-${e.oldIdx}`;
-        if(e.endDate) event['end'] = e.endDate;
+        if (e.endDate) event['end'] = e.endDate;
         this.timelineData.push(event);
         identifier++;
       });
@@ -336,7 +336,7 @@ export class CompareComponent implements AfterViewInit {
           startDate: e.date,
           type: 'point',
           title: this.getTimelineTitle(award, idx),
-          content: this.getTimelineContent(award , 'star'),
+          content: this.getTimelineContent(award, 'star'),
         };
         event['className'] = `timeline-color-${e.oldIdx}`;
         this.timelineData.push(event);
@@ -353,10 +353,10 @@ export class CompareComponent implements AfterViewInit {
   getTreeChartData(): void {
     this.treeChartData = new Skill();
     this.treeChartData.name = 'Skills'; //root
-    for(let i = 0; i < this.resumes.length; i++) {
+    for (let i = 0; i < this.resumes.length; i++) {
       let currentResume = this.resumes[i];
-      if(currentResume.hidden) continue;
-      for(let j = 0; j < currentResume.skills.length; j++) {
+      if (currentResume.hidden) continue;
+      for (let j = 0; j < currentResume.skills.length; j++) {
         let currentSkill = currentResume.skills[j];
         this.generateTreeData(this.treeChartData, currentResume.id, currentSkill, currentResume.skills);
       }
@@ -370,9 +370,9 @@ export class CompareComponent implements AfterViewInit {
       found.people.push(resumeID);
     } else {
       let skillParent = this.findParent(skillArray, currentSkill.name);
-      if(skillParent) {
+      if (skillParent) {
         let foundParent = this.getExistingNode(this.treeChartData, skillParent.name);
-        if(foundParent) {
+        if (foundParent) {
           let skill = new Skill();
           skill.name = currentSkill.name;
           skill.level = currentSkill.level;
@@ -408,10 +408,10 @@ export class CompareComponent implements AfterViewInit {
 
   findParent(skillArray: Array<Skill>, targetNode: string): Skill {
     let found;
-    for(let i = 0; i < skillArray.length; i++) {
+    for (let i = 0; i < skillArray.length; i++) {
       let currentSkill = skillArray[i];
       found = this.getParentOfChild(currentSkill, targetNode);
-      if(found) return found;
+      if (found) return found;
     }
     return found;
   }
@@ -439,14 +439,15 @@ export class CompareComponent implements AfterViewInit {
   getSkillData(): void {
     this.skillData = new Array<any>();
     this.skillMap = new Map<string, Array<any>>();
+    for (let i = 0; i < this.resumes.length; i++) {
+      let currentResume = this.resumes[i];
+      if (currentResume.hidden) continue;
+      for (let j = 0; j < currentResume.skills.length; j++) {
+        let currentSkill = currentResume.skills[j];
+        this.peopleWithSkill(currentSkill, currentResume);
+      }
+    }
 
-    this.resumes.forEach((r: Resume) => {
-      if(r.hidden) return;
-      r.skills.forEach((s: Skill) => {
-        this.peopleWithSkill(s, r);
-      });
-    });
-    
     let uniqueSkills = new Map<string, any>();
 
     this.skillMap.forEach((v, k) => {
@@ -479,37 +480,35 @@ export class CompareComponent implements AfterViewInit {
 
       if (arr.length > 0) this.skillData.push(arr);
     });
+    console.log(this.skillMap);
     this.matchedSkills = this.skillData[0] ? this.skillData[0].length : 0;
     // console.log(this.skillData);
     this.cd.detectChanges();
   }
 
   peopleWithSkill(currentNode, resume): void {
-    if (currentNode.level !== '' && currentNode.children.length === 0) {
-      // if exists push result ontop
-      if (this.skillMap.has(resume.id)) {
-        let value = {
-          skill: currentNode.name,
-          level: this.getLevelAsNumber(currentNode.level.trim()),
-          name: `${resume.firstName} ${resume.lastName}`,
-          person: resume,
-          minLevel: 0,
-          maxLevel: 5
-        };
-        this.skillMap.get(resume.id).push(value);
-      } else {
-        // set new key + initialize array of values
-        let values = new Array<any>();
-        values.push({
-          skill: currentNode.name,
-          level: this.getLevelAsNumber(currentNode.level),
-          name: `${resume.firstName} ${resume.lastName}`,
-          person: resume,
-          minLevel: 0,
-          maxLevel: 5
-        })
-        this.skillMap.set(resume.id, values);
-      }
+    if (this.skillMap.has(resume.id)) {
+      let value = {
+        skill: currentNode.name,
+        level: this.getLevelAsNumber(currentNode.level.trim()),
+        name: `${resume.firstName} ${resume.lastName}`,
+        person: resume,
+        minLevel: 0,
+        maxLevel: 5
+      };
+      this.skillMap.get(resume.id).push(value);
+    } else {
+      // set new key + initialize array of values
+      let values = new Array<any>();
+      values.push({
+        skill: currentNode.name,
+        level: this.getLevelAsNumber(currentNode.level),
+        name: `${resume.firstName} ${resume.lastName}`,
+        person: resume,
+        minLevel: 0,
+        maxLevel: 5
+      })
+      this.skillMap.set(resume.id, values);
     }
 
     for (let i = 0; i < currentNode.children.length; i++) {
@@ -522,7 +521,7 @@ export class CompareComponent implements AfterViewInit {
     // de-highlight all
     this.resumes.forEach((r: Resume) => { r.highlighted = false; });
     this.cs.setResumeID($event);
-    if ($event === 'none')  return;
+    if ($event === 'none') return;
     // highlight selection
     let resume = this.resumes.find((r: Resume) => { return r.id === $event; });
     resume.highlighted = true;
