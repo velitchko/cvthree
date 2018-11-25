@@ -228,7 +228,6 @@ export class TreeChartComponent implements OnChanges {
       });
       donutData.push(nodeArr);
     });
-    // return;
     node.append("circle") //background circle fill
       .attr("cx", 0)
       .attr("cy", 0)
