@@ -353,12 +353,14 @@ export class CompareComponent implements AfterViewInit {
   getTreeChartData(): void {
     this.treeChartData = new Skill();
     this.treeChartData.name = 'Skills'; //root
-    this.resumes.forEach((r: Resume) => {
-      if(r.hidden) return;
-      r.skills.forEach((s: Skill) => {
-        this.generateTreeData(this.treeChartData, r.id, s, r.skills);
-      });
-    });
+    for(let i = 0; i < this.resumes.length; i++) {
+      let currentResume = this.resumes[i];
+      if(currentResume.hidden) continue;
+      for(let j = 0; j < currentResume.skills.length; j++) {
+        let currentSkill = currentResume.skills[j];
+        this.generateTreeData(this.treeChartData, currentResume.id, currentSkill, currentResume.skills);
+      }
+    }
   }
 
   generateTreeData(currentNode: Skill, resumeID: string, currentSkill: Skill, skillArray: Array<Skill>): void {
@@ -406,9 +408,11 @@ export class CompareComponent implements AfterViewInit {
 
   findParent(skillArray: Array<Skill>, targetNode: string): Skill {
     let found;
-    skillArray.forEach((n: Skill) => {
-      found = this.getParentOfChild(n, targetNode);
-    });
+    for(let i = 0; i < skillArray.length; i++) {
+      let currentSkill = skillArray[i];
+      found = this.getParentOfChild(currentSkill, targetNode);
+      if(found) return found;
+    }
     return found;
   }
 
