@@ -38,7 +38,9 @@
   align-items: center;
 }
 // SKILL STUFF
-
+::ng-deep #skill-tree svg {
+  overflow: visible;
+}
 ::ng-deep path.link {
   fill: none;
   // stroke: #D4D8DA;
