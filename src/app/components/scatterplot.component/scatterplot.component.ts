@@ -59,7 +59,6 @@ export class ScatterPlotComponent implements AfterViewInit, OnChanges {
     checkForOverlap(): void {
         let overlaps = new Map<string, Array<any>>();
         for (let i = 0; i < this.points.length; i++) {
-            let overlapAtPoint = new Array<any>();
             for (let j = i + 1; j < this.points.length; j++) {
                 let outPoint = this.points[i];
                 let inPoint = this.points[j];
