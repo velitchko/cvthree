@@ -22,10 +22,27 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
     private items: any;
     private svg: any;
     private tooltip: any;
+    private overlaps: any;
+    private overlappingItems: any; 
+    private margin = {
+        top: 20,
+        right: 20,
+        bottom: 20,
+        left: 120 // because of labels
+    };
+    private x: any;
+    private y: any;
 
     constructor(@Inject(PLATFORM_ID) private platformId: Object,
         private cs: CompareService) {
         this.selectedResume = new EventEmitter<string>();
+
+
+        this.cs.currentlySelectedResume.subscribe((selection: any) => {
+            if(selection) {
+                this.highlightNode(selection);
+            }
+        });
     }
 
     ngAfterViewInit(): void {
@@ -40,11 +57,58 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
         if (changes.data.currentValue.length !== 0) {
             if (isPlatformBrowser(this.platformId)) {
                 this.clearScatterPlot();
-
+                this.checkForOverlap();
                 this.scatterHTML = this.scatter.nativeElement;
                 this.createScatterPlot();
             }
         }
+    }
+
+    highlightNode(selection: string): void {
+        if(selection === 'none') {
+            d3.selectAll('.scatter-point').transition().attr('opacity', 1);
+            return;
+        }
+
+        d3.selectAll('.scatter-point').transition().attr('opacity', 0.2);
+
+        // d3.select(`#${selection}`).transition().attr('opacity', 1);
+        d3.selectAll('.scatter-point').each((d: any, i: any, n: any) => {
+            let node = d3.select(n[i]);
+            console.log(node.attr('id'));
+            console.log(node.attr('id').split(','));
+            console.log(node.attr('id').split(',').includes(selection))
+            if(node.attr('id').split(',').includes(selection)) {
+                node.transition()
+                .attr('stroke', this.cs.getColorForResume(selection))
+                .attr('opacity', 1);
+                return;
+            }
+        });
+    }
+
+    checkForOverlap(): void {
+        let overlaps = new Map<string, Array<any>>();
+
+        for(let i = 0; i < this.data.length; i++) {
+            for(let j = i + 1; j < this.data.length; j++) {
+                let outPoint = this.data[i];
+                let inPoint = this.data[j];
+                if(outPoint[0].value === inPoint[0].value && outPoint[1].value === inPoint[1].value) {
+                    outPoint.hasOverlap = true;
+                    inPoint.hasOverlap = true;
+                    let string = `${outPoint[0].value}.${outPoint[1].value}`;
+                    if(overlaps.has(string)) {
+                        overlaps.get(string).push(inPoint, outPoint);
+                    } else {
+                        overlaps.set(string, new Array<any>(inPoint, outPoint))
+                    }
+                }
+            }
+        }
+        console.log(overlaps);
+
+        this.overlaps = overlaps;
     }
 
     getSkillAsText(level: number): string {
@@ -58,12 +122,6 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
     }
 
     createScatterPlot(): void {
-        let margin = {
-            top: 20,
-            right: 20,
-            bottom: 20,
-            left: 120 // because of labels
-        };
 
         let width = 700;
         let height = 500;
@@ -73,31 +131,31 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
             .attr('height', height)
             .attr('width', width);
 
-        let x = d3.scaleLinear().range([margin.left, width - margin.right - margin.left]);
-        let y = d3.scaleLinear().range([height - margin.top - margin.bottom, margin.top]);
+        this.x = d3.scaleLinear().range([this.margin.left, width - this.margin.right - this.margin.left]);
+        this.y = d3.scaleLinear().range([height - this.margin.top - this.margin.bottom, this.margin.top]);
 
         let extentX = d3.extent([1, 5]);
         let extentY = d3.extent([1, 5]);
         let xAxisLabel = this.data[0][0].area;
         let yAxisLabel = this.data[0][1].area;
-        x.domain(extentX);
-        y.domain(extentY);
+        this.x.domain(extentX);
+        this.y.domain(extentY);
 
-        let axisX = d3.axisBottom(x).ticks(5).tickFormat((d: any) => {
+        let axisX = d3.axisBottom(this.x).ticks(5).tickFormat((d: any) => {
             return this.getSkillAsText(d);
         });
-        let axisY = d3.axisLeft(y).ticks(5).tickFormat((d: any) => {
+        let axisY = d3.axisLeft(this.y).ticks(5).tickFormat((d: any) => {
             return this.getSkillAsText(d);
         });
 
         this.svg.append('g')
             .attr('id', 'axis_x')
-            .attr('transform', 'translate(0,' + (height - margin.top - margin.bottom) + ')')
+            .attr('transform', 'translate(0,' + (height - this.margin.top - this.margin.bottom) + ')')
             .call(axisX);
 
         this.svg.append('g')
             .attr('id', 'axis_y')
-            .attr('transform', 'translate(' + (margin.left / 2) + ', 0)')
+            .attr('transform', 'translate(' + (this.margin.left / 2) + ', 0)')
             .call(axisY);
 
         this.data.forEach((d: any) => {
@@ -125,18 +183,18 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
 
         d3.select('#axis_x')
             .append('text')
-            .attr('transform', `translate(${width - margin.left - margin.right}, -10)`)
+            .attr('transform', `translate(${width - this.margin.left - this.margin.right}, -10)`)
             .text(xAxisLabel);
 
         d3.select('#axis_y')
             .append('text')
-            .attr('transform', `translate(${2*margin.right}, 15)`)
+            .attr('transform', `translate(${2*this.margin.right}, 15)`)
             .text(yAxisLabel);
 
         this.items = this.svg.append('g')
-            .attr('transform', `translate(0, ${margin.top})`)
+            .attr('transform', `translate(0, ${this.margin.top})`)
             .selectAll('circle')
-            .data(this.data)
+            .data(this.data.filter((p: any) => { return !p.hasOverlap; }))
             .enter()
             .append('circle')
             .attr('r', 20)
@@ -151,7 +209,7 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
                         xVal = _d.value;
                     }
                 });
-                return x(+xVal) - 20; 
+                return this.x(+xVal) - 20; 
             }) // add half of height 
             .attr('cy', (d: any) => { 
                 let yVal;
@@ -160,7 +218,7 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
                         yVal = _d.value;
                     }
                 })
-                return y(+yVal) - 20; 
+                return this.y(+yVal) - 20; 
             }) // add half of width
             .attr('fill', (d: any) => {
                 return `url(#${d[0].resumeID})`;
@@ -186,10 +244,10 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
                     .duration(200) // ms
                     .style('opacity', 1) // started as 0!
             })
-            // .on('mousemove', (d: any) => {
-            //     this.tooltip.style('left', `${d3.event.pageX + 20}px`)
-            //         .style('top', `${d3.event.pageY - 20}px`)
-            // })
+            .on('mousemove', (d: any) => {
+                this.tooltip.style('left', `${d3.event.pageX + 20}px`)
+                    .style('top', `${d3.event.pageY - 20}px`)
+            })
             .on('mouseout', () => {
                 let people = d3.selectAll('.scatter-point');
                 people.transition().attr('opacity', 1);
@@ -203,5 +261,71 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
                 selection.transition().attr('opacity', 1);
                 this.selectedResume.emit(d[0].resumeID);
             });
+        
+            let g = this.svg.append('g');
+            this.overlappingItems = g.attr('transform', `translate(0, ${this.margin.top})`);
+            this.overlaps.forEach((v ,k) => {
+                this.overlappingItems
+                .append('circle')
+                .attr('class', 'scatter-point')
+                .attr('r', 20)
+                .attr('id', () => {
+                    let ids = ``;
+                    v.forEach((p: any) => {
+                        console.log(p);
+                        ids += `${p[0].resumeID},`
+                    });
+                    return ids;
+                })
+                .attr('cx', () => {
+                    return this.x(+k.split('.')[1]) + 20;
+                }) // add half of height 
+                .attr('cy', () => {
+                    return this.y(+k.split('.')[0]) - 20;
+                }) // add half of width
+                .attr('fill', '#f2f2f2')
+                .attr('stroke-width', 4)
+                .attr('stroke', '#5d5d5d')
+                .on('mouseover', (d: any, i: any, n: any) => {
+                    let html = '';
+                    v.forEach((pers: any) => {
+                        console.log(pers);
+                        let resume = this.cs.getResumeByID(pers[0].resumeID);
+                        html += `
+                            <div class="scatterplot-cluster-point">
+                                <img class="scatterplot-profile-pic" src=${resume.profilePicture} style="border-color: ${this.cs.getColorForResume(resume.id)};">
+                                <p>${resume.firstName} ${resume.lastName} : ${pers[0].area} | ${this.getSkillAsText(pers[0].value)}, ${pers[1].area} | ${this.getSkillAsText(pers[1].value)}</p>
+                            </div>
+                        `;
+                    });
+                    this.tooltip.html(html)
+                    .style('left', `${d3.event.pageX + 20}px`)
+                    .style('top', `${d3.event.pageY - 20}px`)
+                    .transition()
+                    .duration(200) // ms
+                    .style('opacity', 1) // started as 0!
+                })
+                .on('mouseout', (d: any, i: any, n: any) => {
+                    d3.select(n[i])
+                    .transition()
+                    .duration(250)
+                    .attr('stroke', '#5d5d5d');
+                    this.tooltip.transition().duration(200).style('opacity', 0);
+                });
+               
+               
+                g.append('text')
+                .attr('class', 'all')
+                .attr('x', () => {
+                    return this.x(+k.split('.')[1]) + 15;
+                }) // add half of height 
+                .attr('y', () => {
+                    return this.y(+k.split('.')[0]) - 15;
+                }) // add 
+                .text(v.length);
+
+            this.overlappingItems.merge(this.overlappingItems);
+            });
     }
+    
 }
