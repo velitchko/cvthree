@@ -23,7 +23,7 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
     private svg: any;
     private tooltip: any;
     private overlaps: any;
-    private overlappingItems: any; 
+    private overlappingItems: any;
     private margin = {
         top: 20,
         right: 20,
@@ -39,7 +39,7 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
 
 
         this.cs.currentlySelectedResume.subscribe((selection: any) => {
-            if(selection) {
+            if (selection) {
                 this.highlightNode(selection);
             }
         });
@@ -65,7 +65,7 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
     }
 
     highlightNode(selection: string): void {
-        if(selection === 'none') {
+        if (selection === 'none') {
             d3.selectAll('.scatter-point').transition().attr('opacity', 1);
             return;
         }
@@ -78,10 +78,10 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
             console.log(node.attr('id'));
             console.log(node.attr('id').split(','));
             console.log(node.attr('id').split(',').includes(selection))
-            if(node.attr('id').split(',').includes(selection)) {
+            if (node.attr('id').split(',').includes(selection)) {
                 node.transition()
-                .attr('stroke', this.cs.getColorForResume(selection))
-                .attr('opacity', 1);
+                    .attr('stroke', this.cs.getColorForResume(selection))
+                    .attr('opacity', 1);
                 return;
             }
         });
@@ -90,15 +90,15 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
     checkForOverlap(): void {
         let overlaps = new Map<string, Array<any>>();
 
-        for(let i = 0; i < this.data.length; i++) {
-            for(let j = i + 1; j < this.data.length; j++) {
+        for (let i = 0; i < this.data.length; i++) {
+            for (let j = i + 1; j < this.data.length; j++) {
                 let outPoint = this.data[i];
                 let inPoint = this.data[j];
-                if(outPoint[0].value === inPoint[0].value && outPoint[1].value === inPoint[1].value) {
+                if (outPoint[0].value === inPoint[0].value && outPoint[1].value === inPoint[1].value) {
                     outPoint.hasOverlap = true;
                     inPoint.hasOverlap = true;
                     let string = `${outPoint[0].value}.${outPoint[1].value}`;
-                    if(overlaps.has(string)) {
+                    if (overlaps.has(string)) {
                         overlaps.get(string).push(inPoint, outPoint);
                     } else {
                         overlaps.set(string, new Array<any>(inPoint, outPoint))
@@ -112,7 +112,7 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
     }
 
     getSkillAsText(level: number): string {
-        if(level === 0) return '';
+        if (level === 0) return '';
         return SkillLevel[level];
     }
 
@@ -188,7 +188,7 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
 
         d3.select('#axis_y')
             .append('text')
-            .attr('transform', `translate(${2*this.margin.right}, 15)`)
+            .attr('transform', `translate(${2 * this.margin.right}, 15)`)
             .text(yAxisLabel);
 
         this.items = this.svg.append('g')
@@ -199,26 +199,26 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
             .append('circle')
             .attr('r', 20)
             .attr('class', 'scatter-point')
-            .attr('id', (d: any) => { 
-                return d[0].resumeID; 
+            .attr('id', (d: any) => {
+                return d[0].resumeID;
             })
             .attr('cx', (d: any) => {
                 let xVal;
                 d.forEach((_d: any) => {
-                    if(_d.area === xAxisLabel) {
+                    if (_d.area === xAxisLabel) {
                         xVal = _d.value;
                     }
                 });
-                return this.x(+xVal) - 20; 
+                return this.x(+xVal) - 20;
             }) // add half of height 
-            .attr('cy', (d: any) => { 
+            .attr('cy', (d: any) => {
                 let yVal;
                 d.forEach((_d: any) => {
-                    if(_d.area === yAxisLabel) {
+                    if (_d.area === yAxisLabel) {
                         yVal = _d.value;
                     }
                 })
-                return this.y(+yVal) - 20; 
+                return this.y(+yVal) - 20;
             }) // add half of width
             .attr('fill', (d: any) => {
                 return `url(#${d[0].resumeID})`;
@@ -261,71 +261,89 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
                 selection.transition().attr('opacity', 1);
                 this.selectedResume.emit(d[0].resumeID);
             });
-        
-            let g = this.svg.append('g');
-            this.overlappingItems = g.attr('transform', `translate(0, ${this.margin.top})`);
-            this.overlaps.forEach((v ,k) => {
-                this.overlappingItems
-                .append('circle')
-                .attr('class', 'scatter-point')
-                .attr('r', 20)
-                .attr('id', () => {
-                    let ids = ``;
-                    v.forEach((p: any) => {
-                        console.log(p);
-                        ids += `${p[0].resumeID},`
-                    });
-                    return ids;
-                })
-                .attr('cx', () => {
-                    return this.x(+k.split('.')[1]) + 20;
-                }) // add half of height 
-                .attr('cy', () => {
-                    return this.y(+k.split('.')[0]) - 20;
-                }) // add half of width
-                .attr('fill', '#f2f2f2')
-                .attr('stroke-width', 4)
-                .attr('stroke', '#5d5d5d')
-                .on('mouseover', (d: any, i: any, n: any) => {
-                    let html = '';
+
+        let donutData = new Array<any>();
+        this.overlaps.forEach((v, k) => {
+            let newArr = new Array<any>();
+            v.forEach((_v: any) => {
+                // newArr.push();
+                newArr.push([_v[0].resumeID, 1, _v[0].value, _v[1].value]); // first point    
+            })
+            donutData.push(newArr);
+        });
+        let circleSize = 20;
+        let thickness = 5;
+        let arc = d3.arc()
+            .innerRadius(circleSize - thickness)
+            .outerRadius(circleSize);
+        let pie = d3.pie().value((d: any, i: any) => { 
+            return d[1]; });
+        let g = this.svg.append('g');
+        this.overlappingItems = g.attr('transform', `translate(0, ${this.margin.top})`);
+       
+        // this.overlappingItems.selectAll('path')
+        //     .data((d: any, i: any) => { return pie(donutData[i]); })
+        //     .enter()
+        //     .append('g')
+        //     .attr('transform', (d: any) => {
+        //         return `translate(${this.x(d.data[2]) + 20}, ${this.y(d.data[3]) - 20})`
+        //     })
+        //     .append('text')
+        //     .attr('class', 'all')
+        //     .text((d: any) => {
+        //         return this.overlaps.get(`${d.data[2]}.${d.data[3]}`).length;
+        //     });
+
+            this.overlappingItems
+            .selectAll('path')
+            .data((d: any, i: any) => { console.log('donut'); return pie(donutData[i]); })
+            .enter()
+            .append('path')
+            .attr('transform', (d: any, i: any) => {
+                console.log(d);
+
+                return `translate(${this.x(d.data[2]) + 20}, ${this.y(d.data[3]) - 20})`
+            })
+            .attr('d', <any>arc)
+            .attr('fill', (d: any, i: any) => {
+                return this.cs.getColorForResume(d.data[0]);
+            })
+            // .attr('x', (d: any) => {
+            //     return this.x(d.data[2]) + 20;
+            //     // return this.x(+k.split('.')[1]) + 20;
+            // }) // add half of height 
+            // .attr('y', (d: any) => {
+            //     return this.y(d.data[3]) - 20;
+            //     // return this.y(+k.split('.')[0]) - 20;
+            // }) // add half of width         
+            .on('mouseover', (d: any, i: any, n: any) => {
+                let html = '';
+                this.overlaps.forEach((v, k) => {
                     v.forEach((pers: any) => {
-                        console.log(pers);
                         let resume = this.cs.getResumeByID(pers[0].resumeID);
                         html += `
-                            <div class="scatterplot-cluster-point">
-                                <img class="scatterplot-profile-pic" src=${resume.profilePicture} style="border-color: ${this.cs.getColorForResume(resume.id)};">
-                                <p>${resume.firstName} ${resume.lastName} : ${pers[0].area} | ${this.getSkillAsText(pers[0].value)}, ${pers[1].area} | ${this.getSkillAsText(pers[1].value)}</p>
-                            </div>
-                        `;
+                                <div class="scatterplot-cluster-point">
+                                    <img class="scatterplot-profile-pic" src=${resume.profilePicture} style="border-color: ${this.cs.getColorForResume(resume.id)};">
+                                    <p>${resume.firstName} ${resume.lastName} : ${pers[0].area} | ${this.getSkillAsText(pers[0].value)}, ${pers[1].area} | ${this.getSkillAsText(pers[1].value)}</p>
+                                </div>
+                            `;
                     });
-                    this.tooltip.html(html)
+                });
+                this.tooltip.html(html)
                     .style('left', `${d3.event.pageX + 20}px`)
                     .style('top', `${d3.event.pageY - 20}px`)
                     .transition()
                     .duration(200) // ms
                     .style('opacity', 1) // started as 0!
-                })
-                .on('mouseout', (d: any, i: any, n: any) => {
-                    d3.select(n[i])
+            })
+            .on('mouseout', (d: any, i: any, n: any) => {
+                d3.select(n[i])
                     .transition()
                     .duration(250)
-                    .attr('stroke', '#5d5d5d');
-                    this.tooltip.transition().duration(200).style('opacity', 0);
-                });
-               
-               
-                g.append('text')
-                .attr('class', 'all')
-                .attr('x', () => {
-                    return this.x(+k.split('.')[1]) + 15;
-                }) // add half of height 
-                .attr('y', () => {
-                    return this.y(+k.split('.')[0]) - 15;
-                }) // add 
-                .text(v.length);
-
-            this.overlappingItems.merge(this.overlappingItems);
+                this.tooltip.transition().duration(200).style('opacity', 0);
             });
+
+        this.overlappingItems.merge(this.overlappingItems);
     }
-    
+
 }

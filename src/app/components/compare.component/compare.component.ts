@@ -367,6 +367,17 @@ export class CompareComponent implements AfterViewInit {
     let found = this.getExistingNode(this.treeChartData, currentSkill.name);
     if (found) {
       if (!found.people) found.people = new Array<string>();
+      let foundSkillParent = this.findParent(skillArray, currentSkill.name);
+      if(foundSkillParent) {
+        let treeParent = this.findParent(this.treeChartData.children, currentSkill.name);
+        if(treeParent) {
+          if(!treeParent.names) treeParent.names = new Array<string>();
+          if(!treeParent.names.includes(foundSkillParent.name)) {
+            treeParent.names.push(foundSkillParent.name);
+            if(!treeParent.people.includes(resumeID)) treeParent.people.push(resumeID);
+          }
+        }
+      }
       found.people.push(resumeID);
     } else {
       let skillParent = this.findParent(skillArray, currentSkill.name);
@@ -379,16 +390,13 @@ export class CompareComponent implements AfterViewInit {
           skill.experience = currentSkill.experience;
           skill.people = new Array<string>();
           skill.people.push(resumeID);
+          if(!foundParent.names) foundParent.names = new Array<string>();
+          if(!foundParent.names.includes(skillParent.name)) {
+            foundParent.names.push(skillParent.name);
+            if(!foundParent.people.includes(resumeID)) foundParent.people.push(resumeID);
+          }
           foundParent.children.push(skill);
-        } else {
-          let skill = new Skill();
-          skill.name = currentSkill.name;
-          skill.level = currentSkill.level;
-          skill.experience = currentSkill.experience;
-          skill.people = new Array<string>();
-          skill.people.push(resumeID);
-          this.treeChartData.children.push(skill);
-        }
+        } 
       } else {
         let skill = new Skill();
         skill.name = currentSkill.name;
@@ -417,7 +425,13 @@ export class CompareComponent implements AfterViewInit {
   }
 
   getParentOfChild(currentNode: Skill, target: string): Skill {
-    if (currentNode.children.filter((s) => { return s.name.toLowerCase() === target.toLowerCase(); }).length > 0) return currentNode;
+    currentNode.children.forEach((s: any) => {
+      if(!s.names) s.names = new Array<string>();
+    });
+    if (currentNode.children.filter((s: Skill) => { 
+        return s.name.toLowerCase() === target.toLowerCase() || 
+        s.names.map((n: string) => { return n.toLowerCase(); }).includes(target.toLowerCase()); 
+    }).length > 0) return currentNode;
     for (let i = 0; i < currentNode.children.length; i++) {
       let currentChild = currentNode.children[i];
       let result = this.getParentOfChild(currentChild, target);
@@ -427,7 +441,9 @@ export class CompareComponent implements AfterViewInit {
   }
 
   getExistingNode(currentNode: any, target: any): Skill {
-    if (currentNode.name.toLowerCase() === target.toLowerCase()) return currentNode;
+    if (currentNode.name.toLowerCase() === target.toLowerCase() || 
+      currentNode.names.map((n: string) => { return n.toLowerCase(); }).includes(target.toLowerCase())
+    ) return currentNode;
 
     for (let i = 0; i < currentNode.children.length; i++) {
       let currentChild = currentNode.children[i];
