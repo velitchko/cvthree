@@ -72,7 +72,7 @@ export class TreeChartComponent implements OnChanges {
         d3.select(n[i])
           .transition()
           .duration(250)
-          .attr('stroke-width', 2)
+          .attr('stroke-width', 6)
           .attr('stroke-opacity', 1)
           .attr('stroke', '#D4D8DA');
       });
