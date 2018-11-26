@@ -135,9 +135,8 @@ export class CompareComponent implements AfterViewInit {
     }
   }
 
-
   getLevelAsNumber(level: string): number {
-    return (parseInt(SkillLevel[level]));
+    return level === "" ? 0 : parseInt(SkillLevel[level]);
   }
 
   getSanitizedPicture(picture: string): any {
@@ -480,7 +479,6 @@ export class CompareComponent implements AfterViewInit {
 
       if (arr.length > 0) this.skillData.push(arr);
     });
-    console.log(this.skillMap);
     this.matchedSkills = this.skillData[0] ? this.skillData[0].length : 0;
     // console.log(this.skillData);
     this.cd.detectChanges();
@@ -493,7 +491,7 @@ export class CompareComponent implements AfterViewInit {
         level: this.getLevelAsNumber(currentNode.level.trim()),
         name: `${resume.firstName} ${resume.lastName}`,
         person: resume,
-        minLevel: 0,
+        minLevel: 1,
         maxLevel: 5
       };
       this.skillMap.get(resume.id).push(value);
@@ -505,7 +503,7 @@ export class CompareComponent implements AfterViewInit {
         level: this.getLevelAsNumber(currentNode.level),
         name: `${resume.firstName} ${resume.lastName}`,
         person: resume,
-        minLevel: 0,
+        minLevel: 1,
         maxLevel: 5
       })
       this.skillMap.set(resume.id, values);
