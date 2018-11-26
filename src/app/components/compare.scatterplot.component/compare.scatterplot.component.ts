@@ -66,7 +66,7 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
 
     highlightNode(selection: string): void {
         if(selection === 'none') {
-            d3.selectAll('.scatter-point').transition().attr('opacity', 1);
+            d3.selectAll('.scatter-point').transition().attr('opacity', 1).attr('stroke', '#d4d8da');
             return;
         }
 
@@ -75,9 +75,6 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
         // d3.select(`#${selection}`).transition().attr('opacity', 1);
         d3.selectAll('.scatter-point').each((d: any, i: any, n: any) => {
             let node = d3.select(n[i]);
-            console.log(node.attr('id'));
-            console.log(node.attr('id').split(','));
-            console.log(node.attr('id').split(',').includes(selection))
             if(node.attr('id').split(',').includes(selection)) {
                 node.transition()
                 .attr('stroke', this.cs.getColorForResume(selection))
@@ -106,7 +103,6 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
                 }
             }
         }
-        console.log(overlaps);
 
         this.overlaps = overlaps;
     }
@@ -272,7 +268,6 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
                 .attr('id', () => {
                     let ids = ``;
                     v.forEach((p: any) => {
-                        console.log(p);
                         ids += `${p[0].resumeID},`
                     });
                     return ids;
@@ -285,11 +280,10 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
                 }) // add half of width
                 .attr('fill', '#f2f2f2')
                 .attr('stroke-width', 4)
-                .attr('stroke', '#5d5d5d')
+                .attr('stroke', '#d4d8da')
                 .on('mouseover', (d: any, i: any, n: any) => {
                     let html = '';
                     v.forEach((pers: any) => {
-                        console.log(pers);
                         let resume = this.cs.getResumeByID(pers[0].resumeID);
                         html += `
                             <div class="scatterplot-cluster-point">
@@ -309,7 +303,7 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
                     d3.select(n[i])
                     .transition()
                     .duration(250)
-                    .attr('stroke', '#5d5d5d');
+                    .attr('stroke', '#d4d8da');
                     this.tooltip.transition().duration(200).style('opacity', 0);
                 });
                
