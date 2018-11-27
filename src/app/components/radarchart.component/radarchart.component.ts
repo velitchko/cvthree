@@ -54,6 +54,7 @@ export class RadarChartComponent implements OnChanges {
   }
 
   drawRadarChart(id: any, data: any): void {
+
     let margin = {
       top: 20,
       bottom: 20,
@@ -189,8 +190,8 @@ export class RadarChartComponent implements OnChanges {
       g.selectAll('.nodes')
         .data(y, (j: any, i: any): any => {
           dataValues.push([
-            (cfg.w - margin.right - margin.left) / 2 * (1 - (parseFloat(Math.max(j.value, 0).toString()) / cfg.maxValue) * cfg.factor * Math.sin(i * cfg.radians / total)),
-            (cfg.h - margin.top - margin.bottom) / 2 * (1 - (parseFloat(Math.max(j.value, 0).toString()) / cfg.maxValue) * cfg.factor * Math.cos(i * cfg.radians / total))
+            (cfg.w - margin.right - margin.left) / 2 * (1 - (Math.max(j.value, 0) / cfg.maxValue) * cfg.factor * Math.sin(i * cfg.radians / total)),
+            (cfg.h - margin.top - margin.bottom) / 2 * (1 - (Math.max(j.value, 0) / cfg.maxValue) * cfg.factor * Math.cos(i * cfg.radians / total))
           ]);
         });
       dataValues.push(dataValues[0]);
