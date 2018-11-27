@@ -480,7 +480,6 @@ export class CompareComponent implements AfterViewInit {
       if (arr.length > 0) this.skillData.push(arr);
     });
     this.matchedSkills = this.skillData[0] ? this.skillData[0].length : 0;
-    console.log(this.skillData);
     this.cd.detectChanges();
   }
 
