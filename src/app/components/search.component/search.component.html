@@ -1,13 +1,13 @@
 <div>
     <mat-form-field>
         <input matInput placeholder="Occupation" [(ngModel)]="query.searchOccupation" #occupation>
-        <button mat-button *ngIf="occupation.value" matSuffix mat-icon-button aria-label="Clear" (click)="occupation.value=''">
+        <button mat-button *ngIf="occupation.value" matSuffix mat-icon-button aria-label="Clear" (click)="occupation.value=''; query.searchOccupation='';">
             <mat-icon>close</mat-icon>
         </button>
     </mat-form-field>
     <mat-form-field>
         <input matInput placeholder="Location" [(ngModel)]="query.searchLocation" #location>
-        <button mat-button *ngIf="location.value" matSuffix mat-icon-button aria-label="Clear" (click)="location.value=''">
+        <button mat-button *ngIf="location.value" matSuffix mat-icon-button aria-label="Clear" (click)="location.value=''; query.searchLocation='';">
             <mat-icon>close</mat-icon>
         </button>
     </mat-form-field>
