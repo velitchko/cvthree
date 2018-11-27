@@ -36,8 +36,6 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
     constructor(@Inject(PLATFORM_ID) private platformId: Object,
         private cs: CompareService) {
         this.selectedResume = new EventEmitter<string>();
-
-
         this.cs.currentlySelectedResume.subscribe((selection: any) => {
             if(selection) {
                 this.highlightNode(selection);
