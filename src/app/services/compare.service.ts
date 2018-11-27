@@ -101,9 +101,12 @@ export class CompareService {
 
     private recursiveSkillSearch(skills: Array<Skill>, skillName: string): Skill {
         let found;
-        skills.forEach((s: Skill) => {
-            found = this.getExistingNode(s, skillName);
-        });
+        for(let i = 0; i < skills.length; i++) {
+            let currentSkill = skills[i];
+            found = this.getExistingNode(currentSkill, skillName);
+
+            if(found) return found;
+        }
         return found;
     }
 
