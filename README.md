@@ -1,7 +1,7 @@
 # CVTHREE
 
 ## Changelog
-
+v2.5.0 - Prototype  
 v2.0.0 - Angular 6 (update)  
 v1.0.0 - Angular 2 
 
