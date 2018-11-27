@@ -97,7 +97,12 @@ export class TreeChartComponent implements OnChanges {
             .transition()
             .duration(250)
             .attr('stroke-opacity', () => {
-              return this.getSkillOpacity(d.data.level.trim());
+              if(d.data.name === 'Skills') return 1;
+
+              let skill = this.cs.searchForSkill(resumeID, d.data.name);
+              if(!skill) return 0;
+              
+              return this.getSkillOpacity(skill.level.trim());
             })
             .attr('stroke-width', 8)
             .attr('stroke', () => {
