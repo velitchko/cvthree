@@ -54,11 +54,6 @@ export class RadarChartComponent implements OnChanges {
   }
 
   drawRadarChart(id: any, data: any): void {
-    // sort data so things are aligned
-    data.forEach((d) => {
-      d.sort((a, b) => { return a.area > b.area ? 1 : -1; });
-    });
-
     let margin = {
       top: 20,
       bottom: 20,
