@@ -465,7 +465,7 @@ export class CompareComponent implements AfterViewInit {
         if (uniqueSkills.get(e.skill).value === this.resumes.filter((r: Resume) => { return !r.hidden; }).length) {
           // match
           let person = this.cs.getResume(this.resumes.map((r: Resume) => { return r.id; }).indexOf(k));
-          // console.log(e);
+          if(e.level === 0) return; 
           arr.push({
             area: e.skill,
             name: `${person.firstName} ${person.lastName}`,
@@ -476,11 +476,11 @@ export class CompareComponent implements AfterViewInit {
           });
         }
       });
-
+      arr.sort((a, b) => { return a.area > b.area ? 1 : -1; });
       if (arr.length > 0) this.skillData.push(arr);
     });
     this.matchedSkills = this.skillData[0] ? this.skillData[0].length : 0;
-    // console.log(this.skillData);
+    console.log(this.skillData);
     this.cd.detectChanges();
   }
 
