@@ -397,6 +397,7 @@ export function createApi(distPath: string, ngSetupOptions: NgSetupOptions) {
         let base = score.baseScore(r.skills, query.skills);
         let bonus = score.bonusScore(r.skills, query.skills);
         // if base is 0 and skills were requested return
+
         // else append to results
         if(base === 0 && query.skills.length !== 0) return;
         results.push({

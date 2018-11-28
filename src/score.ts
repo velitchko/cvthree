@@ -2,7 +2,7 @@ import { SkillLevel } from './app/lists/skill.level';
 
 function getNumberForSkill(level: any): number {
     // maps skilllevel[1,5]
-    return (parseInt(SkillLevel[level]));
+    return (parseInt(SkillLevel[level.trim()]));
 }
 
 function normalizeSkillLevel(level: number, min: number = 1, max: number = 5): number {
@@ -15,26 +15,27 @@ export function baseScore(resumeSkills, query) {
     let sumScore = 0;
     let sumWeight = 0;
 
-    query.forEach((q) => {
-        let weight = normalizeSkillLevel(getNumberForSkill(q.searchLevel));
-        resumeSkills.forEach((r) => {
-            let result = findNode(r, 0, q.searchSkill); // result + depth
+    for(let i = 0; i < query.length; i++) {
+        let currentQ = query[i];
+        let weight = normalizeSkillLevel(getNumberForSkill(currentQ.searchLevel));
+        for(let j = 0; j < resumeSkills.length; j++) {
+            let currentNode = resumeSkills[j];
+            let result = findNode(currentNode, 0, currentQ.searchSkill);
             if(result) {
                 sumScore += getNumberForSkill(result.node.level)*weight;
             }
-        });
+        }
         sumWeight += weight;
-    });
-
+    }
+  
     if(sumScore === 0) return 0;
     sumScore /= sumWeight;  
-   
     return +(sumScore*2).toFixed(1); /// { basescore / percentage } 
 }
 
 function findNode(currentNode, level, searchSkill) {
     if(currentNode.name.toLowerCase() === searchSkill.toLowerCase()) return { node: currentNode, level: level };
-
+    if(!currentNode.children) return null;
     for(let i = 0; i < currentNode.children.length; i++) {
         let currentChild = currentNode.children[i];
         let result = findNode(currentChild, level+1, searchSkill);
@@ -45,6 +46,7 @@ function findNode(currentNode, level, searchSkill) {
 }
 
 function getParentOfChild(currentNode, currentLevel, childName, targetLevel)  {
+    if(!currentNode.children) return null;
     if((currentLevel + 1) === targetLevel && currentNode.children.filter((s) => {return s.name.toLowerCase() === childName.toLowerCase();}).length > 0) return currentNode;
 
     for(let i = 0; i < currentNode.children.length; i++) {
@@ -70,7 +72,7 @@ export function bonusScore(resumeSkills, query) {
                 if(node.node.children.length === 0) {
                     let siblings = getParentOfChild(r, 0, q.searchSkill, node.level).children.slice();
                     siblings.forEach((s) => {
-                        if(!alreadyVisited.has(s.name)) {
+                        if(!alreadyVisited.has(s.name) && s.name.toLowerCase() !== q.searchSkill.toLowerCase()) {
                             alreadyVisited.set(s.name, true);
                             bonus = bonus + 1;
                         }
@@ -79,7 +81,7 @@ export function bonusScore(resumeSkills, query) {
                 } else {
                     let children = node.node.children;
                     children.forEach((s) => {
-                        if(!alreadyVisited.has(s.name)) {
+                        if(!alreadyVisited.has(s.name) && s.name.toLowerCase() !== q.searchSkill.toLowerCase()) {
                             alreadyVisited.set(s.name, true);
                             bonus = bonus + 1;
                         }
