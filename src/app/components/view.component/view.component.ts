@@ -81,7 +81,7 @@ export class ViewComponent implements AfterViewInit {
           <i class="material-icons">place</i>${item.location.address ? item.location.address : ''} ${item.location.city ? item.location.city : ''} ${item.location.country ? item.location.country : ''}
         </p>` : ''}
         <p>
-        ${item.description ? item.description : 'No description for event.'}
+        ${item.description ? item.description : item.summary ? item.summary : 'No description for event.'}
         </p>
       </div>
     `;
@@ -119,6 +119,8 @@ export class ViewComponent implements AfterViewInit {
       let education = {
         position: e.studies,
         company: e.institution,
+        startDate: e.startDate,
+        endDate: e.endDate,
         location: {
           address: e.institution
         }
@@ -134,11 +136,7 @@ export class ViewComponent implements AfterViewInit {
         content: this.getTimelineContent(education, 'school'),
         className: `timeline-event`
       };
-      if (e.endDate) {
-        event['end'] = e.endDate;
-      } else {
-        event['end'] = moment().format('DD-MM-YYYY');
-      }
+      if (e.endDate) event['end'] = e.endDate;
       this.timelineData.push(event);
       identifier++;
     });
@@ -147,7 +145,8 @@ export class ViewComponent implements AfterViewInit {
       p.identifier = identifier;
       let publication = {
         position: p.title,
-        company: p.publisher
+        company: p.publisher,
+        startDate: p.date
       };
       let event = {
         id: identifier,
@@ -168,7 +167,9 @@ export class ViewComponent implements AfterViewInit {
       type = p.endDate ? 'range' : 'point';
       let project = {
         position: p.title,
-        company: p.url
+        company: p.url,
+        startDate: p.startDate,
+        endDate: p.endDate
       };
       let event = {
         id: identifier,
@@ -191,14 +192,15 @@ export class ViewComponent implements AfterViewInit {
       a.identifier = identifier;
       let award = {
         position: a.title,
-        company: a.awarder
+        company: a.awarder,
+        startDate: a.date
       };
       let event = {
         id: identifier,
         item: idx,
         category: 'CERTIFICATE/AWARD',
         location: null,
-        startDate: a.date,
+        start: a.date,
         type: 'point',
         title: this.getTimelineTitle(award, idx),
         content: this.getTimelineContent(award, 'star'),
