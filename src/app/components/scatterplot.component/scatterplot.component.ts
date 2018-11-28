@@ -229,9 +229,6 @@ export class ScatterPlotComponent implements AfterViewInit, OnChanges {
                     return ids;
                 })
                 .attr('cx', () => {
-                    console.log(k.split('#'));
-                    console.log(this.x(+k.split('#')[1]));
-                    console.log(this.x(+k.split('#')[0]));
                     return this.x(+k.split('#')[1]);
                 }) // add half of height 
                 .attr('cy', () => {
