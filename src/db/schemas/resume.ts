@@ -62,7 +62,11 @@ let ResumeSchema = new mongoose.Schema({
     degree: String,
     startDate: Date,
     endDate: Date,
-    location: String
+    location: {
+      address: String,
+      lat: Number,
+      lng: Number
+    }
   }],
   awards: [{
     title: String,
@@ -101,7 +105,12 @@ let ResumeSchema = new mongoose.Schema({
     startDate: Date,
     endDate: Date,
     url: String,
-    summary: String
+    summary: String,
+    location: {
+      address: String,
+      lat: Number,
+      lng: Number
+    }
   }]
 });
 // TODO
@@ -131,16 +140,18 @@ function preSave(_self: any, next: any): void {
   };
   let geocoder = NodeGeocoder(options);
   let addrArr = new Array<string>();
-  _self.work.forEach((w: any) => {
+  _self.education.forEach((w: any) => {
+    w.location.address = w.institution;
     // geocode location
     // if(w.location.lat && w.location.lng) return; // already has lat and lng
-    addrArr.push(`${w.location.address} ${w.location.postalCode} ${w.location.city} ${w.location.country}`);
+    //  ${w.location.postalCode} ${w.location.city} ${w.location.country}
+    addrArr.push(`${w.location.address}`);
   });
   geocoder.batchGeocode(addrArr).then((success) => {
-    
     success.forEach((s: any, idx: number) => {
-      _self.work[idx].location.lat = s.value[0].latitude;
-      _self.work[idx].location.lng = s.value[0].longitude;
+      console.log(s);
+      _self.education[idx].location.lat = s.value[0].latitude;
+      _self.education[idx].location.lng = s.value[0].longitude;
     });
     next();
   }).catch((err) => {

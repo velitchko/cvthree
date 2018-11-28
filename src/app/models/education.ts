@@ -1,3 +1,5 @@
+import { Location } from './location';
+
 export class Education {
   institution: string;
   studies: string;
@@ -6,4 +8,5 @@ export class Education {
   endDate: Date;
   identifier?: number;
   oldIdx?: number;
+  location: Location;
 }
