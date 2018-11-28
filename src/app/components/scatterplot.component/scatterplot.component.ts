@@ -67,9 +67,14 @@ export class ScatterPlotComponent implements AfterViewInit, OnChanges {
                     // overlap
                     inPoint.hasOverlap = true;
                     outPoint.hasOverlap = true;
-                    let string = `${outPoint.base}.${outPoint.bonus}`
+                    let string = `${outPoint.base}#${outPoint.bonus}`
                     if (overlaps.has(string)) {
-                        overlaps.get(string).push(inPoint, outPoint);
+                        let resArr = overlaps.get(string);
+                        if(!resArr.map((r: any) => { return r.resume.id }).includes(inPoint.resume.id) && 
+                           !resArr.map((r: any) => { return r.resume.id }).includes(outPoint.resume.id)) {
+                            resArr.push(inPoint);
+                            resArr.push(outPoint);
+                        }
                     } else {
                         overlaps.set(string, new Array<any>(inPoint, outPoint));
                     }
@@ -87,7 +92,7 @@ export class ScatterPlotComponent implements AfterViewInit, OnChanges {
 
     createScatterPlot(): void {
         this.margin = {
-            top: 20,
+            top: 40,
             right: 0,
             bottom: 50,
             left: 85
@@ -106,23 +111,22 @@ export class ScatterPlotComponent implements AfterViewInit, OnChanges {
 
         let xArr = [];
         this.points.forEach((p: any) => { xArr.push(p.bonus); });
-        let extentX = d3.extent(xArr);
-        let extentY = d3.extent([1, 10]);
+        let extentX = d3.extent([0, d3.max(xArr)]);
+        let extentY = d3.extent([0, 10]);
 
         this.x.domain(extentX);
         this.y.domain(extentY);
-
-        let axisX = d3.axisBottom(this.x);
+        let axisX = d3.axisBottom(this.x).ticks(d3.max(xArr));
         let axisY = d3.axisLeft(this.y);
 
         this.svg.append('g')
             .attr('id', 'axis_x')
-            .attr('transform', 'translate(0,' + (height - this.margin.top - this.margin.bottom + this.margin.bottom / 2) + ')')
+            .attr('transform', 'translate(0,' + (height - this.margin.top - this.margin.bottom) + ')')
             .call(axisX);
 
         this.svg.append('g')
             .attr('id', 'axis_y')
-            .attr('transform', 'translate(' + (this.margin.left / 2) + ', 0)')
+            .attr('transform', 'translate(' + this.margin.left + ', 0)')
             .call(axisY);
 
         this.points.forEach((d: any) => {
@@ -156,7 +160,7 @@ export class ScatterPlotComponent implements AfterViewInit, OnChanges {
         d3.select('#axis_x')
             .append('text')
             .attr('transform', 'translate(360, -10)')
-            .text('Contextual knowledge score');
+            .text('Bonus score'); 
 
         d3.select('#axis_y')
             .append('text')
@@ -171,8 +175,8 @@ export class ScatterPlotComponent implements AfterViewInit, OnChanges {
             .append('circle')
             .attr('r', 20)
             .attr('id', (d: any) => { return d.resume.id; })
-            .attr('cx', (d: any) => { return this.x(+d.bonus) + 20; }) // add half of height 
-            .attr('cy', (d: any) => { return this.y(+d.base) - 20; }) // add half of width
+            .attr('cx', (d: any) => { return this.x(+d.bonus); }) // add half of height 
+            .attr('cy', (d: any) => { return this.y(+d.base) - 40; }) // add half of width
             .attr('fill', (d: any) => {
                 return `url(#${d.resume.id})`;
             })
@@ -225,10 +229,13 @@ export class ScatterPlotComponent implements AfterViewInit, OnChanges {
                     return ids;
                 })
                 .attr('cx', () => {
-                    return this.x(+k.split('.')[1]) + 20;
+                    console.log(k.split('#'));
+                    console.log(this.x(+k.split('#')[1]));
+                    console.log(this.x(+k.split('#')[0]));
+                    return this.x(+k.split('#')[1]);
                 }) // add half of height 
                 .attr('cy', () => {
-                    return this.y(+k.split('.')[0]) - 20;
+                    return this.y(+k.split('#')[0]) - 40;
                 }) // add half of width
                 .attr('fill', '#f2f2f2')
                 .attr('stroke-width', 4)
@@ -284,10 +291,10 @@ export class ScatterPlotComponent implements AfterViewInit, OnChanges {
                 g.append('text')
                 .attr('class', 'all')
                 .attr('x', () => {
-                    return this.x(+k.split('.')[1]) + 15;
+                    return this.x(+k.split('#')[1]) - 5;
                 }) // add half of height 
                 .attr('y', () => {
-                    return this.y(+k.split('.')[0]) - 15;
+                    return this.y(+k.split('#')[0]) - 35;
                 }) // add 
                 .text(v.length);
 

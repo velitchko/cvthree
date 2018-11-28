@@ -55,3 +55,7 @@ table {
         margin-right: 0.5em;
     }
 }
+
+::ng-deep #scatterplot svg {
+    overflow: visible;
+}
