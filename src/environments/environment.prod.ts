@@ -5,8 +5,9 @@
 
 export const environment = {
   production: false,
-  API_PATH: 'http://localhost:8002/api/v1/',
-  GMAPS_API_KEY: 'AIzaSyASrJdVcPFtIO6yrdLgD8BjdgRai38kHMg'
+  API_PATH: 'https://cvthree.cvast.tuwien.ac.at/api/v1/',
+  GMAPS_API_KEY: 'AIzaSyASrJdVcPFtIO6yrdLgD8BjdgRai38kHMg',
+  MAPBOX_API_KEY: 'pk.eyJ1IjoidmVsaXRjaGtvIiwiYSI6ImNqOGJkeXE1dzBobWYzMnFybW4zeHJ6eWwifQ.kqTgrJJpLhuqLpm-LL5ghQ',
 };
 
 /*
