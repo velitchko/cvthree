@@ -216,7 +216,7 @@ export class TreeChartComponent implements OnChanges {
 
   getExistingNode(currentNode: any, target: any): Skill {
     if (currentNode.name.toLowerCase() === target.toLowerCase()) return currentNode;
-
+    if(!currentNode.children) return null;
     for (let i = 0; i < currentNode.children.length; i++) {
       let currentChild = currentNode.children[i];
       let exists = this.getExistingNode(currentChild, target);
