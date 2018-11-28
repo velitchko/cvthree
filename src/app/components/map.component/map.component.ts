@@ -126,7 +126,7 @@ export class MapComponent implements OnChanges {
         this.markerClusterGroup.addTo(this.map);
         this.pathGroup.addTo(this.map);
         this.markerClusterGroup.on('click', (event: any) => {
-            console.log(event);
+            // console.log(event);
             this.selectedEvent.emit({
                 event: event.sourceTarget.work.identifier,
                 from: 'map'
