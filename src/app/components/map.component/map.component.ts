@@ -2,6 +2,7 @@ import { Component, Input, Output, Inject, ViewChild, ChangeDetectorRef, OnChang
 import { UtilServices } from '../../services/util.service';
 import { Resume } from '../../models/resume';
 import { Work } from '../../models/work';
+import { Education } from '../../models/education';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CompareService } from '../../services/compare.service';
@@ -63,13 +64,23 @@ export class MapComponent implements OnChanges {
                 require('leaflet.markercluster');   // clustering markers
                 // leaflet plugins automatically inject themselves and extend "L"
                 if(!this.map) {
+                    this.sortEvents();
                     this.createMap();
                 } else {
+                    this.sortEvents();
                     this.clearLayers();
                     this.createItems();
                 }
             }
         }
+    }
+
+    sortEvents(): void {
+        this.resumes.forEach((r: Resume) => {
+            r.work.sort((a: Work, b: Work) => { return new Date(a.startDate) > new Date(b.startDate) ? 1 : -1; })
+        });
+
+        console.log(this.resumes);
     }
 
     clearLayers(): void {
@@ -210,7 +221,7 @@ export class MapComponent implements OnChanges {
           <i class="material-icons">place</i>${item.location.address ? item.location.address : ''} ${item.location.city ? item.location.city : ''} ${item.location.country ? item.location.country : ''}
         </p>` : ''}
         <p>
-         ${item.description}
+         ${item.description ? item.description : item.studies ? item.studies : 'No description.'}
         </p>
       </div>`
     }
@@ -301,13 +312,26 @@ export class MapComponent implements OnChanges {
         resume.work.forEach((w: Work) => {
             if(!w.location.lat && !w.location.lng) return;
             let marker = L.marker([w.location.lat, w.location.lng], { icon: icon });
-            marker.work = w;
             marker.resumeID = resume.id;
             marker.bindPopup(this.getPopupContent(w));
             // marker.addTo(this.map);
             this.markers.push(marker);
             this.markerClusterGroup.addLayer(marker);
         });
+
+        resume.education.forEach((e: Education) => {
+            if(!e.location.lat && !e.location.lng) return;
+            let marker = L.marker([e.location.lat, e.location.lng], { icon: icon });
+            marker.resumeID = resume.id;
+            marker.bindPopup(this.getPopupContent(e));
+            // marker.addTo(this.map);
+            this.markers.push(marker);
+            this.markerClusterGroup.addLayer(marker);
+        });
+
+        // resume.education.forEach((e: Education) => {
+        //     if(!e.)
+        // })
 
         this.createLines(resume);
     }
