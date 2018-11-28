@@ -1,6 +1,8 @@
 import { Component, ViewChild, ElementRef  } from '@angular/core';
 import { DatabaseServices } from '../../services/db.service';
 import { Resume } from '../../models/resume';
+import { Language } from '../../models/language';
+import { LANGUAGES } from '../../lists/languages';
 import { Router } from '@angular/router';
 import { UtilServices } from '../../services/util.service';
 import { CompareService } from '../../services/compare.service';
@@ -46,6 +48,21 @@ export class ListComponent  {
       // we have resumes in the service
       this.loading = false;
     }
+  }
+
+  getLangTooltip(language: Language): string {
+    return `${language.name} | ${language.level}`;
+  }
+
+  getClassForLanguage(language: Language): string {
+    let languageClass = '';
+    LANGUAGES.forEach((l: any) => {
+      if(l.name.toLowerCase() === language.name.toLowerCase()) {
+        languageClass = `flag-icon-${l.code}`;
+        return;
+      }
+    });
+    return languageClass;
   }
   
   getYearsOfExperience(resume: Resume): number {

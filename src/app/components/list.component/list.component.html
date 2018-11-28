@@ -36,6 +36,11 @@
       <!-- <button mat-icon-button (click)="scrollDown()" color="primary"><mat-icon>expand_more</mat-icon></button> -->
       <div *ngFor="let resume of resumes; let idx = index" class="list-entry-wrapper">
         <mat-card [ngClass]="{'selected': resume.selected}" class="list-entry">
+          <div class="languages">
+            <div *ngFor="let l of resume.languages">
+              <span [matTooltip]="getLangTooltip(l)" class="language flag-icon" [ngClass]="getClassForLanguage(l)"></span>
+            </div>
+          </div>
           <mat-card-header>
             <div class="list-entry-avatar" mat-card-avatar [style.backgroundImage]="getSanitizedPicture(resume.profilePicture)">
               <div class="list-entry-avatar-overlay">

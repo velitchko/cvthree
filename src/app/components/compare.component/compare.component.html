@@ -39,6 +39,11 @@
                         <button mat-icon-button (click)="toggleVisibility(idx)" class="button-top-left" [style.color]="getColor(r.id)">
                             <mat-icon>{{ r.highlighted ? 'center_focus_weak' : 'center_focus_strong' }}</mat-icon>
                         </button>
+                        <div class="languages">
+                            <div *ngFor="let l of r.languages">
+                              <span [matTooltip]="getLangTooltip(l)" class="language flag-icon" [ngClass]="getClassForLanguage(l)"></span>
+                            </div>
+                          </div>
                         <mat-card-header>
                             <div class="list-entry-avatar" mat-card-avatar [style.border-color]="getColor(r.id)"
                                 [style.backgroundImage]="getSanitizedPicture(r.profilePicture)">

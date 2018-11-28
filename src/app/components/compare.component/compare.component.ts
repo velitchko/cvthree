@@ -2,6 +2,7 @@ import { Component, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { Resume } from '../../models/resume';
 import { Skill } from '../../models/skill';
 import { Work } from '../../models/work';
+import { Language } from '../../models/language';
 import { Project } from '../../models/project';
 import { Publication } from '../../models/publication';
 import { Award } from '../../models/award';
@@ -10,6 +11,7 @@ import { SkillLevel } from '../../lists/skill.level';
 import { CompareService } from '../../services/compare.service';
 import { UtilServices } from '../../services/util.service';
 import { DatabaseServices } from '../../services/db.service';
+import { LANGUAGES } from '../../lists/languages';
 
 @Component({
   selector: 'app-compare',
@@ -63,6 +65,21 @@ export class CompareComponent implements AfterViewInit {
     this.getSkillData();
     this.getTreeChartData();
     this.getMapData();
+  }
+  
+  getLangTooltip(language: Language): string {
+    return `${language.name} | ${language.level}`;
+  }
+
+  getClassForLanguage(language: Language): string {
+    let languageClass = '';
+    LANGUAGES.forEach((l: any) => {
+      if(l.name.toLowerCase() === language.name.toLowerCase()) {
+        languageClass = `flag-icon-${l.code}`;
+        return;
+      }
+    });
+    return languageClass;
   }
 
   getYearsOfExperience(resume: Resume): number {

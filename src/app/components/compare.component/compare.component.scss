@@ -7,6 +7,18 @@
     margin-right: 6em;
 }
 
+.languages {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    left: 0.6em;
+    margin-top: 1em;
+    .language {
+      background-size: cover;
+      margin-bottom: 0.2em;
+    }
+  }
+
 .cards { grid-area: cards; }
 
 .skill-plot { 

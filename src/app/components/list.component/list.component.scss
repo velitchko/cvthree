@@ -22,6 +22,17 @@
   position: fixed !important;
 }
 
+.languages {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  left: 0.6em;
+  .language {
+    background-size: cover;
+    margin-bottom: 0.2em;
+  }
+}
+
 .search {
   display: flex;
   flex-direction: row;
