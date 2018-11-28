@@ -94,7 +94,12 @@ export class CompareScatterPlotComponent implements AfterViewInit, OnChanges {
                     inPoint.hasOverlap = true;
                     let string = `${outPoint[0].value}.${outPoint[1].value}`;
                     if(overlaps.has(string)) {
-                        overlaps.get(string).push(inPoint, outPoint);
+                        let resArr = overlaps.get(string);
+                        if(!resArr.map((r: any) => { return r.resume.id }).includes(inPoint.resume.id) && 
+                           !resArr.map((r: any) => { return r.resume.id }).includes(outPoint.resume.id)) {
+                         resArr.push(inPoint);
+                         resArr.push(outPoint);
+                     }
                     } else {
                         overlaps.set(string, new Array<any>(inPoint, outPoint))
                     }
