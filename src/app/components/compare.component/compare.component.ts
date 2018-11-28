@@ -188,7 +188,7 @@ export class CompareComponent implements AfterViewInit {
           <i class="material-icons">place</i>${item.location.address ? item.location.address : ''} ${item.location.city ? item.location.city : ''} ${item.location.country ? item.location.country : ''}
         </p>` : ''}
         <p>
-         ${item.description ? item.description : 'No description for event.'}
+        ${item.description ? item.description : item.summary ? item.summary : 'No description for event.'}
         </p>
       </div>
     `;
@@ -243,8 +243,13 @@ export class CompareComponent implements AfterViewInit {
         type = e.endDate ? 'range' : 'point';
         let education = {
           position: e.studies,
-          company: e.institution
-        }
+          company: e.institution,
+          startDate: e.startDate,
+          endDate: e.endDate,
+          location: {
+            address: e.institution
+          }
+        };
         let event = {
           id: identifier,
           item: jdx,
@@ -271,7 +276,9 @@ export class CompareComponent implements AfterViewInit {
         e.oldIdx = !e.oldIdx ? idx : e.oldIdx;
         let project = {
           position: e.title,
-          company: e.url
+          company: e.url,
+          startDate: e.startDate,
+          endDate: e.endDate
         };
         let event = {
           id: identifier,
@@ -298,7 +305,8 @@ export class CompareComponent implements AfterViewInit {
         e.oldIdx = !e.oldIdx ? idx : e.oldIdx;
         let publication = {
           position: e.title,
-          company: e.publisher
+          company: e.publisher,
+          startDate: e.date
         };
         let event = {
           id: identifier,
@@ -323,7 +331,8 @@ export class CompareComponent implements AfterViewInit {
         e.oldIdx = !e.oldIdx ? idx : e.oldIdx;
         let award = {
           position: e.title,
-          company: e.awarder
+          company: e.awarder,
+          startDate: e.date
         };
         let event = {
           id: identifier,
@@ -332,7 +341,7 @@ export class CompareComponent implements AfterViewInit {
           category: 'CERTIFICATE/AWARD',
           resumeID: r.id,
           location: null,
-          startDate: e.date,
+          start: e.date,
           type: 'point',
           title: this.getTimelineTitle(award, idx),
           content: this.getTimelineContent(award, 'star'),
@@ -398,7 +407,7 @@ export class CompareComponent implements AfterViewInit {
         this.treeChartData.children.push(skill);
       }
     }
-
+    if(!currentSkill.children) return null;
     for (let i = 0; i < currentSkill.children.length; i++) {
       let currentChild = currentSkill.children[i];
       this.generateTreeData(currentNode, resumeID, currentChild, skillArray);
@@ -416,6 +425,7 @@ export class CompareComponent implements AfterViewInit {
   }
 
   getParentOfChild(currentNode: Skill, target: string): Skill {
+    if(!currentNode.children) return null;
     if (currentNode.children.filter((s) => { return s.name.toLowerCase() === target.toLowerCase(); }).length > 0) return currentNode;
     for (let i = 0; i < currentNode.children.length; i++) {
       let currentChild = currentNode.children[i];
@@ -427,6 +437,7 @@ export class CompareComponent implements AfterViewInit {
 
   getExistingNode(currentNode: any, target: any): Skill {
     if (currentNode.name.toLowerCase() === target.toLowerCase()) return currentNode;
+    if(!currentNode.children) return null;
 
     for (let i = 0; i < currentNode.children.length; i++) {
       let currentChild = currentNode.children[i];
@@ -507,10 +518,11 @@ export class CompareComponent implements AfterViewInit {
       })
       this.skillMap.set(resume.id, values);
     }
-
-    for (let i = 0; i < currentNode.children.length; i++) {
-      let currentChild = currentNode.children[i];
-      this.peopleWithSkill(currentChild, resume);
+    if(currentNode.children) {
+      for (let i = 0; i < currentNode.children.length; i++) {
+        let currentChild = currentNode.children[i];
+        this.peopleWithSkill(currentChild, resume);
+      }
     }
   }
 
