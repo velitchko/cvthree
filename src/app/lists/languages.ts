@@ -150,7 +150,7 @@ export const LANGUAGES = [
     {"code":"su","name":"Sundanese","nativeName":"Basa Sunda"},
     {"code":"sw","name":"Swahili","nativeName":"Kiswahili"},
     {"code":"ss","name":"Swati","nativeName":"SiSwati"},
-    {"code":"sv","name":"Swedish","nativeName":"svenska"},
+    {"code":"se","name":"Swedish","nativeName":"svenska"},
     {"code":"ta","name":"Tamil","nativeName":"தமிழ்"},
     {"code":"te","name":"Telugu","nativeName":"తెలుగు"},
     {"code":"tg","name":"Tajik","nativeName":"тоҷикӣ, toğikī, تاجیکی‎"},
