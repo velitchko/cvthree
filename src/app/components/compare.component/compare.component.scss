@@ -42,9 +42,17 @@
     flex-wrap: wrap;
 }
 
-.compare-wrapper > div {
+.compare-wrapper .cards, 
+.compare-wrapper .skill-compare,
+.compare-wrapper .cards {
     padding-bottom: 3em;
 }
+
+.compare-wrapper .timeline,
+.compare-wrapper .map {
+    padding-bottom: none !important;
+}
+
 
 .list-entry-avatar {
     width: 150px;
