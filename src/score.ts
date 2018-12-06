@@ -72,7 +72,7 @@ export function bonusScore(resumeSkills, query) {
                 if(node.node.children.length === 0) {
                     let siblings = getParentOfChild(r, 0, q.searchSkill, node.level).children.slice();
                     siblings.forEach((s) => {
-                        if(!alreadyVisited.has(s.name) && s.name.toLowerCase() !== q.searchSkill.toLowerCase()) {
+                        if(!alreadyVisited.has(s.name)) { //&& s.name.toLowerCase() !== q.searchSkill.toLowerCase()) {
                             alreadyVisited.set(s.name, true);
                             bonus = bonus + 1;
                         }
@@ -81,7 +81,7 @@ export function bonusScore(resumeSkills, query) {
                 } else {
                     let children = node.node.children;
                     children.forEach((s) => {
-                        if(!alreadyVisited.has(s.name) && s.name.toLowerCase() !== q.searchSkill.toLowerCase()) {
+                        if(!alreadyVisited.has(s.name)) { //&& s.name.toLowerCase() !== q.searchSkill.toLowerCase()) {
                             alreadyVisited.set(s.name, true);
                             bonus = bonus + 1;
                         }
