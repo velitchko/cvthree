@@ -79,7 +79,7 @@ export class TimelineComponent implements OnChanges {
 			showMajorLabels : true,
 			zoomMin			: 86400000*365, // 1 year in ms
 			zoomMax			: 86400000*365*20, // 10 years in ms
-			minHeight		: '350px',
+			minHeight		: '250px',
 			showCurrentTime : false,
 			tooltip: {
 				followMouse: true,
