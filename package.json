@@ -1,6 +1,6 @@
 {
   "name": "cvthree",
-  "version": "2.0.1",
+  "version": "2.5.0",
   "author": "Velitchko Filipov",
   "license": "MIT",
   "main": "dist/app/server/main.js",
