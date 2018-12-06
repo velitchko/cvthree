@@ -9,7 +9,7 @@ import { CompareComponent } from './components/compare.component/compare.compone
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'add', component: AddComponent },
+  // { path: 'add', component: AddComponent },
   { path: 'edit/:id', component: EditComponent },
   { path: 'list', component: ListComponent },
   { path: 'view/:id', component: ViewComponent },
