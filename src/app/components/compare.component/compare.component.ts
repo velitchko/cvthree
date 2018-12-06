@@ -12,6 +12,7 @@ import { CompareService } from '../../services/compare.service';
 import { UtilServices } from '../../services/util.service';
 import { DatabaseServices } from '../../services/db.service';
 import { LANGUAGES } from '../../lists/languages';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-compare',
@@ -243,12 +244,17 @@ export class CompareComponent implements AfterViewInit {
           resumeID: r.id,
           location: `${w.location.address ? w.location.address : ''} ${w.location.city ? w.location.city : ''} ${w.location.country ? w.location.country : ''}`,
           start: w.startDate,
-          type: type,
+          type: 'range',
           title: this.getTimelineTitle(w, idx),
           content: this.getTimelineContent(w, 'work'),
         }
         event['className'] = `timeline-color-${w.oldIdx}`;
-        if (w.endDate) event['end'] = w.endDate;
+        if (w.endDate) {
+          event['end'] = w.endDate;
+        } else {
+          event['end'] = new Date(moment().format('DD-MM-YYYY'));
+        }
+
         this.timelineData.push(event);
         identifier++;
       });
@@ -257,7 +263,7 @@ export class CompareComponent implements AfterViewInit {
       r.education.forEach((e: Education, jdx: number) => {
         e.identifier = identifier;
         e.oldIdx = !e.oldIdx ? idx : e.oldIdx;
-        type = e.endDate ? 'range' : 'point';
+        // type = e.endDate ? 'range' : 'point';
         let education = {
           position: e.studies,
           company: e.institution,
@@ -276,12 +282,16 @@ export class CompareComponent implements AfterViewInit {
           location: e.institution,
           start: e.startDate,
           end: e.endDate,
-          type: type,
+          type: 'range',
           title: this.getTimelineTitle(education, idx),
           content: this.getTimelineContent(education, 'school'),
         };
         event['className'] = `timeline-color-${e.oldIdx}`;
-        if (e.endDate) event['end'] = e.endDate;
+        if (e.endDate) {
+          event['end'] = e.endDate;
+        } else {
+          event['end'] = new Date(moment().format('DD-MM-YYYY'));
+        }
         this.timelineData.push(event);
         identifier++;
       });
