@@ -48,7 +48,7 @@ export class MapComponent implements OnChanges {
             }
         });
         this.cs.currentlySelectedEvents.subscribe((selection: any)=> {
-            if(!selection) return;
+            if(!selection || selection.event === undefined) return;
             if(selection.from === 'timeline') {
                 this.triggerPopup(selection.event);
             }
@@ -79,8 +79,6 @@ export class MapComponent implements OnChanges {
         this.resumes.forEach((r: Resume) => {
             r.work.sort((a: Work, b: Work) => { return new Date(a.startDate) > new Date(b.startDate) ? 1 : -1; })
         });
-
-        console.log(this.resumes);
     }
 
     clearLayers(): void {
@@ -137,9 +135,9 @@ export class MapComponent implements OnChanges {
         this.markerClusterGroup.addTo(this.map);
         this.pathGroup.addTo(this.map);
         this.markerClusterGroup.on('click', (event: any) => {
-            // console.log(event);
+            if(event.sourceTarget.work === undefined) return;
             this.selectedEvent.emit({
-                event: event.sourceTarget.work.identifier,
+                event: event.sourceTarget.work,
                 from: 'map'
             });
         });
@@ -161,7 +159,7 @@ export class MapComponent implements OnChanges {
     triggerPopup(id: number): void {
         if(id === undefined) this.markerClusterGroup.unspiderfy();
         this.markerClusterGroup.eachLayer((layer: any) => {
-            if(layer.work.identifier === id) {
+            if(layer.work === id) {
                 this.markerClusterGroup.zoomToShowLayer(layer, () => {
                     layer.openPopup();
                 });
@@ -213,7 +211,7 @@ export class MapComponent implements OnChanges {
        return `
        <div class="timeline-content">
         <h3 class="timeline-title">
-          ${item.position} @ ${item.company}
+          ${item.position ? item.position : item.studies} @ ${item.company ? item.company : item.institution}
         </h3>
         <p>${this.util.getPrettyDate(item.startDate, item.endDate)}</p>
         ${item.location ? 
@@ -313,6 +311,7 @@ export class MapComponent implements OnChanges {
             if(!w.location.lat && !w.location.lng) return;
             let marker = L.marker([w.location.lat, w.location.lng], { icon: icon });
             marker.resumeID = resume.id;
+            marker.work = w.identifier;
             marker.bindPopup(this.getPopupContent(w));
             // marker.addTo(this.map);
             this.markers.push(marker);
@@ -323,6 +322,7 @@ export class MapComponent implements OnChanges {
             if(!e.location.lat && !e.location.lng) return;
             let marker = L.marker([e.location.lat, e.location.lng], { icon: icon });
             marker.resumeID = resume.id;
+            marker.work = e.identifier;
             marker.bindPopup(this.getPopupContent(e));
             // marker.addTo(this.map);
             this.markers.push(marker);
