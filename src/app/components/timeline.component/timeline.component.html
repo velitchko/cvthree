@@ -14,9 +14,16 @@
             <mat-option value="CERTIFICATE/AWARD">Certificate/Award</mat-option>
         </mat-select>
         <button mat-button *ngIf="eventFilter.value" matSuffix mat-icon-button aria-label="Clear" (click)="eventFilter.value=''; clearFilter();">
-                <mat-icon>close</mat-icon>
-            </button>
+            <mat-icon>close</mat-icon>
+        </button>
     </mat-form-field>
+    <div class="timeline-legend">
+        <mat-icon>work</mat-icon> Work
+        <mat-icon>school</mat-icon> Education
+        <mat-icon>assignment</mat-icon> Project
+        <mat-icon>note_add</mat-icon> Publication
+        <mat-icon>star</mat-icon> Certificate/Award
+    </div>
 </div>
 <div *ngIf="events.length === 0">
     No events found in selected resumes.
