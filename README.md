@@ -34,5 +34,7 @@ Analytics soon tm.
 
 ## TODO's
 Fixing the page to add/edit CV's (buggy).
+
 Automatic geocoding preSave hook.
+
 Update homepage.
