@@ -5,6 +5,11 @@ v2.5.0 - Prototype
 v2.0.0 - Angular 6 (update)  
 v1.0.0 - Angular 2 
 
+## About
+
+Interactive exploration environment for comparing multiple CVs.
+Analytics soon tm.
+
 ## Database Setup
 Go to [MongoDB](https://www.mongodb.com/) download and setup MongoDB.
 
@@ -26,11 +31,6 @@ You can set up your API key by following the guide here: [Mapbox API Key Guide](
 
 run `npm run dev` 
 the application should be available at `http://localhost:8000`
-
-## About
-
-Interactive exploration environment for comparing multiple CVs.
-Analytics soon tm.
 
 ## TODO's
 Fixing the page to add/edit CV's (buggy).
