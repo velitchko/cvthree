@@ -27,3 +27,6 @@ the application should be available at `http://localhost:8000`
 
 Interactive exploration environment for comparing multiple CVs.
 Analytics soon tm.
+
+## TODO's
+Fixing the page to add/edit CV's (buggy)
