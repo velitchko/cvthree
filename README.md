@@ -11,6 +11,7 @@ Interactive exploration environment for comparing multiple CVs.
 Analytics soon tm.
 
 ## Database Setup
+This project uses MongoDB as a database implementation.
 Go to [MongoDB](https://www.mongodb.com/) download and setup MongoDB.
 
 ## Import Database
@@ -21,11 +22,12 @@ This should create and import all records from the database dump.
 
 ## Installing dependencies
 
-run `npm install`
+run `npm install` to install all of the applications dependencies.
 
 ## Setting up API keys
 This application requires a Mapbox API key.
 You can set up your API key by following the guide here: [Mapbox API Key Guide](https://docs.mapbox.com/help/how-mapbox-works/access-tokens/)
+You should add the API key to the environment{.prod}.ts file in the source directory.
 
 ## Running the application
 
