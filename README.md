@@ -30,6 +30,7 @@ You can set up your API key by following the guide here: [Mapbox API Key Guide](
 You should add the API key to the environment{.prod}.ts file in the source directory.
 
 ## Running the application
+The application is available live as a [demo](https://cvthree.cvast.tuwien.ac.at)
 
 run `npm run dev` 
 the application should be available at `http://localhost:8000`
