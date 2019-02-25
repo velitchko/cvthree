@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { MenuComponent } from './components/menu.component/menu.component';
 import { AddComponent } from './components/add.component/add.component';
 import { HomeComponent } from './components/home.component/home.component';
+import { FooterComponent } from './components/footer.component/footer.component';
 import { ViewComponent } from './components/view.component/view.component';
 import { ListComponent } from './components/list.component/list.component';
 import { EditComponent } from './components/edit.component/edit.component';
@@ -124,6 +125,7 @@ export const APP_ID = 'cvthree';
     MenuComponent,
     AddComponent,
     HomeComponent,
+    FooterComponent,
     ViewComponent,
     ListComponent,
     EditComponent,

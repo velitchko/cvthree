@@ -23,5 +23,8 @@
 
 <div *ngIf="!loading">
   <app-menu></app-menu>
-  <router-outlet></router-outlet>
+  <div class="wrapper">
+    <router-outlet></router-outlet>
+  </div>
+  <app-footer></app-footer>
 </div>
