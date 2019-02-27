@@ -39,31 +39,31 @@
   color: #fff;
 }
 
-.logo {
-  user-select: none;
-  cursor: pointer;
-  &.small {
-    transform: scale(0.2);
-    padding-top: 2px;
-  }
-  .cvthree-svg {
-    transform: rotate(30deg);
-    position: absolute;
-    z-index: -1;
-  }
-  .cvthree-text {
-    font-size: 13em;
-    position: absolute;
-    font-family: 'Roboto', sans-serif;
-    top: calc(50% + 0.07em);
-    left: calc(50% + 0.11em);
-    &.small {
-      font-size: 6em;
-      top: calc(50% + 0.6em);
-      left: calc(50% + 0.2em);
-    }
-  }
-}
+// .logo {
+//   user-select: none;
+//   cursor: pointer;
+//   &.small {
+//     transform: scale(0.2);
+//     padding-top: 2px;
+//   }
+//   .cvthree-svg {
+//     transform: rotate(30deg);
+//     position: absolute;
+//     z-index: -1;
+//   }
+//   .cvthree-text {
+//     font-size: 13em;
+//     position: absolute;
+//     font-family: 'Roboto', sans-serif;
+//     top: calc(50% + 0.07em);
+//     left: calc(50% + 0.11em);
+//     &.small {
+//       font-size: 6em;
+//       top: calc(50% + 0.6em);
+//       left: calc(50% + 0.2em);
+//     }
+//   }
+// }
 
 .loading-logo {
   position: absolute;
@@ -79,4 +79,11 @@ footer {
   align-items: center;
   position: absolute;
   bottom: 0;
+}
+
+
+// Text color selection
+::ng-deep *::selection {
+  background-color: #00d1b2; /* WebKit/Blink Browsers */
+  color: white;
 }
