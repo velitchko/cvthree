@@ -244,7 +244,7 @@ export class CompareComponent implements AfterViewInit {
           resumeID: r.id,
           location: `${w.location.address ? w.location.address : ''} ${w.location.city ? w.location.city : ''} ${w.location.country ? w.location.country : ''}`,
           start: w.startDate,
-          type: 'range',
+          type: type,
           title: this.getTimelineTitle(w, idx),
           content: this.getTimelineContent(w, 'work'),
         }
@@ -252,9 +252,9 @@ export class CompareComponent implements AfterViewInit {
         if (w.endDate) {
           event['end'] = w.endDate;
         } else {
-          event['end'] = new Date(moment().format('DD-MM-YYYY'));
+          event['end'] = moment().toDate();
         }
-
+      
         this.timelineData.push(event);
         identifier++;
       });
@@ -263,7 +263,7 @@ export class CompareComponent implements AfterViewInit {
       r.education.forEach((e: Education, jdx: number) => {
         e.identifier = identifier;
         e.oldIdx = !e.oldIdx ? idx : e.oldIdx;
-        // type = e.endDate ? 'range' : 'point';
+        type = e.endDate ? 'range' : 'point';
         let education = {
           position: e.studies,
           company: e.institution,
@@ -281,8 +281,8 @@ export class CompareComponent implements AfterViewInit {
           resumeID: r.id,
           location: e.institution,
           start: e.startDate,
-          end: e.endDate,
-          type: 'range',
+          // end: e.endDate,
+          type: type,
           title: this.getTimelineTitle(education, idx),
           content: this.getTimelineContent(education, 'school'),
         };
@@ -290,7 +290,7 @@ export class CompareComponent implements AfterViewInit {
         if (e.endDate) {
           event['end'] = e.endDate;
         } else {
-          event['end'] = new Date(moment().format('DD-MM-YYYY'));
+          event['end'] = moment().toDate();
         }
         this.timelineData.push(event);
         identifier++;
@@ -315,13 +315,17 @@ export class CompareComponent implements AfterViewInit {
           resumeID: r.id,
           location: null, // should we add a location?
           start: e.startDate,
-          end: e.endDate,
+          // end: e.endDate,
           type: type,
           title: this.getTimelineTitle(project, idx),
           content: this.getTimelineContent(project, 'assignment'),
         };
         event['className'] = `timeline-color-${e.oldIdx}`;
-        if (e.endDate) event['end'] = e.endDate;
+        if (e.endDate) {
+          event['end'] = e.endDate;
+        } else {
+          event['end'] = moment().toDate();
+        }
         this.timelineData.push(event);
         identifier++;
       });
@@ -342,7 +346,7 @@ export class CompareComponent implements AfterViewInit {
           category: 'PUBLICATION',
           resumeID: r.id,
           location: null,
-          startDate: e.date,
+          start: e.date,
           type: 'point',
           title: this.getTimelineTitle(publication, idx),
           content: this.getTimelineContent(publication, 'note_add'),
