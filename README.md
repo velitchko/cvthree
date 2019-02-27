@@ -1,4 +1,7 @@
 # CVTHREE
+<p align="center">
+  <img src="logo.png" alt="Logo" width="200"/>
+</p>
 
 ## Changelog
 v2.5.0 - Prototype  
