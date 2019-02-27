@@ -40,4 +40,4 @@ Fixing the page to add/edit CV's (buggy).
 
 Automatic geocoding preSave hook.
 
-Update homepage.
+~~Update homepage.~~
