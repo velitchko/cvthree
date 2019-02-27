@@ -160,12 +160,12 @@ export class ScatterPlotComponent implements AfterViewInit, OnChanges {
         d3.select('#axis_x')
             .append('text')
             .attr('transform', 'translate(360, -10)')
-            .text('Bonus score'); 
+            .text('Diversification'); 
 
         d3.select('#axis_y')
             .append('text')
             .attr('transform', 'rotate(-90) translate(-20, 15)')
-            .text('Base score');
+            .text('Specialization');
 
         this.items = this.svg.append('g')
             .attr('transform', `translate(0, ${this.margin.top})`)
@@ -182,7 +182,7 @@ export class ScatterPlotComponent implements AfterViewInit, OnChanges {
             })
             .attr('class', 'non_brushed')
             .on('mouseover', (d: any) => {
-                this.tooltip.html(`${d.resume.firstName} ${d.resume.lastName}: Base ${d.base}, Bonus ${d.bonus}`)
+                this.tooltip.html(`${d.resume.firstName} ${d.resume.lastName}: Spec. ${d.base}, Div. ${d.bonus}`)
                     .style('left', `${d3.event.pageX + 20}px`)
                     .style('top', `${d3.event.pageY - 20}px`)
                     .transition()
@@ -248,7 +248,7 @@ export class ScatterPlotComponent implements AfterViewInit, OnChanges {
                         html += `
                             <div class="scatterplot-cluster-point">
                                 <img class="scatterplot-profile-pic" src=${pers.resume.profilePicture}>
-                                <p>${pers.resume.firstName} ${pers.resume.lastName} : Base ${pers.base}, Bonus ${pers.bonus}</p>
+                                <p>${pers.resume.firstName} ${pers.resume.lastName} : Spec. ${pers.base}, Div. ${pers.bonus}</p>
                             </div>
                         `;
                     });
